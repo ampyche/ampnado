@@ -1,0 +1,67 @@
+<!--
+###############################################################################
+###############################################################################
+	# LICENSE: GNU General Public License, version 2 (GPLv2)
+	# Copyright 2015, Charlie J. Smotherman
+	#
+	# This program is free software; you can redistribute it and/or
+	# modify it under the terms of the GNU General Public License v2
+	# as published by the Free Software Foundation.
+	#
+	# This program is distributed in the hope that it will be useful,
+ 	# but WITHOUT ANY WARRANTY; without even the implied warranty of
+	# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	# GNU General Public License for more details.
+	#
+	# You should have received a copy of the GNU General Public License
+	# along with this program; if not, write to the Free Software
+	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+###############################################################################
+###############################################################################
+-->
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>AmpNado</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link type="text/css" rel="stylesheet" href="static/css/jquery.mobile-1.4.5.min.css" />
+		<link type="text/css" rel="stylesheet" href="static/css/jquery.mobile.theme-1.4.5.min.css" />
+		<link type="text/css" rel="stylesheet" href="static/css/mystyles2.css" />
+		<script src="static/js/jquery-2.1.4.min.js"></script>
+		<script src="static/js/jquery.mobile-1.4.5.min.js"></script>
+		<link type="text/css" rel="stylesheet" href="static/css/loginstyles.css" />
+		<script src="static/js/login.js"></script>
+	</head>
+	<body>
+		<div class='amp' data-role="page" id ="intro" data-theme="b">
+			<div data-role="header" data-theme="b" data-position="fixed">
+				<h1 id="loginHeaderH1">AmpNado</h1>
+			</div>
+			<div id="loginmain" role="main" class="ui-content">
+				<h1 id="loginFormH1">Login</h1>	
+				<div id="loginForm">
+					<form action='/login' method='post' data-ajax='false'>
+						{% module xsrf_form_html() %}
+						<input data-theme='c' id='username' data-clear-btn='true' type="text" name="username" value="Username">
+						<input data-theme='c' id='password' data-clear-btn='true' type="password" name="password" value="PassWord">
+						<input id="submit1" data-url='/ampnado' type="submit" value="Ampnado Submit" />
+					</form>
+				</div>
+				<div id="loginCanPlay">
+					<h6 id="loginmp3"></h6>
+					<h6 id="loginogg"></h6>
+				</div>
+			</div>
+			<h2 id="about">About</h2>
+			<span id="intro_div">
+				<p id="intro">Inspired by the original <a href="http://ampache.org">Ampache</a>,
+				AmpNado is a music server just like Ampache except that AmpNado utilizes a
+				mobile friendly frontend with JQuery Mobile while Python3 Tornado's asynchronous
+				web server gives use a lightweight industrial strength web server powering a
+				nice RESTFUL API. MongoDB powers the database.
+				</p>
+			</span>
+		</div>
+	</body>
+</html>

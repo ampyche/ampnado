@@ -1,0 +1,262 @@
+/*
+###############################################################################
+###############################################################################
+	# LICENSE: GNU General Public License, version 2 (GPLv2)
+	# Copyright 2015, Charlie J. Smotherman
+	#
+	# This program is free software; you can redistribute it and/or
+	# modify it under the terms of the GNU General Public License v2
+	# as published by the Free Software Foundation.
+	#
+	# This program is distributed in the hope that it will be useful,
+ 	# but WITHOUT ANY WARRANTY; without even the implied warranty of
+	# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	# GNU General Public License for more details.
+	#
+	# You should have received a copy of the GNU General Public License
+	# along with this program; if not, write to the Free Software
+	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+###############################################################################
+###############################################################################
+*/
+
+td, th {
+	padding: .5em;
+}
+.amp {
+	background-color: firebrick;
+}
+.genpopup {
+	background-color: firebrick;
+	padding-top: 1.5em;
+	padding-left: 1.5em;
+	padding-right: 1.5em;
+	width: 18em;
+}
+#audio100 {
+	padding-top: .5em;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 18.75em;
+}
+#intro {
+font-style: bold;
+}
+#pnButtons {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 5.625em;
+}
+.artistimg, .artistimgS {
+	width: 8.75em;/* 140px */
+	padding: .5em;
+}
+div#plDIV {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+}
+#editpopupH4 {
+	padding-top: 1.5em;
+}
+#intro_div {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 37em;
+}
+img.fraz {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 13em;
+	padding-top: 1em;
+	padding-bottom: .5em;
+}
+img.PicGrid {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: .5em;
+	padding-bottom: .5em;
+	width: 7em;
+}
+.controlGrid {
+	margin-left: auto;
+	margin-right: auto;
+	width: 14.5em;
+		
+}
+.artistplayericons, .albumplayericons, .songplayericons {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 18em;
+}
+img#playlistalbart {
+	width: 13em;
+}
+#vid100 {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 48em;
+	height: 22.6em;	
+}
+@media all and (max-width: 50em) {
+	#vid100 {
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		width: 33.5em;
+		height: 18.9em;	
+	}
+}
+/*@media all and (max-width: 37em) {*/
+@media all and (max-width: 37.5em) {
+	#intro_div {
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		width: 24em;
+	}
+	img.fraz {
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		width: 11.5em;
+		/*width: 10em;*/
+		padding-top: 1em;
+		padding-bottom: .5em;
+	}
+	img.PicGrid {
+		padding-top: .5em;
+		padding-bottom: .5em;
+		width: 5em;	
+	} 
+	
+	.controlGrid {
+		margin-left: auto;
+		margin-right: auto;
+		width: 14.5em;
+		
+	}
+	.artistplayericons, .albumplayericons, .songplayericons {
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		width: 17em;
+	}
+	img#playlistalbart {
+		width: 10em;
+	}
+	#vid100 {
+		width: 23.5em;
+		height: 13.3em;	
+	}
+}
+
+
+
+
+@media all and (max-width: 33em) {
+	#intro_div {
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		width: 20em;
+	}
+	img.fraz {
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		/*width: 7em;*/
+		width: 9.5em;
+		padding-top: 1em;
+		padding-bottom: .5em;
+	}
+	img.PicGrid {
+		padding-top: .5em;
+		padding-bottom: .5em;
+		width: 4em;	
+	} 
+	
+	.controlGrid {
+		margin-left: auto;
+		margin-right: auto;
+		width: 14.5em;
+		
+	}
+	
+}
+
+
+
+
+
+
+
+
+
+
+/*@media all and (max-width: 30em) {*/
+@media all and (max-width: 25em) {
+	.my-breakpoint .ui-block-a,
+	.my-breakpoint .ui-block-b,
+	.my-breakpoint .ui-block-c,
+	.my-breakpoint .ui-block-d,
+	.my-breakpoint .ui-block-e {
+		width: 100%;
+		float: none;
+	}
+}
+
+/*@media all and (max-width: 24em) {*/
+@media all and (max-width: 25em) {
+	#intro_div {
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		width: 18em;
+	}
+	img.fraz {
+		display: block;
+		width: 8.5em;
+		/*width: 7em;*/
+		padding-top: .5em;
+		padding-bottom: .25em;
+	}
+	img.PicGrid {
+		padding-top: .25em;
+		padding-bottom: .25em;
+		/*width: 4em;*/
+		width: 5.5em;	
+	}
+
+	.controlGrid {
+		margin-left: auto;
+		margin-right: auto;
+		width: 14.5em;
+		
+	}
+
+
+
+
+	.artistplayericons, .albumplayericons, .songplayericons {
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		width: 14.5em;
+	}
+	img#playlistalbart {
+		width: 7em;
+	}
+	#vid100 {
+		width: 16em;
+		height: 9em;	
+	}
+}

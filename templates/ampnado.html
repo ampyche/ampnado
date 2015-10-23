@@ -1,0 +1,494 @@
+<!--
+###############################################################################
+###############################################################################
+	# LICENSE: GNU General Public License, version 2 (GPLv2)
+	# Copyright 2015, Charlie J. Smotherman
+	#
+	# This program is free software; you can redistribute it and/or
+	# modify it under the terms of the GNU General Public License v2
+	# as published by the Free Software Foundation.
+	#
+	# This program is distributed in the hope that it will be useful,
+ 	# but WITHOUT ANY WARRANTY; without even the implied warranty of
+	# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	# GNU General Public License for more details.
+	#
+	# You should have received a copy of the GNU General Public License
+	# along with this program; if not, write to the Free Software
+	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+###############################################################################
+###############################################################################
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>AmpNado</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link type="text/css" rel="stylesheet" href="static/css/jquery.mobile-1.4.5.min.css" />
+	<link type="text/css" rel="stylesheet" href="static/css/jquery.mobile.theme-1.4.5.min.css" />
+	<link type="text/css" rel="stylesheet" href="static/css/mystyles2.css" />
+	<script src="static/js/jquery-2.1.4.min.js"></script>
+	<script src="static/js/jquery.mobile-1.4.5.min.js"></script>
+	<script src="static/js/playlistplayer.js"></script>
+	<script src="static/js/base.js"></script>
+	<script src="static/js/base0.js"></script>
+	<script src="static/js/base1.js"></script>
+</head>
+<body>
+
+<!--Start Audio Player -->
+<div>
+	<audio id="audio2" src=""></audio>	
+</div>
+<!--End Audio Player -->
+
+<!-- Start of Intro page -->
+<div class='amp' data-role="page" id ="intro" data-theme="b">
+	<div id="intro-popups">
+		<div id='popup1' data-role='popup' class='ui-content'></div>
+		<div id='popup2' data-role='popup' class='ui-content'></div>
+		<div id='popup3' data-role='popup' class='ui-content'></div>
+		<div id='popup4' data-role='popup' class='ui-content'></div>
+		<div id='popup5' data-role='popup' class='ui-content'></div>
+	</div>
+	<div data-role="header" data-theme="b" data-position="fixed">
+		<a href="/logout" id="logoutBtn" data-ajax='false' class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all">LogOut</a>
+		<a href="#settings" id="settingsbtn"  class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-icon-gear ui-btn-icon-notext" data-transition='slidefade'>Settings</a>
+		<h1 id="introH1">AmpNado</h1>
+		<div id='nbintro' data-role='navbar'>
+			<ul>
+				<li><a href="#artists" class='navArt' data-theme='a'>Artist</a></li>	
+				<li><a href="#albums" class='navAlb' data-theme='a'>Album</a></li>
+				<li><a href="#songs" class='navSong' data-theme='a'>Song</a></li>
+			</ul>
+			<ul>
+				<li><a href="#playlists" class='navPls' data-theme='a'>Playlist</a></li>
+				<li><a href="#videos" class='navVid' data-theme='a'>Video</a></li>
+			</ul>
+		</div>	
+	</div> 
+	<div id="intromain" role="main" class="ui-content">
+		<img id="introimg" class="fraz" src="static/images/112.png"></img>
+		<div id="picGrid">
+			<div class="ui-grid-d my-breakpoint" id="intropicGrid1"></div>	
+		</div>		
+	</div>
+	<div data-role='footer' data-theme='b' data-position='fixed'>
+		<div class="controlGrid">
+			<div class='ui-block-a' data-theme='a'>
+				<span class="current ui-btn">0:00</span>
+			</div>
+			<div class='ui-block-b' data-theme='a'>
+				<button class="playButton ui-btn ui-icon-audio ui-btn-icon-notext ui-corner-all"></button>
+			</div>
+			<div class='ui-block-c' data-theme='a'>
+				<button class="stopButton ui-btn ui-icon-delete ui-btn-icon-notext ui-corner-all"></button>
+			</div>
+			<div class='ui-block-d' data-theme='a'>
+				<span class="duration ui-btn">0.00</span>
+			</div>
+		</div>		
+	</div>
+</div>
+<!-- End Intro page -->
+
+<!-- Start Artists page -->
+<div class='amp' data-role="page" id="artists" data-theme="b">
+	<div data-role="header" data-theme="b" data-position="fixed">
+		<a href="#intro" class="homeBTN ui-btn-left ui-btn ui-btn-inline ui-icon-home ui-btn-icon-notext ui-mini ui-corner-all"></a>
+		<h1>Artists</h1>
+		<div data-role='navbar'>
+			<ul>
+				<li><a href="#albums" class='navAlb' data-theme='a'>Albums</a></li>
+				<li><a href="#songs" class='navSong' data-theme='a'>Songs</a></li>
+			</ul>
+			<ul>
+				<li><a href="#playlists" class='navPls' data-theme='a'>Playlist</a></li>
+				<li><a href="#videos" class='navVid' data-theme='a'>Video</a></li>
+			</ul>
+		</div>
+	</div>
+	<div role="main" class="ui-content" id="artistmain1">
+		<h2 id="artSS">Search:</h2>
+		<form id="artForm">
+			<div id="artSSD1">
+				<input type="search" name="artsearch" id="artsearch-basic" value="Enter Search Term">
+			</div>
+			<div id="artSSD2" class="ui-grid-a ui-responsive">
+				<div class="ui-block-a">	
+					<input type="button" id='artsearchBut' class="show-page-loading-msg" data-textonly='false' data-textvisible='false' data-msgtext='' data-mini='true' value="Search">
+				</div>
+				<div class="ui-block-b">
+					<input type="button" id='artsearchClear' data-mini='true' value="Clear">
+				</div>
+			</div>
+		</form>
+		<div id="artSearchDIV"></div>
+		<div id="artistOFC" data-role="collapsible">
+			<h4>Artist Soup</h4>
+			<div id="artistOFwrap"></div>	
+		</div>
+		<div id='artistmain'></div>
+	</div>
+	<div data-role='footer' data-theme='b' data-position='fixed'>
+		<div class="controlGrid">
+			<div class='ui-block-a' data-theme='a'>
+				<span class="current ui-btn">0:00</span>
+			</div>
+			<div class='ui-block-b' data-theme='a'>
+				<button class="playButton ui-btn ui-icon-audio ui-btn-icon-notext ui-corner-all"></button>
+			</div>
+			<div class='ui-block-c' data-theme='a'>
+				<button class="stopButton ui-btn ui-icon-delete ui-btn-icon-notext ui-corner-all"></button>
+			</div>
+			<div class='ui-block-d' data-theme='a'>
+				<span class="duration ui-btn">0.00</span>
+			</div>
+		</div>		
+	</div>
+</div>
+<!--End Artist page -->
+
+<!-- Start Albums Page -->
+<div class='amp' data-role="page" id="albums" data-theme="b">
+	<div data-role="header" data-theme="b" data-position="fixed">
+		<a href="#intro" class="homeBTN ui-btn-left ui-btn ui-btn-inline ui-icon-home ui-btn-icon-notext ui-mini ui-corner-all"></a>
+		<h1>Albums</h1>
+		<div data-role='navbar'>
+			<ul>
+				<li><a href="#artists" class='navArt' data-theme='a'>Artists</a></li>
+				<li><a href="#songs" class='navSong' data-theme='a'>Songs</a></li>
+			</ul>
+			<ul>
+				<li><a href="#playlists" class='navPls' data-theme='a'>Playlists</a></li>
+				<li><a href="#videos" class='navVid' data-theme='a'>Video</a></li>
+			</ul>
+		</div>
+	</div>
+	<div id='albmain1' role="main" class="ui-content" data-inset="true">
+		<h2 id="albSS">Search: </h2>
+		<div id="albSSD1">
+			<input type="search" name="albsearch" id="albsearch-basic" value="Enter Search Term">
+		</div>
+		<div id="albSSD2" class="ui-grid-a ui-responsive">
+			<div class="ui-block-a"> 
+				<input type="button" id='albsearchBut' class="show-page-loading-msg" data-textonly='false' data-textvisible='false' data-msgtext='' data-mini='true' value="Search">
+			</div>
+			<div class="ui-block-b">
+				<input type="button" id='albsearchClear' data-mini='true' value="Clear">
+			</div>
+		</div>
+		<div id="albListViewDIV2"></div>
+		<div id="albumOFC" data-role="collapsible">
+			<h4>Album Soup</h4>
+			<div id="albumOFwrap"></div>	
+		</div>
+		<div id="alblist"></div>
+	</div> <!-- Album Content -->
+	<div data-role='footer' data-theme='b' data-position='fixed'>
+		<div class="controlGrid">
+			<div class='ui-block-a' data-theme='a'>
+				<span class="current ui-btn">0:00</span>
+			</div>
+			<div class='ui-block-b' data-theme='a'>
+				<button class="playButton ui-btn ui-icon-audio ui-btn-icon-notext ui-corner-all"></button>
+			</div>
+			<div class='ui-block-c' data-theme='a'>
+				<button class="stopButton ui-btn ui-icon-delete ui-btn-icon-notext ui-corner-all"></button>
+			</div>
+			<div class='ui-block-d' data-theme='a'>
+				<span class="duration ui-btn">0.00</span>
+			</div>
+		</div>		
+	</div>
+</div>
+<!--End Albums Page -->
+
+<!-- Start Songs Page  -->
+<div class='amp' data-role="page" id="songs" data-theme="b" data-dom-cache='true'>
+	<div data-role="header" data-theme="b" data-position="fixed"> 
+		<a href="#intro" class="homeBTN ui-btn-left ui-btn ui-btn-inline ui-icon-home ui-btn-icon-notext ui-mini ui-corner-all"></a>
+		<h2>Songs</h2>
+		<div data-role='navbar'>
+			<ul data-theme='a'>
+				<li><a href="#artists" class='navArt' data-theme='a'>Artists</a></li>
+				<li><a href="#albums" class='navAlb' data-theme='a'>Albums</a></li>
+			</ul>
+			<ul>
+				<li><a href="#playlists" class='navPls' data-theme='a'>Playlists</a></li>
+				<li><a href="#videos" class='navVid' data-theme='a'>Video</a></li>
+			</ul>
+		</div>
+	</div>
+	<div role="main" class="ui-content">
+		<h2 id="SS">Search: </h2>
+		<div id="SSD1">
+			<input type="search" name="search" id="search-basic" value="Enter Search Term">
+		</div>
+		<div id="SSD2" class="ui-grid-a ui-responsive">
+			<div class="ui-block-a">
+				<input type="button" id='searchBut' class="show-page-loading-msg" data-textonly='false' data-textvisible='false' data-msgtext='' data-mini='true' value="Search">
+			</div>
+			<div class="ui-block-b">
+				<input type="button" id='searchClear' data-mini='true' value="Clear">
+			</div>
+		</div>
+		<div id="songListViewDIV2">
+			<ul id="songs_view2" data-role="listview" data-split-icon='gear' data-inset="true"></ul>
+		</div>
+		<div id="songOFC" data-role="collapsible">
+			<h4>Song Soup</h4>
+			<div id="songOFwrap"></div>	
+		</div>
+		<div id="songListViewDIV">
+			<ul id="songs_view" data-role="listview" data-split-icon='gear' data-inset="true"></ul>
+		</div>
+	</div> <!-- Song Content -->
+	
+	<div data-role='footer' data-theme='b' data-position='fixed'>
+		<div class="controlGrid">
+			<div class='ui-block-a' data-theme='a'>
+				<span class="current ui-btn">0:00</span>
+			</div>
+			<div class='ui-block-b' data-theme='a'>
+				<button class="playButton ui-btn ui-icon-audio ui-btn-icon-notext ui-corner-all"></button>
+			</div>
+			<div class='ui-block-c' data-theme='a'>
+				<button class="stopButton ui-btn ui-icon-delete ui-btn-icon-notext ui-corner-all"></button>
+			</div>
+			<div class='ui-block-d' data-theme='a'>
+				<span class="duration ui-btn">0.00</span>
+			</div>
+		</div>
+	</div>
+</div>
+<!--End Song Page-->
+
+<!-- Start Playlists Page  -->
+<div class='amp' data-role="page" id="playlists" data-theme="b">
+	<div id="intro-popups">
+		<div id='noAlphaNumPopup' data-role='popup' class='ui-content'>
+			<p>Please only enter alpha numeric charcters.</p>
+			<a href='#' id='nanp' class='ui-btn'>OK</a>
+		</div>
+		<div id='noNumPopup' data-role='popup' class='ui-content'>
+			<p>Please only enter numeric characters.</p>
+			<a href='#' id='nnp' class='ui-btn'>OK</a>
+		
+		</div>
+	</div>
+	<div data-role="header" data-theme="b" data-position="fixed">
+		<a href="#intro" class="homeBTN ui-btn-left ui-btn ui-btn-inline ui-icon-home ui-btn-icon-notext ui-mini ui-corner-all"></a>
+		<h1>Playlists</h1>
+		<div data-role='navbar'>
+			<ul>
+				<li><a href="#artists" class='navArt' data-theme='a'>Artists</a></li>
+				<li><a href="#albums" class='navAlb' data-theme='a'>Album</a></li>
+			</ul>
+			<ul>
+				<li><a href="#songs" class='navSong' data-theme='a'>Songs</a></li>
+				<li><a href="#videos" class='navVid' data-theme='a'>Video</a></li>
+			</ul>	
+		</div>
+	</div>
+	<div role="main" class="ui-content">
+		<div id="plDIV">
+			<table id="table1">
+				<tr>
+					<th rowspan="2"><img id='playlistalbart' src="static/images/112.png" alt=""></img></th>
+					<td><h3 id="pictext"></h3></td>
+				</tr>
+				<tr>
+					<td><h4 id="pictext2"></h4></td>		
+				</tr>
+			</table>
+		</div>
+		<div id="playlistcollapsible" data-role="collapsible">
+			<h4>Playlists</h4>
+			<ul id='playPlaylistUL' data-role='listview' data-inset='true'></ul>			
+		</div>
+		<div id="controlGrid">
+			<div class="ui-grid-a" id="playlistselect1">					
+				<div class="ui-block-a" data-theme='a'>
+					<a href='#' id='playlistLoadBtn1' class='plssel show-page-loading-msg ui-btn ui-btn-mini ui-corner-all' data-textonly='false' data-textvisible='false' data-msgtext=''>Load</a>	
+				</div>
+				<div class="ui-block-b" data-theme='a'>					
+					<a href='#' id='playlistDownLoadBtn1' class='pldl show-page-loading-msg ui-btn ui-btn-mini ui-corner-all' data-textonly='false' data-textvisible='false' data-msgtext=''>DownLoad</a>	
+				</div>
+			</div>
+			<div class="ui-grid-a" id="playlistdownload">
+				<div class="ui-block-a" data-theme='a'>
+					<a href='#' id="playlistDeleteBtn1" class='plssel show-page-loading-msg ui-btn ui-btn-mini ui-corner-all' data-textonly='false' data-textvisible='false' data-msgtext=''>Delete</a>			
+				</div>
+				<div class="ui-block-b" data-theme='a'>
+					<a href='#playlisteditpage' id="playlistEditBtn1" class='plssel show-page-loading-msg ui-btn ui-btn-mini ui-corner-all' data-textonly='false' data-textvisible='false' data-msgtext='' data-transition='slidefade'>Edit</a>					
+				</div>
+			</div>
+		</div>
+		<div>
+			<form>
+				<fieldset id="addnewplaylistDiv" data-role='collapsible'>
+					<legend>Add Empty Playlist</legend>
+					<label for='text1'><h3>Enter New Playlist Name:</h3></label>
+					<input data-theme="a" data-clear-btn='true' type="text" name="text1" id="text1" value="New Playlist">
+					<a id="butsub" class="show-page-loading-msg ui-btn ui-corner-all" data-textonly='false' data-textvisible='false' data-msgtext=''>Add Playlist</a>
+				</fieldset>			
+			</form>		
+		</div>
+		<div>
+			<p></p>
+		</div>
+		<div>
+			<form>
+				<fieldset id='addrandomplaylist' data-role='collapsible'>
+					<legend>Add Random Playlist</legend>
+					<label for="text2"><h3>Enter Playlist Name</h3></label>		
+					<input data-theme="a" data-clear-btn='true' type="text" name="text2" id="text2" value="New Random Playlist">
+					<label for="text3"><h3>Enter Number Of Random Songs</h3></label>		
+					<input data-theme="a" data-clear-btn='true' type="text" name="text3" id="text3" value="Number Of Random Songs">
+					<a id="randomInput" class="show-page-loading-msg ui-btn ui-corner-all" data-textonly='false' data-textvisible='false' data-msgtext=''>Add Random Playlist</a>
+				</fieldset>
+			</form>		
+		</div>
+	</div>
+	<div data-role='footer' data-theme='b' data-position='fixed'>
+		<div id="audio100">
+			<audio id="audio1" controls="controls"></audio>
+		</div>
+		<div id="pnButtons">			
+			<button class="plprevButton ui-btn ui-btn-inline ui-icon-arrow-l ui-btn-icon-notext ui-corner-all"></button>
+			<button class="plnextButton ui-btn ui-btn-inline ui-icon-arrow-r ui-btn-icon-notext ui-corner-all"></button>
+		</div>
+	</div>
+</div>
+<!--End Playlist Page -->
+
+<!--Start PlaylistEditPage -->
+<div class='amp' data-role="page" id="playlisteditpage" data-theme="b">
+	<div class='genpopup' id="editpopup" data-role="popup" data-theme="b">
+		<div>
+			<a href="#" data-rel='back' class='pledclosebtn ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-left'>Close</a>
+			<h3 id="editpopupH4">Delete Song From Playlist</h3>
+			<h5 id="editpopupH5"></h5>
+			<h5 id="editpopup2H5"></h5>
+		</div>
+		<div>
+			<a href="#playlisteditpage" id='editYesBtn' class='show-page-loading-msg plssel ui-btn ui-corner-all' data-textonly='false' data-textvisible='false' data-msgtext=''>Yes</a>
+		</div>
+	</div>
+	<div data-role='header' data-them='b'>
+		<a href="#playlists" data-rel='back' data-icon='arrow-l' data-iconpos='notext' data-shadow='false' data-icon-shadow='false'>Back</a>
+		<h1>Edit Playlist</h1>
+	</div>
+	<div id='pleditMain' role='main' class="ui-content"></div>
+</div>
+<!--End PlaylistEditPage -->
+
+<!--Start ArtistSelectPlPage -->
+<div class='amp' data-role="page" id="artistselectplpage" data-theme="b">
+	<div data-role='header' data-them='b'>
+		<a href="" data-rel='back' data-icon='arrow-l' data-iconpos='notext' data-shadow='false' data-icon-shadow='false'>Back</a>
+		<h1>Select A Artist Playlist</h1>
+	</div>
+	<div role='main' class="ui-content">		
+		<div id='artsplDiv'>
+			<h3 id="artsplH3"></h3>
+			<ul id='artsplUL' data-role='listview' data-inset='true' data-split-icon='gear'></ul>
+		</div>
+		<a href="" data-rel='back' class="ui-btn ui-corner-all">Back</a>	
+	</div>
+</div>
+<!--End ArtistSelectPlPage -->
+
+<!--Start AlbumSelectPlPage -->
+<div class='amp' data-role="page" id="albumselectplpage" data-theme="b">
+	<div data-role='header' data-them='b'>
+		<a href="" data-rel='back' data-icon='arrow-l' data-iconpos='notext' data-shadow='false' data-icon-shadow='false'>Back</a>
+		<h1>Select A Album Playlist</h1>
+	</div>
+	<div role='main' class="ui-content">		
+		<div id='albsplDiv'>
+			<h3 id="albsplH3"></h3>
+			<ul id='albsplUL' data-role='listview' data-inset='true' data-split-icon='gear'></ul>
+		</div>
+		<a href="" data-rel='back' class="ui-btn ui-corner-all">Back</a>	
+	</div>
+</div>
+<!--End AlbumSelectPlPage -->
+
+<!--Start SelectPlPage -->
+<div class='amp' data-role="page" id="selectplpage" data-theme="b">
+	<div data-role='header' data-them='b'>
+		<a href="" data-rel='back' data-icon='arrow-l' data-iconpos='notext' data-shadow='false' data-icon-shadow='false'>Back</a>
+		<h1>Select A Song Playlist</h1>
+	</div>
+	<div role='main' class="ui-content">		
+		<div id='splDiv'>
+			<h3 id="splH3"></h3>
+			<ul id='splUL' data-role='listview' data-inset='true' data-split-icon='gear'></ul>
+		</div>
+		<a href="" data-rel='back' class="ui-btn ui-corner-all">Back</a>	
+	</div>
+</div>
+<!--End AlbumSelectPlPage -->
+
+<!-- Start Settings Page -->
+<div class='amp' data-role="page" id="settings" data-theme="b">
+	<div data-role="header" data-theme="b" data-position="fixed">
+		<a href="#intro" class="homeBTN ui-btn-left ui-btn ui-btn-inline ui-icon-home ui-btn-icon-notext ui-mini ui-corner-all"></a>
+		<h1>Stats</h1>		
+	</div>
+	<div role="main" class="ui-content" id="artistmain1">
+		<div id="statsDiv"><h3>DataBase Stats</h3><table id="statsTab"></table></div>		
+	</div>
+</div>
+<!-- End Settings Page -->
+
+<!--Start of Video Page -->
+<div class='amp' data-role="page" id="videos" data-theme="b">
+	<div data-role="header" data-theme="b" data-position="fixed">
+		<a href="#intro" class="homeBTN ui-btn-left ui-btn ui-btn-inline ui-icon-home ui-btn-icon-notext ui-mini ui-corner-all"></a>
+		<h1>Video</h1>
+			<div data-role='navbar'>
+			<ul>
+				<li><a href="#artists" class='navArt' data-theme="a">Artist</a></li>	
+				<li><a href="#albums" class='navAlb' data-theme="a">Album</a></li>
+			</ul>
+			<ul>
+				<li><a href="#songs" class='navSong' data-theme="a">Song</a></li>
+				<li><a href="#playlists" class='navPls' data-theme='a'>Playlist</a></li>
+			</ul>
+		</div>
+	</div>
+	<div role="main" class="ui-content" id="artistmain1">
+		<div id="vidDIV"></div>
+	</div>
+</div>
+<!-- End Video Page -->
+
+<!-- Start VideoPlayer page -->
+<div class='amp' data-role="page" id="vidplayer" data-theme="b">
+	<div data-role="header" data-theme="b" data-position="fixed">
+		<a href="#intro" class="homeBTN ui-btn-left ui-btn ui-btn-inline ui-icon-home ui-btn-icon-notext ui-mini ui-corner-all"></a>
+		<h1>Video Player</h1>
+			<div data-role='navbar'>
+			<ul>
+				<li><a href="#artists" id="vartists" class='navArt' data-theme="a">Artist</a></li>	
+				<li><a href="#albums" id="valbums" class='navAlb' data-theme="a">Album</a></li>
+				<li><a href="#songs" id="vsongs" class='navSong' data-theme="a">Song</a></li>
+			</ul>
+			<ul>
+				<li><a href="#playlists" id="vplaylists" class='navPls' data-theme='a'>Playlist</a></li>
+				<li><a href="#videos" id="vvideos" class='navVid' data-theme='a'>Video</a></li>
+			</ul>
+		</div>
+	</div>
+	<div role="main" class="ui-content" id="artistmain1">
+		<div id="video100">
+			<video id='vid100' src='' controls></video>
+		</div>
+	</div>
+</div>
+</body>
+</html>
