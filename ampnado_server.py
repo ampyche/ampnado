@@ -468,18 +468,6 @@ class RamdomAlbumPicPlaySongHandler(BaseHandler):
 		soho = yield self._get_song(p['sid'][0])
 		self.write(dict(soho=soho))
 
-#class WebSocketAddrHandler(BaseHandler):
-#	@tornado.web.authenticated
-#	@tornado.gen.coroutine
-#	def get(self):
-#		a = db.user_options.find_one({}, {'hostaddress':1, '_id':0})
-#		b = a['hostaddress'].split('http://')
-#		c = b[1].split('/ampnado')
-#		d = ''.join((c[0] + "/websock?Id=" + str(uuid.uuid4().hex)))
-#		self.write(dict(ha=d))
-#
-
-
 class RandomPicsHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def _get_count(self):
@@ -496,7 +484,6 @@ class RandomPicsHandler(BaseHandler):
 
 	@tornado.gen.coroutine
 	def _reset_displayed(self):
-		#db.randthumb.update({}, {'$set': {'displayed':'NOTSHOWN'}}, multi=True)
 		FUN._create_random_art_db()
 		print('creating random art DB')
 		
@@ -525,71 +512,7 @@ class RandomPicsHandler(BaseHandler):
 			x['thumbnail'] = ace['lthumbnail']
 			x['songs'] = [(song['song'], song['songid']) for song in db.tags.find({'albumid':r}, {'song':1, 'songid':1, '_id':0})]
 			art.append(x)
-			
-		#boo = json.dumps(art)
-		#boo = json.dumps(dict(rsamp=art))
-		#pprint(boo)
-		#self.write(boo)
 		self.write(dict(rsamp=art))
-
-
-
-
-
-
-#class WebSocketHandler(tws.WebSocketHandler):
-#	def _get_count(self):
-#		return len([d['_id'] for d in db.randthumb.find({'displayed':'NOTSHOWN'})])
-#
-#	def _get_chunk(self):
-#		t5 = db.randthumb.find_one({'displayed': 'NOTSHOWN'})
-#		return t5['_id'], t5['chunk'], t5['displayed']
-#
-#	def _update_db(self, aid):
-#		db.randthumb.update({'_id': aid}, {'$set': {'displayed':'SHOWN'}})
-#
-#	def _reset_displayed(self):
-#		db.randthumb.update({}, {'$set': {'displayed':'NOTSHOWN'}}, multi=True)
-#	
-#	def _get_rand_alb_list(self):
-#		count = self._get_count()
-#		if count < 2:
-#			rset = self._reset_displayed()
-#			tid = self._get_chunk()
-#			updb = self._update_db(tid[0])
-#			return tid[1]
-#		else:
-#			tid = self._get_chunk()
-#			updb = self._update_db(tid[0])
-#			return tid[1]
-#
-#	def open(self, *args):
-#		self.id = self.get_argument('Id')
-#		self.stream.set_nodelay(True)
-#		CLIENTS[self.id] = {"id": self.id, 'object': self}
-#		
-#	def on_close(self):
-#		if self.id in CLIENTS:
-#			del CLIENTS[self.id]		
-#
-#	def on_message(self, message):
-#		print('New Pic Set Sent')
-#		if message == 'SENDMETHEPHOTOS':
-#			rs = self._get_rand_alb_list()
-#			art = []
-#			for r in rs:
-#				x = {}
-#				ace = db.tags.find_one({'albumid':r}, {'lthumbnail':1, '_id':0})
-#				x['thumbnail'] = ace['lthumbnail']
-#				x['songs'] = [(song['song'], song['songid']) for song in db.tags.find({'albumid':r}, {'song':1, 'songid':1, '_id':0})]
-#				art.append(x)
-#			boo = json.dumps(dict(rsamp=art))
-#			self.write_message(boo)
-#			self.close()
-#			print('socket connection has closed')
-#		else:
-#			self.close()
-#			print('socket connection has closed')
 
 def main():
 	tornado.options.parse_command_line()
