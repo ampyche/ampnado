@@ -19,6 +19,403 @@
 ###############################################################################
 ###############################################################################
 */
+
+///////////////////////////////////////////////////////////////////////////////
+function oc_artOF1(xx) {
+	var soupArtOne = "<div><img class='artistimgS' src='" + xx + "'></img>";
+	var soupArtTwo = soupArtOne + "</div><div class='art1divS'><ul class='artistSongULS' ";
+	var soupArtThree1 = soupArtTwo + "data-role='listview' data-inset='true' data-split-icon='gear'>";
+	return soupArtThree1			
+};
+function oc_artOF2(vv) {
+	var soupArt1 = "<li class='artSongLIS'><a href='#' class='artsongA1' ";
+	var soupArt2 = soupArt1 + "data-songid='" + vv[1] + "'>" + vv[0] + "</a>";
+	var soupArt3 = soupArt2 + "<a href='#artistselectplpage' class='artToPlaylistBtn' ";
+	var soupArt4 = soupArt3 + "data-song='" + vv[0] + "' data-songid='" + vv[1] + "' ";
+	var soupArt51 = soupArt4 + "data-transition='slidefade'></a></li>";
+	return soupArt51			
+};
+function oc_artOF3(v) {
+	var a = "<div class='artistPageDiv' data-role='collapsible'><h4>" + v.artist + "</h4><div>";
+	var a11 = a + "<form id='" + v.artistid + "' class='artistForm'><div class='ui-field-contain'>";
+	var a222 = a11 + "<select name='" + v.artist + "' id='" + v.artistid + "' class='artistselect'>";
+	return a222	
+};
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function och_artistselect1(d) {
+	var aone = "<div id='songimglist'><img class='artistimg' src='" + d.getimgsonalb.thumbnail + "'></img>";
+	var atwo = aone + "<div class='art1div'><ul id='artistSongUL' data-role='listview' data-inset='true' ";
+	var athree1 = atwo + "data-split-icon='gear'>";
+	return athree1	
+};
+function och_artistselect2(v1) {
+	var four = "<li class='artsongLI'><a href='#' class='artsongA1' ";
+	var four1 = four + "data-songid='" + v1[1] + "'>" + v1[0] + "</a><a href='#artistselectplpage' ";
+	var four2 = four1 + "class='artToPlaylistBtn' data-song='" + v1[0] + "' data-songid='" + v1[1] + "' ";
+	var four31 = four2 + "data-transition='slidefade'></a></li>";
+	return four31		
+};
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function oc_albumOF1(va) {
+	var alb1 = "<div class='albumDIV'><ul class='albumUL' data-role='listview' data-inset='true'>";
+	var alb2 = alb1 + "<li class='albumLI'><a href='#' class='albumA1' data-artist='" + va.artist + "' ";
+	var alb3 = alb2 + "data-artistid='" + va.artistid + "' data-album='" + va.album + "' ";
+	var alb4 = alb3 + "data-albumid='" + va.albumid + "'><img id='" + va.albumid + "' ";
+	var alb5 = alb4 + "src='" + va.thumbnail + "'><h3 id='albH3'>" + va.album + "</h3>";
+	var alb6 = alb5 + "<p>" + va.artist + "</p><span class='ui-li-count'>" + va.numsongs + "</span>";
+	var alb7 = alb6 + "</a></li></ul></div><div class='albsongList'><ul id='albsongUL" + va.albumid + "' ";
+	var alb81 = alb7 + "class='albsongUL' data-role='listview' data-inset='true' data-split-icon='gear'>";
+	return alb81
+};
+function oc_albumOF2(b) {
+	var albab = "<li class='albsongsLI'><a href='#' class='albsongsA' data-song='" + b[0] + "' ";
+	var albab1 = albab + "data-songid='" + b[1] + "'>" + b[0] + "</a><a href='#albumselectplpage' ";
+	var albab2 = albab1 + "class='addToPlaylist' data-pageid='albums' data-song='" + b[0] + "' ";
+	var albab31 = albab2 + "data-songid='" + b[1] + "' data-transition='slidefade'></a></li>";
+	return albab31			
+};
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function oc_addtoplaylist1(va) {
+	var pll1 = "<li class='playlistLi' data-playlistid='" + va[1] + "'><a href='#' class='plplay ui-btn ";
+	var pll2 = pll1 + "ui-mini ui-icon-bullets ui-btn-icon-right' ";
+	var pll31 = pll2 + "data-playlistid='" + va[1] + "'>" + va[0] + "</a></li>";
+	return pll31
+};
+function oc_addtoplaylist2(va) {
+	var spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + va[1] + "' ";
+	var spl31 = spl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + va[0] + "</a></li>";
+	return spl31
+};	
+function oc_addtoplaylist3(va) {	
+	var ablspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var ablspl2 = ablspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
+	var ablspl3 = ablspl2 + "data-playlistid='" + va[1] + "' data-textonly='false' data-textvisible='false' ";
+	var ablspl41 = ablspl3 + "data-msgtext=''>" + va[0] + "</a></li>";
+	return ablspl41
+};	
+function oc_addtoplaylist4(va) {	
+	var artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
+	var artspl3 = artspl2 + "data-playlistid='" + va[1] + "' data-textonly='false' data-textvisible='false' ";
+	var artspl41 = artspl3 + "data-msgtext=''>" + va[0] + "</a></li>";
+	return artspl41
+};
+function oc_addtoplaylist5(p) {	
+	var pll1 = "<li class='playlistLi'><a href='#' class='plplay ui-btn ui-mini ui-icon-bullets ";
+	var pll21 = pll1 + "ui-btn-icon-right'>" + p + "</a></li>";
+	return pll21
+};
+function oc_addtoplaylist6(p) {	
+	var spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
+	var spl31 = spl2 + "data-textvisible='false' data-msgtext=''>" + p + "</a></li>";
+	return spl31	
+};
+function oc_addtoplaylist7(p) {	
+	var albspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var albspl2 = albspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
+	var albspl31 = albspl2 + "data-textvisible='false' data-msgtext=''>" + p + "</a></li>";
+	return albspl31		
+};
+function oc_addtoplaylist8(p) {	
+	var artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
+	var artspl31 = artspl2 + "data-textvisible='false' data-msgtext=''>" + p + "</a></li>";
+	return artspl31		
+};
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function oc_artToPlaylistBtn1(v) {
+	var pll1 = "<li class='playlistLi' data-playlistid='" + v[1] + "'><a href='#' class='plplay ui-btn ";
+	var pll2 = pll1 + "ui-mini ui-icon-bullets ui-btn-icon-right' ";
+	var pll31 = pll2 + "data-playlistid='" + v[1] + "'>" + v[0] + "</a></li>";
+	return pll31
+};
+function oc_artToPlaylistBtn2(v) {
+	var spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
+	var spl3 = spl2 + "data-playlistid='" + v[1] + "' data-textonly='false' data-textvisible='false' ";
+	var spl41 = spl3 + "data-msgtext=''>" + v[0] + "</a></li>";
+	return spl41
+};
+function oc_artToPlaylistBtn3(v) {
+	var albspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var albspl2 = albspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
+	var albspl31 = albspl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
+	return albspl31	
+};
+function oc_artToPlaylistBtn4(v) {
+	var artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
+	var artspl31 = artspl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
+	return artspl31
+};		
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function oc_addToPlaylist1(v) {
+	var pl1 = "<li class='playlistLi' data-playlistid='" + v[1] + "'><a href='#' class='plplay ui-btn ";
+	var pl2 = pl1 + "ui-mini ui-icon-bullets ui-btn-icon-right' ";
+	var pl31 = pl2 + "data-playlistid='" + v[1] + "'>" + v[0] + "</a></li>";
+	return pl31
+};
+function oc_addToPlaylist2(v) {
+	var spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
+	var spl31 = spl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
+	return spl31
+};
+function oc_addToPlaylist3(v) {
+	var albspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var albspl2 = albspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
+	var albspl31 = albspl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
+	return albspl31
+};
+function oc_addToPlaylist4(v) {
+	var artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
+	var artspl31 = artspl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
+	return artspl31
+};
+function oc_addToPlaylist5(f) {
+	var p1 = "<li class='playlistLi'><a href='#' class='plplay ui-btn ui-mini ui-icon-bullets ";
+	var p22 = p1 + "ui-btn-icon-right'>" + f + "</a></li>";
+	return p22
+};
+function oc_addToPlaylist6(f) {
+	var spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
+	var spl32 = spl2 + "data-textvisible='false' data-msgtext=''>" + f + "</a></li>";
+	return spl32
+};
+function oc_addToPlaylist7(f) {
+	var albspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var albspl2 = albspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
+	var albspl33 = albspl2 + "data-textvisible='false' data-msgtext=''>" + f + "</a></li>";
+	return albspl33
+};
+function oc_addToPlaylist8(f) {
+	var artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
+	var artspl33 = artspl2 + "data-textvisible='false' data-msgtext=''>" + f + "</a></li>";
+	return artspl33	
+};
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function oc_searchBut(v) {
+	var s1 = "<li class='songs_li'><a class='songnameS' href='#' data-songid='" + v.songid + "' ";
+	var s2 = s1 + "data-song='" + v.song + "'><h2>" + v.song + "</h2><h6>" + v.artist + "</h6></a>"
+	var s3 = s2 + "<a href='#selectplpage' data-pageid='songs' data-songid='" + v.songid + "' ";
+	var s41 = s3 + "data-song='" + v.song + "' class='addtoplaylist' data-transition='slidefade'></a></li>";
+	return s41		
+};
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function oc_albsearchBut1(f) {
+	var alb1 = "<div class='albumDIV'><ul class='albumUL' data-role='listview' data-inset='true'>";
+	var alb2 = alb1 + "<li class='albumLI'><a href='#' class='albumA1' data-artist='" + f.artist + "' ";
+	var alb3 = alb2 + "data-artistid='" + f.artistid + "' data-album='" + f.album + "' ";
+	var alb4 = alb3 + "data-albumid='" + f.albumid + "'><img id='" + f.albumid + "' src='" + f.thumbnail + "'>";
+	var alb5 = alb4 + "<h3 id='albH3'>" + f.album + "</h3><p>" + f.artist + "</p>";
+	var alb6 = alb5 + "<span class='ui-li-count'>" + f.numsongs + "</span></a></li></ul></div>";
+	var alb7 = alb6 + "<div class='albsongList'><ul id='albsongUL" + f.albumid + "' class='albsongUL' ";
+	var alb81 = alb7 + "data-role='listview' data-inset='true' data-split-icon='gear'>";
+	return alb81
+};
+function oc_albsearchBut2(f) {
+	var albab1 = "<li class='albsongsLI'><a href='#' class='albsongsA' data-song='" + v[0] + "' ";
+	var albab2 = albab1 + "data-songid='" + v[1] + "'>" + v[0] + "</a><a href='#albumselectplpage' ";
+	var albab3 = albab2 + "class='addToPlaylist' data-pageid='albums' data-song='" + v[0] + "' ";
+	var albab44 = albab3 + "data-songid='" + v[1] + "' data-transition='slidefade'></a></li>";
+	return albab44
+};
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function oc_artsearchBut1(m) {
+	var a1 = "<div><img class='artistimgS' src='" + m + "'></img></div>";
+	var a2 = a1 + "<div class='art1divS'><ul class='artistSongULS' data-role='listview' ";
+	var a37 = a2 + "data-inset='true' data-split-icon='gear'>";
+	return a37
+};
+function oc_artsearchBut2(n) {
+	var art31 = "<li class='artSongLIS'><a href='#' class='artsongA1' ";
+	var art32 = art31 + "data-songid='" + n[1] + "'>" + n[0] + "</a>";
+	var art33 = art32 + "<a href='#artistselectplpage' class='artToPlaylistBtn' ";
+	var art342 = art33 + "data-songid='" + n[1] + "' data-transition='slidefade'></a></li>";
+	return art342
+};
+function oc_artsearchBut3(n) {
+	var artA1 = "<div class='artistPageDivSearch' data-role='collapsible'><h4>" + n.artist + "</h4>";
+	var artA2 = artA1 + "<div><form id='" + n.artistid + "' class='artistForm'><div ";
+	var artA3 = artA2 + "class='ui-field-contain'><select ";
+	var artA46 = artA3 + "name='" + n.artist + "' id='" + n.artistid + "' class='artistselect'>";
+	return artA46
+};
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function oc_homeBTN_fraz1(b) {
+	var b1 = "<div class='ui-block-a' data-theme='a'><a href='#popup1' data-rel='popup' data-transition='pop'>";
+	var b2 = b1 + "<img src='" + b.rsamp[0].thumbnail + "' class='PicGrid'></img></a></div>";
+	var b3 = b2 + "<div class='ui-block-b' data-theme='a'><a href='#popup2' data-rel='popup' data-transition='pop'>";
+	var b4 = b3 + "<img src='" + b.rsamp[1].thumbnail + "' class='PicGrid'></img></a></div>";
+	var b5 = b4 + "<div class='ui-block-c' data-theme='a'><a href='#popup3' data-rel='popup' data-transition='pop'>";
+	var b6 = b5 + "<img src='" + b.rsamp[2].thumbnail + "' class='PicGrid'></img></a></div>";
+	var b7 = b6 + "<div class='ui-block-d' data-theme='a'><a href='#popup4' data-rel='popup' data-transition='pop'>";
+	var b8 = b7 + "<img src='" + b.rsamp[3].thumbnail + "' class='PicGrid'></img></a></div>";
+	var b9 = b8 + "<div class='ui-block-e' data-theme='a'><a href='#popup5' data-rel='popup' data-transition='pop'>";
+	var result12 = b9 + "<img src='" + b.rsamp[4].thumbnail + "' class='PicGrid'></img></a></div>";
+	return result12
+};
+function oc_homeBTN_fraz2(b) {
+	var pu11 = "<ul id='pop1' data-role='listview' class='ui-content' data-insert='true'>"
+	var pu12 = '';
+	$.each(b.rsamp[0].songs, function (key, val) {
+		var s11 = "<li><a href='#' class='rart1' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
+		pu12 = pu12 + s11;
+		return pu12
+	})
+	var pu111 = pu11 + pu12 + "</ul>";
+	$('#popup1').append(pu111);
+	$('#pop1').listview().trigger('refresh');
+	$('#popup1').popup().trigger('create');
+};
+function oc_homeBTN_fraz3(b) {
+	var pu21 = "<ul id='pop2' data-role='listview' class='ui-content' data-insert='true'>";
+	var pu22 = '';
+	$.each(b.rsamp[1].songs, function (key, val) {
+		var s22 = "<li><a href='#' class='rart2' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
+		pu22 = pu22 + s22;
+		return pu22
+	})
+	var pu211 = pu21 + pu22 + "</ul>";
+	$('#popup2').append(pu211);
+	$('#pop2').listview().trigger('refresh');
+	$('#popup2').popup().trigger('create');
+};
+function oc_homeBTN_fraz4(b) {
+	var pu31 = "<ul id='pop3' data-role='listview' class='ui-content' data-insert='true'>";
+	var pu32 = '';
+	$.each(b.rsamp[2].songs, function (key, val) {	
+		var s31 = "<li><a href='#' class='rart3' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
+		pu32 = pu32 + s31;
+		return pu32
+	})
+	var pu311 = pu31 + pu32 + "</ul>";
+	$('#popup3').append(pu311);
+	$('#pop3').listview().trigger('refresh');
+	$('#popup3').popup().trigger('create');
+};
+function oc_homeBTN_fraz5(b) {
+	var pu41 = "<ul id='pop4' data-role='listview' class='ui-content' data-insert='true'>";
+	var pu42 = '';
+	$.each(b.rsamp[3].songs, function (key, val) {	
+		var s41 = "<li><a href='#' class='rart4' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
+		pu42 = pu42 + s41
+	})
+	var pu411 = pu41 + pu42 + "</ul>";
+	$('#popup4').append(pu411);
+	$('#pop4').listview().trigger('refresh');
+	$('#popup4').popup().trigger('create');
+};
+function oc_homeBTN_fraz6(b) {
+	var pu51 = "<ul id='pop5' data-role='listview' class='ui-content' data-insert='true'>";	
+	var pu52 = '';
+	$.each(b.rsamp[4].songs, function (key, val) {
+		var s51 = "<li><a href='#' class='rart5' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
+		pu52 = pu52 + s51
+	})
+	var pu511 = pu51 + pu52 + "</ul>";
+	$('#popup5').append(pu511);
+	$('#pop5').listview().trigger('refresh');
+	$('#popup5').popup().trigger('create');
+};
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function singPlayer1(d) {
+	$('#introimg').attr('src', d.soho[1]);
+	$('#playlistalbart').attr('src', d.soho[1]);
+	$('#pictext').text(d.soho[2]);
+	$('#pictext2').text(d.soho[3]);
+	audio2 = $('#audio2');
+	audio2.attr('src', d.soho[0]);
+	audio2.on('loadedmetadata', function () {
+		var dur = audio2[0].duration;
+		var cd = calcDuration(dur);
+		$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
+	});
+};
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function oc_butsub1(v) {
+	var npl1 = "<li class='playlistLi' data-playlistid='" + v.playlistid + "'><a href='#' ";
+	var npl2 = npl1 + "class='plplay ui-btn ui-mini ui-icon-bullets ui-btn-icon-right' ";
+	var npl31 = npl2 + "data-playlistid='" + v.playlistid + "'>" + v.playlistname + "</a></li>"
+	return npl31
+};
+function oc_butsub2(v) {
+	var npl21 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var npl22 = npl21 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
+	var npl23 = npl22 + "data-playlistid='" + v.playlistid + "' data-textonly='false' ";
+	var npl242 = npl23 + "data-textvisible='false' data-msgtext=''>" + v.playlistname + "</a></li>";
+	return npl242
+};
+function oc_butsub3(v) {
+	var npl31 = "<li><a href='#artists' class='artSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var npl32 = npl31 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
+	var npl33 = npl32 + "data-playlistid='" + v.playlistid + "' data-textonly='false' data-textvisible='false' ";
+	var npl344 = npl33 + "data-msgtext=''>" + v.playlistname + "</a></li>";
+	return npl344
+};
+function oc_butsub4(v) {
+	var npl41 = "<li><a href='#albumssongs' class='albSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var npl42 = npl41 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v.playlistid + "' ";
+	var npl437 = npl42 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v.playlistname + "</a></li>";
+	return npl437
+};
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function oc_randomInput1(v) {
+	var p1 = "<li class='playlistLi' data-playlistid='" + v.playlistid + "'><a href='#' class='plplay ui-btn ";
+	var p2 = p1 + "ui-mini ui-icon-bullets ui-btn-icon-right' ";
+	var p36 = p2 + "data-playlistid='" + v.playlistid + "'>" + v.playlistname + "</a></li>";
+	return p36
+};
+function oc_randomInput2(v) {
+	var spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ui-icon-bullets ";
+	var spl2 = spl1 + "ui-btn-icon-right ui-corner-all' data-playlistid='" + v.playlistid + "' ";
+	var spl35 = spl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v.playlistname + "</a></li>";
+	return spl35
+};
+function oc_randomInput3(v) {
+	var alpl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var alpl2 = alpl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
+	var alpl3 = alpl2 + "data-playlistid='" + v.playlistid + "' data-textonly='false' data-textvisible='false' ";
+	var alpl43 = alpl3 + "data-msgtext=''>" + v.playlistname + "</a></li>";
+	return alpl43
+};	
+function oc_randomInput4(v) {	
+	var arpl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var arpl2 = arpl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
+	var arpl3 = arpl2 + "data-playlistid='" + v.playlistid + "' data-textonly='false' data-textvisible='false' ";
+	var arpl49 = arpl3 + "data-msgtext=''>" + v.playlistname + "</a></li>";
+	return arpl49
+};
+
 //This makes Artist soup
 $(document).on('click', '.artOF', function () {
 	artass = $(this).text();
@@ -148,28 +545,6 @@ $(document).on('click', '.artOF', function () {
 	bebe = "#albsongUL" + $(this).attr('data-albumid');
 	$(bebe).fadeToggle('fast');
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .on('click', '.albumOF', function () {
 	albass = $(this).text();
 	albjpath = "/static/json/offset/albumOffset" + albass + ".json";
@@ -177,21 +552,11 @@ $(document).on('click', '.artOF', function () {
 	$('#alblist').empty();
 	$.getJSON(albjpath, function(data){
 		$.each(data, function ( key, val) {
-			var alb1 = "<div class='albumDIV'><ul class='albumUL' data-role='listview' data-inset='true'>";
-			var alb2 = alb1 + "<li class='albumLI'><a href='#' class='albumA1' data-artist='" + val.artist + "' ";
-			var alb3 = alb2 + "data-artistid='" + val.artistid + "' data-album='" + val.album + "' ";
-			var alb4 = alb3 + "data-albumid='" + val.albumid + "'><img id='" + val.albumid + "' ";
-			var alb5 = alb4 + "src='" + val.thumbnail + "'><h3 id='albH3'>" + val.album + "</h3>";
-			var alb6 = alb5 + "<p>" + val.artist + "</p><span class='ui-li-count'>" + val.numsongs + "</span>";
-			var alb7 = alb6 + "</a></li></ul></div><div class='albsongList'><ul id='albsongUL" + val.albumid + "' ";
-			var alb8 = alb7 + "class='albsongUL' data-role='listview' data-inset='true' data-split-icon='gear'>";
+			var alb8 = oc_albumOF1(val);
 			var alba33 = '';
 			$.each(val.songs, function (ka, val) {
-				$.each(val, function (k, v) {
-					var albab = "<li class='albsongsLI'><a href='#' class='albsongsA' data-song='" + v[0] + "' ";
-					var albab1 = albab + "data-songid='" + v[1] + "'>" + v[0] + "</a><a href='#albumselectplpage' ";
-					var albab2 = albab1 + "class='addToPlaylist' data-pageid='albums' data-song='" + v[0] + "' ";
-					var albab3 = albab2 + "data-songid='" + v[1] + "' data-transition='slidefade'></a></li>";
+				$.each(val, function (k, v) {					
+					var albab3 = oc_albumOF2(v);
 					alba33 = alba33 + albab3;
 					return alba33
 				});
@@ -294,38 +659,21 @@ $(document).on('click', '.artOF', function () {
 		if ( data.plnames != 'Please create a playlist' ) {
 			localStorage.setItem('playlists', JSON.stringify(data));
 			$.each(data.plnames, function (k, va) {
-				var pll1 = "<li class='playlistLi' data-playlistid='" + va[1] + "'><a href='#' class='plplay ui-btn ";
-				var pll2 = pll1 + "ui-mini ui-icon-bullets ui-btn-icon-right' ";
-				var pll3 = pll2 + "data-playlistid='" + va[1] + "'>" + va[0] + "</a></li>";
-				var spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-				var spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + va[1] + "' ";
-				var spl3 = spl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + va[0] + "</a></li>";
-				var ablspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-				var ablspl2 = ablspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
-				var ablspl3 = ablspl2 + "data-playlistid='" + va[1] + "' data-textonly='false' data-textvisible='false' ";
-				var ablspl4 = ablspl3 + "data-msgtext=''>" + va[0] + "</a></li>";
-				var artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-				var artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
-				var artspl3 = artspl2 + "data-playlistid='" + va[1] + "' data-textonly='false' data-textvisible='false' ";
-				var artspl4 = artspl3 + "data-msgtext=''>" + va[0] + "</a></li>";
+				var pll3 = oc_addtoplaylist1(va);
+				var spl3 = oc_addtoplaylist2(va);
+				var ablspl4 = oc_addtoplaylist3(va);
+				var artspl4 = oc_addtoplaylist4(va);
 				$('#playPlaylistUL').append(pll3);
 				$('#splUL').append(spl3);
 				$('#albsplUL').append(ablspl4);
 				$('#artsplUL').append(artspl4);
 			});
 		} else {
-			pln = 'Please create a playlist'
-			var pll1 = "<li class='playlistLi'><a href='#' class='plplay ui-btn ui-mini ui-icon-bullets ";
-			var pll2 = pll1 + "ui-btn-icon-right'>" + pln + "</a></li>";
-			var spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-			var spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
-			var spl3 = spl2 + "data-textvisible='false' data-msgtext=''>" + pln + "</a></li>";
-			var albspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-			var albspl2 = albspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
-			var albspl3 = albspl2 + "data-textvisible='false' data-msgtext=''>" + pln + "</a></li>";
-			var artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-			var artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
-			var artspl3 = artspl2 + "data-textvisible='false' data-msgtext=''>" + pln + "</a></li>";
+			var pln = 'Please create a playlist';
+			var pll2 = oc_addtoplaylist5(pln);
+			var spl3 = oc_addtoplaylist6(pln);
+			var albspl3 = oc_addtoplaylist7(pln);
+			var artspl3 = oc_addtoplaylist8(pln);
 			$('#playPlaylistUL').append(pll2);
 			$('#splUL').append(spl3);
 			$('#albsplUL').append(albspl3);
@@ -346,19 +694,10 @@ $(document).on('click', '.artOF', function () {
 	},
 	function(data) {
 		$.each(data.plnames, function (k, v) {
-			var pll1 = "<li class='playlistLi' data-playlistid='" + v[1] + "'><a href='#' class='plplay ui-btn ";
-			var pll2 = pll1 + "ui-mini ui-icon-bullets ui-btn-icon-right' ";
-			var pll3 = pll2 + "data-playlistid='" + v[1] + "'>" + v[0] + "</a></li>";
-			var spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-			var spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
-			var spl3 = spl2 + "data-playlistid='" + v[1] + "' data-textonly='false' data-textvisible='false' ";
-			var spl4 = spl3 + "data-msgtext=''>" + v[0] + "</a></li>";
-			var albspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-			var albspl2 = albspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
-			var albspl3 = albspl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
-			var artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-			var artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
-			var artspl3 = artspl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
+			var pll3 = oc_artToPlaylistBtn1(v);
+			var spl4 = oc_artToPlaylistBtn2(v);
+			var albspl3 = oc_artToPlaylistBtn3(v);
+			var artspl3 = oc_artToPlaylistBtn4(v);
 			$('#playPlaylistUL').append(pll3);
 			$('#splUL').append(spl4);
 			$('#albsplUL').append(albspl3);
@@ -382,36 +721,21 @@ $(document).on('click', '.artOF', function () {
 		$('#playPlaylistUL, #splUL, #albsplUL, #artsplUL').empty();
 		if ( data.plnames != 'Please create a playlist' ) {
 			$.each(data.plnames, function (k, v) {
-				var pl1 = "<li class='playlistLi' data-playlistid='" + v[1] + "'><a href='#' class='plplay ui-btn ";
-				var pl2 = pl1 + "ui-mini ui-icon-bullets ui-btn-icon-right' ";
-				var pl3 = pl2 + "data-playlistid='" + v[1] + "'>" + v[0] + "</a></li>";
-				var spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-				var spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
-				var spl3 = spl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
-				var albspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-				var albspl2 = albspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
-				var albspl3 = albspl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
-				var artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-				var artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
-				var artspl3 = artspl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
+				var pl3 = oc_addToPlaylist1(v);
+				var spl3 = oc_addToPlaylist2(v);
+				var albspl3 = oc_addToPlaylist3(v);
+				var artspl3 = oc_addToPlaylist4(v);
 				$('#playPlaylistUL').append(pl3);
 				$('#splUL').append(spl3);
 				$('#albsplUL').append(albspl3);
 				$('#artsplUL').append(artspl3);
 			});
 		} else {
-			var plnln = 'Please create a playlist'
-			var p1 = "<li class='playlistLi'><a href='#' class='plplay ui-btn ui-mini ui-icon-bullets ";
-			var p2 = p1 + "ui-btn-icon-right'>" + plnln + "</a></li>";
-			var spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-			var spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
-			var spl3 = spl2 + "data-textvisible='false' data-msgtext=''>" + plnln + "</a></li>";
-			var albspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-			var albspl2 = albspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
-			var albspl3 = albspl2 + "data-textvisible='false' data-msgtext=''>" + plnln + "</a></li>";
-			var artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-			var artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
-			var artspl3 = artspl2 + "data-textvisible='false' data-msgtext=''>" + plnln + "</a></li>";
+			var plnln = 'Please create a playlist';
+			var p2 = oc_addToPlaylist5(plnln);
+			var spl3 = oc_addToPlaylist6(plnln);
+			var albspl3 = oc_addToPlaylist7(v);
+			var artspl3 = oc_addToPlaylist8(v);
 			$('#playPlaylistUL').append(p2);
 			$('#splUL').append(spl3);
 			$('#albsplUL').append(albspl3);
@@ -479,10 +803,7 @@ $(document).on('click', '.artOF', function () {
 	function(data) {
 		$('#songs_view, #songs_view2').empty();
 		$.each(data.xsearch, function ( k, v) {
-			var s1 = "<li class='songs_li'><a class='songnameS' href='#' data-songid='" + v.songid + "' ";
-			var s2 = s1 + "data-song='" + v.song + "'><h2>" + v.song + "</h2><h6>" + v.artist + "</h6></a>"
-			var s3 = s2 + "<a href='#selectplpage' data-pageid='songs' data-songid='" + v.songid + "' ";
-			var s4 = s3 + "data-song='" + v.song + "' class='addtoplaylist' data-transition='slidefade'></a></li>";
+			var s4 = oc_searchBut(v);
 			$("#songs_view2").append(s4);
 		});
 		$('#songs_view2').listview('refresh');
@@ -532,20 +853,10 @@ $(document).on('click', '.artOF', function () {
 	function(data) {
 		$('#albListViewDIV2').empty();
 		$.each(data.ysearch, function ( ke, va) {
-			var alb1 = "<div class='albumDIV'><ul class='albumUL' data-role='listview' data-inset='true'>";
-			var alb2 = alb1 + "<li class='albumLI'><a href='#' class='albumA1' data-artist='" + va.artist + "' ";
-			var alb3 = alb2 + "data-artistid='" + va.artistid + "' data-album='" + va.album + "' ";
-			var alb4 = alb3 + "data-albumid='" + va.albumid + "'><img id='" + va.albumid + "' src='" + va.thumbnail + "'>";
-			var alb5 = alb4 + "<h3 id='albH3'>" + va.album + "</h3><p>" + va.artist + "</p>";
-			var alb6 = alb5 + "<span class='ui-li-count'>" + va.numsongs + "</span></a></li></ul></div>";
-			var alb7 = alb6 + "<div class='albsongList'><ul id='albsongUL" + va.albumid + "' class='albsongUL' ";
-			var alb8 = alb7 + "data-role='listview' data-inset='true' data-split-icon='gear'>";
+			var alb8 = oc_albsearchBut(va);
 			var alba33 = '';
 			$.each(va.songs, function (k, v) {
-				var albab1 = "<li class='albsongsLI'><a href='#' class='albsongsA' data-song='" + v[0] + "' ";
-				var albab2 = albab1 + "data-songid='" + v[1] + "'>" + v[0] + "</a><a href='#albumselectplpage' ";
-				var albab3 = albab2 + "class='addToPlaylist' data-pageid='albums' data-song='" + v[0] + "' ";
-				var albab4 = albab3 + "data-songid='" + v[1] + "' data-transition='slidefade'></a></li>";
+				var albab4 = oc_albsearchBut2(f)
 				alba33 = alba33 + albab4;
 				return alba33
 			});
@@ -585,15 +896,10 @@ $(document).on('click', '.artOF', function () {
 							'selected' : selected		
 						},
 						function (data) {
-							var a1 = "<div><img class='artistimgS' src='" + data.getimgsonalb.thumbnail + "'></img></div>";
-							var a2 = a1 + "<div class='art1divS'><ul class='artistSongULS' data-role='listview' ";
-							var a3 = a2 + "data-inset='true' data-split-icon='gear'>";
+							var a3 = oc_artsearchBut1(data.getimgsonalb.thumbnail);							
 							liString = '';
 							$.each(data.getimgsonalb.songs, function (kk, vv) {
-								var art31 = "<li class='artSongLIS'><a href='#' class='artsongA1' ";
-								var art32 = art31 + "data-songid='" + vv[1] + "'>" + vv[0] + "</a>";
-								var art33 = art32 + "<a href='#artistselectplpage' class='artToPlaylistBtn' ";
-								var art34 = art33 + "data-songid='" + vv[1] + "' data-transition='slidefade'></a></li>";
+								var art34 = oc_artsearchBut2(vv);
 								liString = liString + art34;
 								return liString;
 							})
@@ -601,11 +907,8 @@ $(document).on('click', '.artOF', function () {
 							$('#artSearchDIV').append(result2);
 							$('.artistPageDivS').collapsible().trigger('create');	
 					});
-				} else {				
-					var artA1 = "<div class='artistPageDivSearch' data-role='collapsible'><h4>" + va.artist + "</h4>";
-					var artA2 = artA1 + "<div><form id='" + va.artistid + "' class='artistForm'><div ";
-					var artA3 = artA2 + "class='ui-field-contain'><select ";
-					var artA4 = artA3 + "name='" + va.artist + "' id='" + va.artistid + "' class='artistselect'>";
+				} else {
+					var artA4 = oc_artsearchBut3(va);
 					var a2 = ''
 					var aa1 = "<option class='artop0' value='Choose Album'>Choose Album</option>";
 					$.each(va.albums, function (k, v) {
@@ -658,71 +961,14 @@ $(document).on('click', '.artOF', function () {
 	rpwStop();
 	$('#popup1, #popup2, #popup3, #popup4, #popup5, #intropicGrid1').empty();
 	var boohoo = JSON.parse(localStorage.getItem('nextimgset'));
-	var b1 = "<div class='ui-block-a' data-theme='a'><a href='#popup1' data-rel='popup' data-transition='pop'>";
-	var b2 = b1 + "<img src='" + boohoo.rsamp[0].thumbnail + "' class='PicGrid'></img></a></div>";
-	var b3 = b2 + "<div class='ui-block-b' data-theme='a'><a href='#popup2' data-rel='popup' data-transition='pop'>";
-	var b4 = b3 + "<img src='" + boohoo.rsamp[1].thumbnail + "' class='PicGrid'></img></a></div>";
-	var b5 = b4 + "<div class='ui-block-c' data-theme='a'><a href='#popup3' data-rel='popup' data-transition='pop'>";
-	var b6 = b5 + "<img src='" + boohoo.rsamp[2].thumbnail + "' class='PicGrid'></img></a></div>";
-	var b7 = b6 + "<div class='ui-block-d' data-theme='a'><a href='#popup4' data-rel='popup' data-transition='pop'>";
-	var b8 = b7 + "<img src='" + boohoo.rsamp[3].thumbnail + "' class='PicGrid'></img></a></div>";
-	var b9 = b8 + "<div class='ui-block-e' data-theme='a'><a href='#popup5' data-rel='popup' data-transition='pop'>";
-	var result = b9 + "<img src='" + boohoo.rsamp[4].thumbnail + "' class='PicGrid'></img></a></div>";
+	var result = oc_homeBTN_fraz1(boohoo);
 	$('#intropicGrid1').append(result);
-	var pu11 = "<ul id='pop1' data-role='listview' class='ui-content' data-insert='true'>"
-	var pu12 = '';
-	$.each(boohoo.rsamp[0].songs, function (key, val) {
-		var s11 = "<li><a href='#' class='rart1' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
-		pu12 = pu12 + s11;
-		return pu12
-	})
-	var pu111 = pu11 + pu12 + "</ul>";
-	$('#popup1').append(pu111);
-	$('#pop1').listview().trigger('refresh');
-	$('#popup1').popup().trigger('create');
-	var pu21 = "<ul id='pop2' data-role='listview' class='ui-content' data-insert='true'>";
-	var pu22 = '';
-	$.each(boohoo.rsamp[1].songs, function (key, val) {
-		var s22 = "<li><a href='#' class='rart2' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
-		pu22 = pu22 + s22;
-		return pu22
-	})
-	var pu211 = pu21 + pu22 + "</ul>";
-	$('#popup2').append(pu211);
-	$('#pop2').listview().trigger('refresh');
-	$('#popup2').popup().trigger('create');
-	var pu31 = "<ul id='pop3' data-role='listview' class='ui-content' data-insert='true'>";
-	var pu32 = '';
-	$.each(boohoo.rsamp[2].songs, function (key, val) {	
-		var s31 = "<li><a href='#' class='rart3' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
-		pu32 = pu32 + s31;
-		return pu32
-	})
-	var pu311 = pu31 + pu32 + "</ul>";
-	$('#popup3').append(pu311);
-	$('#pop3').listview().trigger('refresh');
-	$('#popup3').popup().trigger('create');
-	var pu41 = "<ul id='pop4' data-role='listview' class='ui-content' data-insert='true'>";
-	var pu42 = '';
-	$.each(boohoo.rsamp[3].songs, function (key, val) {	
-		var s41 = "<li><a href='#' class='rart4' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
-		pu42 = pu42 + s41
-	})
-	var pu411 = pu41 + pu42 + "</ul>";
-	$('#popup4').append(pu411);
-	$('#pop4').listview().trigger('refresh');
-	$('#popup4').popup().trigger('create');
-	var pu51 = "<ul id='pop5' data-role='listview' class='ui-content' data-insert='true'>";	
-	var pu52 = '';
-	$.each(boohoo.rsamp[4].songs, function (key, val) {
-		var s51 = "<li><a href='#' class='rart5' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
-		pu52 = pu52 + s51
-	})
-	var pu511 = pu51 + pu52 + "</ul>";
-	$('#popup5').append(pu511);
-	$('#pop5').listview().trigger('refresh');
-	$('#popup5').popup().trigger('create');
-	RandomPicsWebSocket();
+	oc_homeBTN_fraz2(boohoo);
+	oc_homeBTN_fraz3(boohoo);
+	oc_homeBTN_fraz4(boohoo);
+	oc_homeBTN_fraz5(boohoo);
+	oc_homeBTN_fraz6(boohoo);
+	RandomPics();
 	rpwStart();		
 })
 .on('click', '.rart1', function () {
@@ -733,17 +979,7 @@ $(document).on('click', '.artOF', function () {
 		'sid' : sid
 	},
 	function (data) {
-		$('#introimg').attr('src', data.soho[1]);
-		$('#playlistalbart').attr('src', data.soho[1]);
-		$('#pictext').text(data.soho[2]);
-		$('#pictext2').text(data.soho[3]);
-		audio2 = $('#audio2');
-		audio2.attr('src', data.soho[0]);
-		audio2.on('loadedmetadata', function () {
-			var dur = audio2[0].duration;
-			var cd = calcDuration(dur);
-			$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
-		});
+		singPlayer1(data);
 	});
 	rpwStart();
 })
@@ -755,17 +991,7 @@ $(document).on('click', '.artOF', function () {
 		'sid' : sid
 	},
 	function (data) {
-		$('#introimg').attr('src', data.soho[1]);
-		$('#playlistalbart').attr('src', data.soho[1]);
-		$('#pictext').text(data.soho[2]);
-		$('#pictext2').text(data.soho[3]);
-		audio2 = $('#audio2');
-		audio2.attr('src', data.soho[0]);
-		audio2.on('loadedmetadata', function () {
-			var dur = audio2[0].duration;
-			var cd = calcDuration(dur);
-			$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
-		});
+		singPlayer1(data);
 	});
 	rpwStart();
 })
@@ -777,17 +1003,7 @@ $(document).on('click', '.artOF', function () {
 		'sid' : sid
 	},
 	function (data) {
-		$('#introimg').attr('src', data.soho[1]);
-		$('#playlistalbart').attr('src', data.soho[1]);
-		$('#pictext').text(data.soho[2]);
-		$('#pictext2').text(data.soho[3]);
-		audio2 = $('#audio2');
-		audio2.attr('src', data.soho[0]);
-		audio2.on('loadedmetadata', function () {
-			var dur = audio2[0].duration;
-			var cd = calcDuration(dur);
-			$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');	
-		});
+		singPlayer1(data);
 	});
 	rpwStart();
 })
@@ -799,17 +1015,7 @@ $(document).on('click', '.artOF', function () {
 		'sid' : sid
 	},
 	function (data) {
-		$('#introimg').attr('src', data.soho[1]);
-		$('#playlistalbart').attr('src', data.soho[1]);
-		$('#pictext').text(data.soho[2]);
-		$('#pictext2').text(data.soho[3]);
-		audio2 = $('#audio2');
-		audio2.attr('src', data.soho[0]);
-		audio2.on('loadedmetadata', function () {
-			var dur = audio2[0].duration;
-			var cd = calcDuration(dur);
-			$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
-		});
+		singPlayer1(data);
 	});
 	rpwStart();
 })
@@ -821,23 +1027,12 @@ $(document).on('click', '.artOF', function () {
 		'sid' : sid
 	},
 	function (data) {
-		$('#introimg').attr('src', data.soho[1]);
-		$('#playlistalbart').attr('src', data.soho[1]);
-		$('#pictext').text(data.soho[2]);
-		$('#pictext2').text(data.soho[3]);
-		audio2 = $('#audio2');
-		audio2.attr('src', data.soho[0]);
-		audio2.on('loadedmetadata', function () {
-			var dur = audio2[0].duration;
-			var cd = calcDuration(dur);
-			$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');	
-		});
+		singPlayer1(data);
 	});
 	rpwStart();
 })
 .on('click', '#intropicGrid1', function () {
 	rpwStop();
-	console.log('rpw stopped');
 })
 .on("click", ".hide-page-loading-msg", function () {
 	$.mobile.loading("hide");
@@ -890,22 +1085,10 @@ $.mobile.loader.prototype.options.textVisible,
 			$.each(data.pnames, function (k, v) {
 				var pln = {'playlist': v.playlistname, 'playlistid': v.playlistid};
 				localStorage.setItem("currentSelected_PLAYLIST_PLAYLISTID", JSON.stringify(pln));
-				//This updates the playlist page playlist listview
-				var npl1 = "<li class='playlistLi' data-playlistid='" + v.playlistid + "'><a href='#' ";
-				var npl2 = npl1 + "class='plplay ui-btn ui-mini ui-icon-bullets ui-btn-icon-right' ";
-				var npl3 = npl2 + "data-playlistid='" + v.playlistid + "'>" + v.playlistname + "</a></li>"
-				//This updates the selectPlaylist page playlist listview
-				var npl21 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-				var npl22 = npl21 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
-				var npl23 = npl22 + "data-playlistid='" + v.playlistid + "' data-textonly='false' ";
-				var npl24 = npl23 + "data-textvisible='false' data-msgtext=''>" + v.playlistname + "</a></li>";
-				var npl31 = "<li><a href='#artists' class='artSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-				var npl32 = npl31 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
-				var npl33 = npl32 + "data-playlistid='" + v.playlistid + "' data-textonly='false' data-textvisible='false' ";
-				var npl34 = npl33 + "data-msgtext=''>" + v.playlistname + "</a></li>";
-				var npl41 = "<li><a href='#albumssongs' class='albSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-				var npl42 = npl41 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v.playlistid + "' ";
-				var npl43 = npl42 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v.playlistname + "</a></li>";
+				var npl3 = oc_butsub1(v);
+				var npl24 = oc_butsub2(v);
+				var npl34 = oc_butsub3(v);
+				var npl43 = oc_butsub4(v);
 				$('#playPlaylistUL').append(npl3);
 				$('#splUL').append(npl24);
 				$('#artsplUL').append(npl34);
@@ -1056,20 +1239,10 @@ $.mobile.loader.prototype.options.textVisible,
 		},
 		function (data) {
 			$.each(data.plists, function (k, v) {
-				var p1 = "<li class='playlistLi' data-playlistid='" + v.playlistid + "'><a href='#' class='plplay ui-btn ";
-				var p2 = p1 + "ui-mini ui-icon-bullets ui-btn-icon-right' ";
-				var p3 = p2 + "data-playlistid='" + v.playlistid + "'>" + v.playlistname + "</a></li>";
-				var spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ui-icon-bullets ";
-				var spl2 = spl1 + "ui-btn-icon-right ui-corner-all' data-playlistid='" + v.playlistid + "' ";
-				var spl3 = spl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v.playlistname + "</a></li>";
-				var alpl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-				var alpl2 = alpl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
-				var alpl3 = alpl2 + "data-playlistid='" + v.playlistid + "' data-textonly='false' data-textvisible='false' ";
-				var alpl4 = alpl3 + "data-msgtext=''>" + v.playlistname + "</a></li>";
-				var arpl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-				var arpl2 = arpl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
-				var arpl3 = arpl2 + "data-playlistid='" + v.playlistid + "' data-textonly='false' data-textvisible='false' ";
-				var arpl4 = arpl3 + "data-msgtext=''>" + v.playlistname + "</a></li>";
+				var p3 = oc_randomInput1(v);
+				var spl3 = oc_randomInput2(v);
+				var alpl4 = oc_randomInput3(v);
+				var arpl4 = oc_randomInput4(v);
 				$('#playPlaylistUL').append(p3);
 				$('#splUL').append(spl3);
 				$('#albsplUL').append(alpl4);

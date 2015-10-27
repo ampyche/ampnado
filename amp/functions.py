@@ -644,6 +644,9 @@ class SetUp():
 		db.randthumb.remove({})
 		tlist = db.tags.distinct('albumid')
 		rlist = random.sample(tlist, len(tlist))
+		slist = random.sample(rlist, len(rlist))
+		for s in slist:
+			rlist.append(s)
 		bean = self.chunks(rlist, 5)
 		mc = []
 		for b in bean:
@@ -657,7 +660,7 @@ class SetUp():
 				print('chunk has less than 5 entries')
 			else:
 				print('something fucked up')
-		db.randthumb.insert(mc)
+		db.randthumb.insert(mc)		
 		logging.info('_create_random_art_db is complete')
 
 	def _creat_db_indexes(self):

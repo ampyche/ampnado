@@ -19,7 +19,6 @@
 ###############################################################################
 ###############################################################################
 */
-
 function iArtist1P1Fun1(d0) {
 	var art1 = "<div><img class='artistimgS' src='" + d0.getimgsonalb.thumbnail + "'></img>";
 	var art2 = art1 + "</div><div class='art1divS'><ul class='artistSongULS' data-role='listview' ";
@@ -276,7 +275,6 @@ function initGetAllVideoFun1(a) {
 	var vid = v6 + "</a></li></ul></div>";
 	return vid
 };
-
 function initGetAllVideo() {
 	$.get('GetAllVideo', function (data) {
 		$.each(data.vlist, function (key, val) {
@@ -299,11 +297,6 @@ function calcDuration(d) {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-function websockAddr() {
-	$.get('websockaddr', function (data) {
-		localStorage.setItem('wsaddr', data.ha);
-	});
-};
 function blka(recm) {
 	var ba1 = "<div class='ui-block-a' data-theme='a'>";
 	var ba2 = ba1 + "<a href='#popup1' data-rel='popup' data-transition='pop'>";
@@ -392,39 +385,61 @@ function creatPop5(recm) {
 	var pu511 = pu51 + pu52 + "</ul>";
 	return pu511
 };
-function RandomPicsWebSocket() {
-	if ("WebSocket" in window) {		
-		var ws = new WebSocket("ws://" + localStorage.getItem('wsaddr'));
-		ws.onopen = function () {
-			ws.send("SENDMETHEPHOTOS");
-		};
-		ws.onmessage = function (evt) {
-			localStorage.setItem('nextimgset', (evt.data));
-			var recieved_msg = JSON.parse(evt.data);
-			var result1 = blka(recieved_msg.rsamp[0].thumbnail) + blkb(recieved_msg.rsamp[1].thumbnail);
-			var result2 = result1 + blkc(recieved_msg.rsamp[2].thumbnail) + blkd(recieved_msg.rsamp[3].thumbnail);
-			var result = result2 + blke(recieved_msg.rsamp[4].thumbnail);
-			var pu1 = creatPop1(recieved_msg.rsamp[0].songs);
-			var pu2 = creatPop2(recieved_msg.rsamp[1].songs);
-			var pu3 = creatPop3(recieved_msg.rsamp[2].songs);
-			var pu4 = creatPop4(recieved_msg.rsamp[3].songs);
-			var pu5 = creatPop5(recieved_msg.rsamp[4].songs);
-			$('#popup1, #popup2, #popup3, #popup4, #popup5, #intropicGrid1').empty();
-			$('#intropicGrid1').append(result);
-			$('#popup1').append(pu1);
-			$('#popup2').append(pu2);
-			$('#popup3').append(pu3);
-			$('#popup4').append(pu4);
-			$('#popup5').append(pu5);
-			$('#pop1, #pop2, #pop3, #pop4, #pop5').listview().trigger('refresh');
-			$('#popup1, #popup2, #popup3, #popup4, #popup5').popup().trigger('create');
-		};
-		ws.onclose = function () {
-			console.log('Connection has closed')
-		};
-	} else {
-		$('#messages').text("websocket not supported");
-	}
+
+
+
+function initRandomPics() {
+	$.get('RandomPics', function (data) {
+		var result1 = blka(data.rsamp[0].thumbnail) + blkb(data.rsamp[1].thumbnail);
+		var result2 = result1 + blkc(data.rsamp[2].thumbnail) + blkd(data.rsamp[3].thumbnail);
+		var result = result2 + blke(data.rsamp[4].thumbnail);
+		var pu1 = creatPop1(data.rsamp[0].songs);
+		var pu2 = creatPop2(data.rsamp[1].songs);
+		var pu3 = creatPop3(data.rsamp[2].songs);
+		var pu4 = creatPop4(data.rsamp[3].songs);
+		var pu5 = creatPop5(data.rsamp[4].songs);
+		$('#popup1, #popup2, #popup3, #popup4, #popup5, #intropicGrid1').empty();
+		$('#intropicGrid1').append(result);
+		$('#popup1').append(pu1);
+		$('#popup2').append(pu2);
+		$('#popup3').append(pu3);
+		$('#popup4').append(pu4);
+		$('#popup5').append(pu5);
+		$('#pop1, #pop2, #pop3, #pop4, #pop5').listview().trigger('refresh');
+		$('#popup1, #popup2, #popup3, #popup4, #popup5').popup().trigger('create');
+	});
+};
+
+function RandomPics() {
+	$.get('RandomPics', function (data) {
+		localStorage.setItem('nextimgset', JSON.stringify(data));
+	});
+};
+
+
+function randomPicProcess() {
+	
+	//localStorage.setItem('nextimgset', JSON.stringify(data));
+
+	var d = JSON.parse(localStorage.getItem('nextimgset'));
+	var result1 = blka(d.rsamp[0].thumbnail) + blkb(d.rsamp[1].thumbnail);
+	var result2 = result1 + blkc(d.rsamp[2].thumbnail) + blkd(d.rsamp[3].thumbnail);
+	var result = result2 + blke(d.rsamp[4].thumbnail);
+	var pu1 = creatPop1(d.rsamp[0].songs);
+	var pu2 = creatPop2(d.rsamp[1].songs);
+	var pu3 = creatPop3(d.rsamp[2].songs);
+	var pu4 = creatPop4(d.rsamp[3].songs);
+	var pu5 = creatPop5(d.rsamp[4].songs);
+	$('#popup1, #popup2, #popup3, #popup4, #popup5, #intropicGrid1').empty();
+	$('#intropicGrid1').append(result);
+	$('#popup1').append(pu1);
+	$('#popup2').append(pu2);
+	$('#popup3').append(pu3);
+	$('#popup4').append(pu4);
+	$('#popup5').append(pu5);
+	$('#pop1, #pop2, #pop3, #pop4, #pop5').listview().trigger('refresh');
+	$('#popup1, #popup2, #popup3, #popup4, #popup5').popup().trigger('create');
+	
 };
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////// PLAYLIST PAGE STUFF //////////////////////////////
@@ -453,12 +468,9 @@ function checkNums(numString) {
 //////////////////////////// END PLAYLIST PAGE STUFF //////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-
-
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////// SETTINGS PAGE STUFF //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-
 function loadStats() {
 	$('#statsTab').empty();
 	$.get('GetStats', function ( data ) {
@@ -473,25 +485,24 @@ function loadStats() {
 		$('#statsTab').append(stats);
 	});
 };
-
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////// END SETTINGS PAGE STUFF //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-
 var rpw;
 function rpwStart() {
-	rpw = setInterval(function () {RandomPicsWebSocket()}, 90000);
+	rpw = setInterval(function () {RandomPics()}, 80000);
+	rpw1 = setInterval(function () {randomPicProcess()}, 90000);
 };
 function rpwStop() {
 	clearInterval(rpw);
+	clearInterval(rpw1);
 };
-
 var initAmpyche = function () {
+	initRandomPics();
 	$('#audio2').show();
 	//This hides the search boxes
 	$('#controlGrid, #albSSD1, #albSSD2, #albListViewDIV2, #artForm, #SSD1, #SSD2, #songListViewDIV2').hide();
-	websockAddr();
-	RandomPicsWebSocket();
+	RandomPics();
 	rpwStart();
 	intitArtist1P1();
 	initAlbum1P1();
