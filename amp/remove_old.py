@@ -22,12 +22,12 @@ import os, shutil, logging
 from pprint import pprint
 
 class RemoveOld():
-	def _remove_json(self, apath):
-		try: shutil.rmtree(apath['jsonPath'], ignore_errors=True)
-		except OSError:
-			os.mkdir(apath['jsonPath'])
-			os.mkdir(apath['jsonoffsetPath'])
-		logging.info('remove json complete')
+#	def _remove_json(self, apath):
+#		try: shutil.rmtree(apath['jsonPath'], ignore_errors=True)
+#		except OSError:
+#			os.mkdir(apath['jsonPath'])
+#			os.mkdir(apath['jsonoffsetPath'])
+#		logging.info('remove json complete')
 
 	def _remove_symlinks(self, apath):
 		try: shutil.rmtree(apath['musiccatPath'], ignore_errors=True)
@@ -45,8 +45,8 @@ class RemoveOld():
 		logging.info('Temp dir has been removed')
 
 	def _make_needed_dirs(self, apath):
-		if not os.path.isdir(apath['jsonPath']): os.mkdir(apath['jsonPath'])
-		if not os.path.isdir(apath['jsonoffsetPath']): os.mkdir(apath['jsonoffsetPath'])
+		#if not os.path.isdir(apath['jsonPath']): os.mkdir(apath['jsonPath'])
+		#if not os.path.isdir(apath['jsonoffsetPath']): os.mkdir(apath['jsonoffsetPath'])
 		if not os.path.isdir(apath['musiccatPath']): os.mkdir(apath['musiccatPath'])
 		if not os.path.isdir(apath['tempPath']): os.mkdir(apath['tempPath'])
 		if not os.path.isdir(apath['isoPath']): os.mkdir(apath['isoPath'])
@@ -54,9 +54,10 @@ class RemoveOld():
 		logging.info("All needed dirs have been created")
 
 	def _remove_all_old(self, path):
-		self._remove_json(path)
+		#self._remove_json(path)
 		self._remove_symlinks(path)
 		self._remove_logs(path)
 		self._remove_temp(path)
 		self._make_needed_dirs(path)
+		print('All old files have been removed')
 		logging.info('All old files have been removed')

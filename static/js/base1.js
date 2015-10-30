@@ -40,8 +40,8 @@ function iArtist1P1Fun3(d2) {
 	return artc	
 };
 function intitArtist1P1() {
-	$.getJSON('static/json/artist1.json', function ( data ) {
-		$.each(data, function ( key, val ) {
+	$.get('GetInitialArtistInfo', function (data) {
+		$.each(data.ia, function ( key, val ) {
 			if ( val.albums.length === 1 ) {
 				var abc = "<div class='artistPageDivS' data-role='collapsible'><h4>" + val.artist + "</h4>";
 				var selected = val.albums[0][1];
@@ -100,8 +100,8 @@ function initAlbum1P1Fun2(c1) {
 	return albab33
 };
 function initAlbum1P1() {
-	$.getJSON('static/json/album1.json', function ( data ) {
-		$.each(data, function (key, val) {
+	$.get('GetInitialAlbumInfo', function (data) {
+		$.each(data.ial, function (key, val) {		
 			var alb8 = initAlbum1P1Fun1(val)
 			var alba3 = '';
 			$.each(val.songs, function (k, v) {
@@ -128,14 +128,11 @@ function initSong1P1Fun1(e1) {
 	return s
 };
 function initSong1P1() {
-	$.getJSON("static/json/song1.json", function( data ) {
-		dlen = data.length;
-		if ( dlen > 1 ) {
-			$.each(data, function ( key, val) {
-				var s4 = initSong1P1Fun1(val);
-				$("#songs_view").append(s4);
-			});
-		}
+	$.get('GetInitialSongInfo', function (data) {
+		$.each(data.ias, function ( key, val) {
+			var s4 = initSong1P1Fun1(val);
+			$("#songs_view").append(s4);
+		});
 	});
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -219,8 +216,8 @@ function initGetArtistAlphaFun2(g2, g3) {
 	return w33
 };
 function initGetArtistAlpha() {
-	$.getJSON('static/json/artistalpha.json', function (data) {	
-		$.each( data, function (key, val) {
+	$.get('GetArtistAlpha', function (data) {
+		$.each( data.artal, function (key, val) {
 			var k = initAddOne(val);
 			var w3 = initGetArtistAlphaFun2(k, val);
 			$('#artistOFwrap').append(w3);
@@ -237,8 +234,8 @@ function initGetAlbumAlphaFun1(kk, cc) {
 	return ww
 };
 function initGetAlbumAlpha() {
-	$.getJSON('static/json/albumalpha.json', function (data) {
-		$.each( data, function (ke, va) {
+	$.get('GetAlbumAlpha', function (data) {
+		$.each(data.albal, function (ke, va) {
 			var kk = initAddOne(ke);
 			var ww3 = initGetAlbumAlphaFun1(kk, va);
 			$('#albumOFwrap').append(ww3);
@@ -255,8 +252,8 @@ function initGetSongAlphaFun1(b) {
 	return www333
 };
 function initGetSongAlpha() {
-	$.getJSON('static/json/songalpha.json', function (data) {
-		$.each(data, function (k2, vk) {
+	$.get('GetSongAlpha', function (data) {
+		$.each(data.songal, function (k2, vk) {
 			var www3 = initGetSongAlphaFun1(vk);
 			$('#songOFwrap').append(www3);
 		});
@@ -386,25 +383,18 @@ function creatPop5(recm) {
 	return pu511
 };
 
-
-
 function initRandomPics() {
 	$.get('RandomPics', function (data) {
 		var result1 = blka(data.rsamp[0].thumbnail) + blkb(data.rsamp[1].thumbnail);
 		var result2 = result1 + blkc(data.rsamp[2].thumbnail) + blkd(data.rsamp[3].thumbnail);
 		var result = result2 + blke(data.rsamp[4].thumbnail);
-		var pu1 = creatPop1(data.rsamp[0].songs);
-		var pu2 = creatPop2(data.rsamp[1].songs);
-		var pu3 = creatPop3(data.rsamp[2].songs);
-		var pu4 = creatPop4(data.rsamp[3].songs);
-		var pu5 = creatPop5(data.rsamp[4].songs);
 		$('#popup1, #popup2, #popup3, #popup4, #popup5, #intropicGrid1').empty();
 		$('#intropicGrid1').append(result);
-		$('#popup1').append(pu1);
-		$('#popup2').append(pu2);
-		$('#popup3').append(pu3);
-		$('#popup4').append(pu4);
-		$('#popup5').append(pu5);
+		$('#popup1').append(creatPop1(data.rsamp[0].songs));
+		$('#popup2').append(creatPop2(data.rsamp[1].songs));
+		$('#popup3').append(creatPop3(data.rsamp[2].songs));
+		$('#popup4').append(creatPop4(data.rsamp[3].songs));
+		$('#popup5').append(creatPop5(data.rsamp[4].songs));
 		$('#pop1, #pop2, #pop3, #pop4, #pop5').listview().trigger('refresh');
 		$('#popup1, #popup2, #popup3, #popup4, #popup5').popup().trigger('create');
 	});
@@ -416,30 +406,20 @@ function RandomPics() {
 	});
 };
 
-
 function randomPicProcess() {
-	
-	//localStorage.setItem('nextimgset', JSON.stringify(data));
-
 	var d = JSON.parse(localStorage.getItem('nextimgset'));
 	var result1 = blka(d.rsamp[0].thumbnail) + blkb(d.rsamp[1].thumbnail);
 	var result2 = result1 + blkc(d.rsamp[2].thumbnail) + blkd(d.rsamp[3].thumbnail);
 	var result = result2 + blke(d.rsamp[4].thumbnail);
-	var pu1 = creatPop1(d.rsamp[0].songs);
-	var pu2 = creatPop2(d.rsamp[1].songs);
-	var pu3 = creatPop3(d.rsamp[2].songs);
-	var pu4 = creatPop4(d.rsamp[3].songs);
-	var pu5 = creatPop5(d.rsamp[4].songs);
 	$('#popup1, #popup2, #popup3, #popup4, #popup5, #intropicGrid1').empty();
 	$('#intropicGrid1').append(result);
-	$('#popup1').append(pu1);
-	$('#popup2').append(pu2);
-	$('#popup3').append(pu3);
-	$('#popup4').append(pu4);
-	$('#popup5').append(pu5);
+	$('#popup1').append(creatPop1(d.rsamp[0].songs));
+	$('#popup2').append(creatPop2(d.rsamp[1].songs));
+	$('#popup3').append(creatPop3(d.rsamp[2].songs));
+	$('#popup4').append(creatPop4(d.rsamp[3].songs));
+	$('#popup5').append(creatPop5(d.rsamp[4].songs));
 	$('#pop1, #pop2, #pop3, #pop4, #pop5').listview().trigger('refresh');
 	$('#popup1, #popup2, #popup3, #popup4, #popup5').popup().trigger('create');
-	
 };
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////// PLAYLIST PAGE STUFF //////////////////////////////

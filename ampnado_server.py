@@ -37,14 +37,13 @@ except ImportError: from mutagenx import File
 
 mclient = MongoClient()
 db = mclient.ampnadoDB
+viewsdb = mclient.ampviewsDB
 
 FUN = Fun.SetUp()
 RM = Rm.RemoveOld()
 
 PORT = db.user_options.find_one({}, {'port':1, '_id':0})
 define('port', default=PORT['port'], help='run on the given port', type=int)
-
-#CLIENTS = dict()
 
 class Application(tornado.web.Application):
 	def __init__(self):
@@ -54,14 +53,18 @@ class Application(tornado.web.Application):
 		handlers = [
 			(r"/Music/(.*)", tornado.web.StaticFileHandler, {'path': progpath2}),
 			(r"/ampnado", MainHandler),
-			#(r"/websockaddr", WebSocketAddrHandler),
-#			(r"/websock", WebSocketHandler),
 			(r"/login", LoginHandler),
 			(r"/logout", LogoutHandler),
-			
 			(r"/RandomPics", RandomPicsHandler),
-			
-			
+			(r"/GetArtistAlpha", GetArtistAlphaHandler),
+			(r"/GetInitialArtistInfo", GetInitialArtistInfoHandler),
+			(r"/GetArtistInfo", GetArtistInfoHandler),
+			(r"/GetAlbumAlpha", GetAlbumAlphaHandler),
+			(r"/GetInitialAlbumInfo", GetInitialAlbumInfoHandler),
+			(r"/GetAlbumInfo", GetAlbumInfoHandler),
+			(r"/GetSongAlpha", GetSongAlphaHandler),
+			(r"/GetInitialSongInfo", GetInitialSongInfoHandler),
+			(r"/GetSongInfo", GetSongInfoHandler),
 			(r"/GetImageSongsForAlbum", GetImageSongsForAlbumHandler),
 			(r"/GetPathArt", GetPathArtHandler),
 			(r"/GetAllPlaylists", GetAllPlaylistsHandler),
@@ -73,9 +76,9 @@ class Application(tornado.web.Application):
 			(r"/CreatePlayerPlaylist", CreatePlayerPlaylistHandler),
 			(r"/DeletePlaylistFromDB", DeletePlaylistFromDBHandler),
 			(r"/DeleteSongFromPlaylist", DeleteSongFromPlaylistHandler),
-			(r"/SongSearch", SongSearchHandler),
-			(r"/AlbumSearch", AlbumSearchHandler),		
 			(r"/ArtistSearch", ArtistSearchHandler),
+			(r"/AlbumSearch", AlbumSearchHandler),
+			(r"/SongSearch", SongSearchHandler),
 			(r"/Download", DownloadPlaylistHandler),
 			(r"/GetAllVideo", GetAllVideoHandler),
 			(r"/RamdomAlbumPicPlaySong", RamdomAlbumPicPlaySongHandler),
@@ -139,6 +142,93 @@ class GetAllPlaylistsHandler(BaseHandler):
 		plnamez = u"Please create a playlist"
 		if plname != []: self.write(dict(plnames=plname))
 		else: self.write(dict(plnames=plnamez))
+
+class GetArtistAlphaHandler(BaseHandler):
+	@tornado.web.authenticated
+	@tornado.gen.coroutine
+	def get(self):
+		artal = viewsdb.artalpha.find_one({}, {'artalpha':1, '_id':0})
+		artal = artal['artalpha']
+		self.write(dict(artal=artal))
+
+class GetInitialArtistInfoHandler(BaseHandler):
+	@tornado.web.authenticated
+	@tornado.gen.coroutine
+	def get(self):
+		iartv = viewsdb.initartView.find_one({})
+		ia = iartv['init_art_info']
+		self.write(dict(ia=ia))
+
+class GetArtistInfoHandler(BaseHandler):
+	@tornado.gen.coroutine
+	def _get_art_info(self, sel):
+		artinfo = [art for art in viewsdb.artistViewOffSet.find({'page': sel}, {'_id':0})]
+		return artinfo
+
+	@tornado.web.authenticated
+	@tornado.gen.coroutine
+	def get(self):
+		p = parse_qs(urlparse(self.request.full_url()).query)
+		arts = yield self._get_art_info(int(p['selected'][0]))
+		self.write(dict(arts=arts))
+
+class GetAlbumAlphaHandler(BaseHandler):
+	@tornado.web.authenticated
+	@tornado.gen.coroutine
+	def get(self):
+		albal = viewsdb.albalpha.find_one({}, {'albalpha':1, '_id':0})
+		albal = albal['albalpha']
+		self.write(dict(albal=albal))
+
+class GetInitialAlbumInfoHandler(BaseHandler):
+	@tornado.web.authenticated
+	@tornado.gen.coroutine
+	def get(self):
+		ialbv = viewsdb.initalbView.find_one({})
+		ial = ialbv['init_alb_info']
+		self.write(dict(ial=ial))
+
+class GetAlbumInfoHandler(BaseHandler):
+	@tornado.gen.coroutine
+	def _get_alb_info(self, sel):
+		albinfo = [alb for alb in viewsdb.albumViewOffSet.find({'page': sel}, {'_id':0})]
+		return albinfo
+
+	@tornado.web.authenticated
+	@tornado.gen.coroutine
+	def get(self):
+		p = parse_qs(urlparse(self.request.full_url()).query)
+		albs = yield self._get_alb_info(int(p['selected'][0]))
+		self.write(dict(albs=albs))
+
+class GetSongAlphaHandler(BaseHandler):
+	@tornado.web.authenticated
+	@tornado.gen.coroutine
+	def get(self):
+		songal = viewsdb.songalpha.find_one({}, {'songalpha':1, '_id':0})
+		songal = songal['songalpha']
+		self.write(dict(songal=songal))
+
+class GetInitialSongInfoHandler(BaseHandler):
+	@tornado.web.authenticated
+	@tornado.gen.coroutine
+	def get(self):
+		iasv = viewsdb.initsongView.find_one({})
+		ias = iasv['init_song_info']
+		self.write(dict(ias=ias))
+
+class GetSongInfoHandler(BaseHandler):
+	@tornado.gen.coroutine
+	def _get_song_info(self, sel):
+		songinfo = [song for song in viewsdb.songViewOffSet.find({'page': sel}, {'_id':0})]
+		return songinfo
+
+	@tornado.web.authenticated
+	@tornado.gen.coroutine
+	def get(self):
+		p = parse_qs(urlparse(self.request.full_url()).query)
+		song = yield self._get_song_info(int(p['selected'][0]))
+		self.write(dict(song=song))
 
 class GetImageSongsForAlbumHandler(BaseHandler):
 	@tornado.gen.coroutine
@@ -261,13 +351,7 @@ class CreatePlayerPlaylistHandler(BaseHandler):
 		try:
 			for pl in playlist['songs']:
 				tracks += 1
-				z = {
-					'tracks'    : tracks,
-					'name'      : pl['song'],
-					'file'      : pl['playlistpath'],
-					'thumbnail' : pl['lthumbnail'],
-					'album'     : pl['album'],
-				}				
+				z = {'tracks': tracks, 'name': pl['song'], 'file': pl['playlistpath'], 'thumbnail': pl['lthumbnail'], 'album': pl['album']}				
 				fart.append(z)
 			return fart
 		except KeyError: return []
@@ -331,7 +415,7 @@ class DeleteSongFromPlaylistHandler(BaseHandler):
 class ArtistSearchHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def get_search(self, artsv):
-		search = db.command('text', 'artistView', search=artsv)
+		search = viewsdb.command('text', 'artistView', search=artsv)
 		return [{ 'artist': sea['obj']['artist'],  'artistid': sea['obj']['artistid'], 'albums': sea['obj']['albums']} for sea in search['results']]
 
 	@tornado.web.authenticated
@@ -344,7 +428,7 @@ class ArtistSearchHandler(BaseHandler):
 class AlbumSearchHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def get_search(self, albsv):
-		search = db.command('text', 'albumView', search=albsv)
+		search = viewsdb.command('text', 'albumView', search=albsv)
 		return [{'artist': sea['obj']['artist'], 'album': sea['obj']['album'], 'albumid': sea['obj']['albumid'], 'thumbnail': sea['obj']['thumbnail'], 'songs': sea['obj']['songs'], 'numsongs': sea['obj']['numsongs']} for sea in search['results']]
 
 	@tornado.web.authenticated

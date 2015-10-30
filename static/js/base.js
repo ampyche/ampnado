@@ -232,7 +232,7 @@ function oc_albsearchBut1(f) {
 	var alb81 = alb7 + "data-role='listview' data-inset='true' data-split-icon='gear'>";
 	return alb81
 };
-function oc_albsearchBut2(f) {
+function oc_albsearchBut2(v) {
 	var albab1 = "<li class='albsongsLI'><a href='#' class='albsongsA' data-song='" + v[0] + "' ";
 	var albab2 = albab1 + "data-songid='" + v[1] + "'>" + v[0] + "</a><a href='#albumselectplpage' ";
 	var albab3 = albab2 + "class='addToPlaylist' data-pageid='albums' data-song='" + v[0] + "' ";
@@ -418,16 +418,18 @@ function oc_randomInput4(v) {
 
 //This makes Artist soup
 $(document).on('click', '.artOF', function () {
-	artass = $(this).text();
-	artjpath = "/static/json/offset/artistOffset" + artass + ".json";
+	var artass = $(this).text();
 	$('#artistOFC').collapsible("collapse");
 	$('#artistmain').empty();
-	$.getJSON(artjpath, function ( data ) {
-		$.each(data, function ( key, val ) {
+	$.get('GetArtistInfo', 
+	{
+		'selected': artass
+	},
+	function (data) {
+		$.each(data.arts, function ( key, val ) {
 			var alblength = val.albums.length;
 			var abc = "<div class='artistPageDivS' data-role='collapsible'><h4>" + val.artist + "</h4>";
 			var selected = val.albums[0][1];
-			
 			if ( alblength === 1 ) {
 				$.get('GetImageSongsForAlbum', 
 				{
@@ -491,17 +493,13 @@ $(document).on('click', '.artOF', function () {
 //This fetches the selected album and displays albumart and
 //song list for artist page
 .on('change', '.artistselect', function () {
-	//Clear albumart and songs list
-	$('.artistimg').remove();
+	$('.artistimg').remove(); //Clear albumart and songs list
 	$('.art1div').empty();
-	//This is the artistid of the selected album	
-	artistid = $(this).attr('id');
-	//this is selected albumid
-	selected = $(this).find(':selected').val();
+	artistid = $(this).attr('id'); //This is the artistid of the selected album	
+	selected = $(this).find(':selected').val(); //this is selected albumid
 	$.get('GetImageSongsForAlbum',
 		{
-			//this is albumid
-			'selected' : selected		
+			'selected' : selected //this is albumid	
 		},
 		function (data) {
 			var athree = och_artistselect1(data);
@@ -531,7 +529,6 @@ $(document).on('click', '.artOF', function () {
 	var name = JSON.parse(localStorage.getItem("artistPageSelected_SONG_SONGID"));
 	$.get('AddSongsToPlistDB', 
 	{
-		
 		"songname" : name.song, "songid" : name.songid, "playlistid" : selectedPlayList.playlistid,	
 	},
 	function(data,status) {
@@ -546,19 +543,23 @@ $(document).on('click', '.artOF', function () {
 	$(bebe).fadeToggle('fast');
 })
 .on('click', '.albumOF', function () {
-	albass = $(this).text();
-	albjpath = "/static/json/offset/albumOffset" + albass + ".json";
+	var albass = $(this).text();
 	$('#albumOFC').collapsible("collapse");
 	$('#alblist').empty();
-	$.getJSON(albjpath, function(data){
-		$.each(data, function ( key, val) {
+	$.get('GetAlbumInfo', 
+	{
+		'selected': albass
+	},
+	function (data) {
+		$.each(data.albs, function ( key, val) {
 			var alb8 = oc_albumOF1(val);
 			var alba33 = '';
 			$.each(val.songs, function (ka, val) {
-				$.each(val, function (k, v) {					
-					var albab3 = oc_albumOF2(v);
-					alba33 = alba33 + albab3;
-					return alba33
+				$.each(val, function (kk, vv) {
+					$.each(vv, function (k, v) {
+						alba33 = alba33 + oc_albumOF2(v);
+						return alba33
+					});
 				});
 			});
 			var result = alb8 + alba33 + "</ul></div>";
@@ -602,11 +603,14 @@ $(document).on('click', '.artOF', function () {
 //This gets the songs for the selected Alpha selecter
 .on('click', '.songOF', function () {
 	var ss = $(this).text();
-	var songsoup = "/static/json/offset/songOffset" + ss + '.json';
 	$('#songOFC').collapsible("collapse");
 	$("#songs_view").empty();
-	$.getJSON(songsoup, function (data) {
-		$.each(data, function ( key, val) {
+	$.get('GetSongInfo',
+	{
+		'selected': ss
+	},
+	function (data) {
+		$.each(data.song, function ( key, val) {
 			var ss1 = "<li class='songs_li'><a class='songname' href='#' data-songid='" + val.songid + "'>";
 			var ss2 = ss1 + "<h2>" + val.song + "</h2><h6>" + val.artist + "</h6></a><a href='#selectplpage' ";
 			var ss3 = ss2 + "data-song='" + val.song + "' data-songid='" + val.songid + "' class='addtoplaylist' ";
@@ -659,25 +663,17 @@ $(document).on('click', '.artOF', function () {
 		if ( data.plnames != 'Please create a playlist' ) {
 			localStorage.setItem('playlists', JSON.stringify(data));
 			$.each(data.plnames, function (k, va) {
-				var pll3 = oc_addtoplaylist1(va);
-				var spl3 = oc_addtoplaylist2(va);
-				var ablspl4 = oc_addtoplaylist3(va);
-				var artspl4 = oc_addtoplaylist4(va);
-				$('#playPlaylistUL').append(pll3);
-				$('#splUL').append(spl3);
-				$('#albsplUL').append(ablspl4);
-				$('#artsplUL').append(artspl4);
+				$('#playPlaylistUL').append(oc_addtoplaylist1(va));
+				$('#splUL').append(oc_addtoplaylist2(va));
+				$('#albsplUL').append(oc_addtoplaylist3(va));
+				$('#artsplUL').append(oc_addtoplaylist4(va));	
 			});
 		} else {
 			var pln = 'Please create a playlist';
-			var pll2 = oc_addtoplaylist5(pln);
-			var spl3 = oc_addtoplaylist6(pln);
-			var albspl3 = oc_addtoplaylist7(pln);
-			var artspl3 = oc_addtoplaylist8(pln);
-			$('#playPlaylistUL').append(pll2);
-			$('#splUL').append(spl3);
-			$('#albsplUL').append(albspl3);
-			$('#artsplUL').append(artspl3);
+			$('#playPlaylistUL').append(oc_addtoplaylist5(pln));
+			$('#splUL').append(oc_addtoplaylist6(pln));
+			$('#albsplUL').append(oc_addtoplaylist7(pln));
+			$('#artsplUL').append(oc_addtoplaylist8(pln));
 		}
 	});
 	$('#playPlaylistUL, #splUL, #albsplUL, #artsplUL').listview().trigger('refresh');
@@ -694,14 +690,10 @@ $(document).on('click', '.artOF', function () {
 	},
 	function(data) {
 		$.each(data.plnames, function (k, v) {
-			var pll3 = oc_artToPlaylistBtn1(v);
-			var spl4 = oc_artToPlaylistBtn2(v);
-			var albspl3 = oc_artToPlaylistBtn3(v);
-			var artspl3 = oc_artToPlaylistBtn4(v);
-			$('#playPlaylistUL').append(pll3);
-			$('#splUL').append(spl4);
-			$('#albsplUL').append(albspl3);
-			$('#artsplUL').append(artspl3);
+			$('#playPlaylistUL').append(oc_artToPlaylistBtn1(v));
+			$('#splUL').append(oc_artToPlaylistBtn2(v));
+			$('#albsplUL').append(oc_artToPlaylistBtn3(v));
+			$('#artsplUL').append(oc_artToPlaylistBtn4(v));
 		});
 		localStorage.setItem('playlists', JSON.stringify(data));
 	});
@@ -721,25 +713,17 @@ $(document).on('click', '.artOF', function () {
 		$('#playPlaylistUL, #splUL, #albsplUL, #artsplUL').empty();
 		if ( data.plnames != 'Please create a playlist' ) {
 			$.each(data.plnames, function (k, v) {
-				var pl3 = oc_addToPlaylist1(v);
-				var spl3 = oc_addToPlaylist2(v);
-				var albspl3 = oc_addToPlaylist3(v);
-				var artspl3 = oc_addToPlaylist4(v);
-				$('#playPlaylistUL').append(pl3);
-				$('#splUL').append(spl3);
-				$('#albsplUL').append(albspl3);
-				$('#artsplUL').append(artspl3);
+				$('#playPlaylistUL').append(oc_addToPlaylist1(v));
+				$('#splUL').append(oc_addToPlaylist2(v));
+				$('#albsplUL').append(oc_addToPlaylist3(v));
+				$('#artsplUL').append(oc_addToPlaylist4(v));
 			});
 		} else {
 			var plnln = 'Please create a playlist';
-			var p2 = oc_addToPlaylist5(plnln);
-			var spl3 = oc_addToPlaylist6(plnln);
-			var albspl3 = oc_addToPlaylist7(v);
-			var artspl3 = oc_addToPlaylist8(v);
-			$('#playPlaylistUL').append(p2);
-			$('#splUL').append(spl3);
-			$('#albsplUL').append(albspl3);
-			$('#artsplUL').append(artspl3);	
+			$('#playPlaylistUL').append(oc_addToPlaylist5(plnln));
+			$('#splUL').append(oc_addToPlaylist6(plnln));
+			$('#albsplUL').append(oc_addToPlaylist7(v));
+			$('#artsplUL').append(oc_addToPlaylist8(v));	
 		}
 		$('#playPlaylistUL, #splUL, #albsplUL, #artsplUL').listview().trigger('refresh');
 	});
@@ -853,12 +837,16 @@ $(document).on('click', '.artOF', function () {
 	function(data) {
 		$('#albListViewDIV2').empty();
 		$.each(data.ysearch, function ( ke, va) {
-			var alb8 = oc_albsearchBut(va);
+			var alb8 = oc_albsearchBut1(va);
 			var alba33 = '';
 			$.each(va.songs, function (k, v) {
-				var albab4 = oc_albsearchBut2(f)
-				alba33 = alba33 + albab4;
-				return alba33
+				$.each(v, function (kk, vv) {
+					console.log('this is albumsearchBut vv[0]');
+					console.log(vv[0]);
+					var albab4 = oc_albsearchBut2(vv);
+					alba33 = alba33 + albab4;
+					return alba33
+				});
 			});
 			var result = alb8 + alba33 + "</ul></div>";
 			$('#albListViewDIV2').append(result);
@@ -888,12 +876,10 @@ $(document).on('click', '.artOF', function () {
 				alblength = va.albums.length;
 				if ( alblength === 1 ) {
 					var abc = "<div class='artistPageDivS' data-role='collapsible'><h4>" + va.artist + "</h4>";
-					//this is albumid
-					var selected = va.albums[0][1];
+					var selected = va.albums[0][1]; //this is albumid
 					$.get('GetImageSongsForAlbum',
 						{
-							//this is albumid
-							'selected' : selected		
+							'selected' : selected	//this is albumid	
 						},
 						function (data) {
 							var a3 = oc_artsearchBut1(data.getimgsonalb.thumbnail);							
@@ -1085,14 +1071,10 @@ $.mobile.loader.prototype.options.textVisible,
 			$.each(data.pnames, function (k, v) {
 				var pln = {'playlist': v.playlistname, 'playlistid': v.playlistid};
 				localStorage.setItem("currentSelected_PLAYLIST_PLAYLISTID", JSON.stringify(pln));
-				var npl3 = oc_butsub1(v);
-				var npl24 = oc_butsub2(v);
-				var npl34 = oc_butsub3(v);
-				var npl43 = oc_butsub4(v);
-				$('#playPlaylistUL').append(npl3);
-				$('#splUL').append(npl24);
-				$('#artsplUL').append(npl34);
-				$('#albsplUL').append(npl43);
+				$('#playPlaylistUL').append(oc_butsub1(v));
+				$('#splUL').append(oc_butsub2(v));
+				$('#artsplUL').append(oc_butsub3(v));
+				$('#albsplUL').append(oc_butsub4(v));
 				$('input#text1').val("");
 				$('#playlistform').hide();
 			});
@@ -1239,14 +1221,10 @@ $.mobile.loader.prototype.options.textVisible,
 		},
 		function (data) {
 			$.each(data.plists, function (k, v) {
-				var p3 = oc_randomInput1(v);
-				var spl3 = oc_randomInput2(v);
-				var alpl4 = oc_randomInput3(v);
-				var arpl4 = oc_randomInput4(v);
-				$('#playPlaylistUL').append(p3);
-				$('#splUL').append(spl3);
-				$('#albsplUL').append(alpl4);
-				$('#artsplUL').append(arpl4);
+				$('#playPlaylistUL').append(oc_randomInput1(v));
+				$('#splUL').append(oc_randomInput2(v));
+				$('#albsplUL').append(oc_randomInput3(v));
+				$('#artsplUL').append(oc_randomInput4(v));
 				$('#playPlaylistUL, #splUL, #albsplUL, #artsplUL').listview().trigger('refresh');
 				if (t2 === v.playlistname) {
 					var voo = {'playlist': v.playlistname, 'playlistid': v.playlistid};
