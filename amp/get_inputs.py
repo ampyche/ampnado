@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 ###############################################################################
 ###############################################################################
 	# LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -129,11 +129,6 @@ class GetInputs():
 			'httppath'       : ahttp,
 			'httpmusicPath'  : '/'.join((ahttp, 'Music')),
 			'setupLog'       : '/'.join((aprogpath, 'logs', 'setup.log')),
-			#'jsonPath'       : '/'.join((aprogpath, 'static', 'json')),
-			#'jsonoffsetPath' : '/'.join((aprogpath, 'static', 'json', 'offset')),
-			#'artistjsonPath' : '/'.join((aprogpath, 'static', 'json', 'artist')),
-			#'albumjsonPath'  : '/'.join((aprogpath, 'static', 'json', 'album')),
-			#'songjsonPath'   : '/'.join((aprogpath, 'static', 'json', 'song')),
 			'tempPath'       : '/'.join((aprogpath, 'static', 'TEMP')),
 			'musiccatPath'   : '/'.join((aprogpath, 'static', 'MUSIC')),
 			'isoPath'        : '/'.join((aprogpath, 'static', 'TEMP', 'ISO')),
@@ -180,7 +175,6 @@ class GetInputs():
 		PATHS = self.create_paths_dict(progpath, http)
 		RM_OLD = self.RM._remove_all_old(PATHS)
 		RMDBI = self.DBI.drop_all_indexes()
-		
 		RMDB = self.DB.rm_all_dbs()
 		os.symlink(OPT['musicpath'], CAT['catpath'])
 		if args.username and args.password:
@@ -204,7 +198,6 @@ class GetInputs():
 		cat_check = self.check_if_cat_is_in_db(user_cat_orig)
 		user_cat_path = args.music_path
 		print('this is user_cat_path')
-		
 		if cat_check is None:
 			CAT = self.create_catalog_dict(user_cat_path, user_cat_name, user_cat_id, progpath, user_cat_orig)
 			os.symlink(user_cat_path, CAT['catpath'])

@@ -26,7 +26,6 @@ import tornado.auth
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
-#import tornado.websocket as tws
 from tornado.options import define, options, parse_command_line
 import amp.functions as Fun
 import amp.remove_old as Rm
@@ -42,8 +41,9 @@ viewsdb = mclient.ampviewsDB
 FUN = Fun.SetUp()
 RM = Rm.RemoveOld()
 
-PORT = db.user_options.find_one({}, {'port':1, '_id':0})
-define('port', default=PORT['port'], help='run on the given port', type=int)
+US_OP = db.user_options.find_one({})
+define('port', default=US_OP['port'], help='run on the given port', type=int)
+off_set = US_OP['offset']
 
 class Application(tornado.web.Application):
 	def __init__(self):
@@ -155,14 +155,14 @@ class GetInitialArtistInfoHandler(BaseHandler):
 	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
-		iartv = viewsdb.initartView.find_one({})
-		ia = iartv['init_art_info']
-		self.write(dict(ia=ia))
-
+		ia = [artist for artist in viewsdb.artistView.find({}, {'_id':0}).limit(off_set)]
+		random.shuffle(ia)
+		self.write(dict(ia=ia))	
+		
 class GetArtistInfoHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def _get_art_info(self, sel):
-		artinfo = [art for art in viewsdb.artistViewOffSet.find({'page': sel}, {'_id':0})]
+		artinfo = [art for art in viewsdb.artistView.find({'page': sel}, {'_id':0})]
 		return artinfo
 
 	@tornado.web.authenticated
@@ -184,14 +184,14 @@ class GetInitialAlbumInfoHandler(BaseHandler):
 	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
-		ialbv = viewsdb.initalbView.find_one({})
-		ial = ialbv['init_alb_info']
+		ial = [album for album in viewsdb.albumView.find({}, {'_id':0}).limit(off_set)]
+		random.shuffle(ial)
 		self.write(dict(ial=ial))
 
 class GetAlbumInfoHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def _get_alb_info(self, sel):
-		albinfo = [alb for alb in viewsdb.albumViewOffSet.find({'page': sel}, {'_id':0})]
+		albinfo = [alb for alb in viewsdb.albumView.find({'page': sel}, {'_id':0})]
 		return albinfo
 
 	@tornado.web.authenticated
@@ -213,14 +213,14 @@ class GetInitialSongInfoHandler(BaseHandler):
 	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
-		iasv = viewsdb.initsongView.find_one({})
-		ias = iasv['init_song_info']
+		ias = [song for song in viewsdb.songView.find({}, {'_id':0}).limit(off_set)]		
+		random.shuffle(ias)
 		self.write(dict(ias=ias))
 
 class GetSongInfoHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def _get_song_info(self, sel):
-		songinfo = [song for song in viewsdb.songViewOffSet.find({'page': sel}, {'_id':0})]
+		songinfo = [song for song in viewsdb.songView.find({'page': sel}, {'_id':0})]
 		return songinfo
 
 	@tornado.web.authenticated
@@ -331,7 +331,7 @@ class AddRandomPlaylistHandler(BaseHandler):
 		aplcount = int(aplcount)
 		pl['playlistname'] = aplname
 		pl['playlistid'] = str(uuid.uuid4().hex)
-		pl['songs'] = random.sample([song for song in db.tags.find({})], aplcount)
+		pl['songs'] = random.shuffle([song for song in db.tags.find({})])
 		db.playlists.insert(pl)
 		return [{'playlistname': pl['playlistname'], 'playlistid': pl['playlistid']} for pl in db.playlists.find({}, {'_id':0})]
 
@@ -436,6 +436,7 @@ class AlbumSearchHandler(BaseHandler):
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
 		ysearch = yield self.get_search(p['albsearchval'][0])
+		print(ysearch)
 		self.write(dict(ysearch=ysearch))
 
 class SongSearchHandler(BaseHandler):

@@ -25,6 +25,10 @@ from PIL import Image
 try: from mutagen import File
 except ImportError: from mutagenx import File
 
+import amp.artistview as artv
+import amp.albumview as albv
+import amp.songview as songv
+
 from pprint import pprint
 
 client = MongoClient()
@@ -45,6 +49,8 @@ class SetUp():
 	def gen_size(self, f): return os.stat(f).st_size
 		
 	def gen_dirname(self, f): return os.path.dirname(f)
+	
+	def gen_uuid(self): return str(uuid.uuid4().hex)
 
 	def _get_lthumb_bytes(self): return sum([int(s['largethumb_size']) for s in db.tags.find({}, {'largethumb_size':1, '_id':0})])
 
@@ -115,8 +121,6 @@ class SetUp():
 				else: pass
 		logging.info('Finding music complete')
 		return self.mp3list, self.ogglist, self.vidlist
-
-	def gen_uuid(self): return str(uuid.uuid4().hex)
 
 	def _get_tags(self, a_list, apath):
 		zlist = []
@@ -262,12 +266,6 @@ class SetUp():
 		with open(location, 'rb') as imagefile:
 			 return ''.join(('data:image/png;base64,', base64.b64encode(imagefile.read()).decode('utf-8')))
 
-#	def _save_json_file(self, path, data):
-#		with open(path, 'w') as artist:
-#			artist.write(json.dumps(data, sort_keys=True, indent=4))	
-
-	def _remove_file(self, afile): os.remove(afile)
-
 	def _img_size_check_and_save(self, img, size, location):
 		im = Image.open(img)
 		sim = im.size
@@ -290,11 +288,11 @@ class SetUp():
 			x['album'] = p[2]
 			x['smallthumb_size'] = self._get_thumb_size(loc1)
 			x['smallthumb'] = self._get_b64_image(loc1)
-			self._remove_file(loc1)
+			os.remove(loc1)
 			self._img_size_check_and_save(p[0], dthumb, loc2)
 			x['largethumb_size'] = self._get_thumb_size(loc2)
 			x['largethumb'] = self._get_b64_image(loc2)
-			self._remove_file(loc2)
+			os.remove(loc2)
 			if not u_date:
 				db.tags.update({'albumartPath': p[0]}, {'$set': {'sthumbnail': x['smallthumb'], 'smallthumb_size': x['smallthumb_size'], 'lthumbnail' : x['largethumb'], 'largethumb_size': x['largethumb_size']}}, multi=True)
 			else:
@@ -319,90 +317,6 @@ class SetUp():
 		create_thumbs = self.create_thumbs(alblist, sl10, apaths, u_date)
 		logging.info('get_albumart is complete')
 
-	def create_artistView_db(self, u_date):
-		if not u_date:
-			art_artid_list = []
-			for art in db.tags.distinct('artist'):
-				artistid = db.tags.find_one({'artist': art}, {'artistid': 1, '_id': 0})
-				boo = db.tags.aggregate([
-					{'$match': {'artist': art}},
-					{'$group': {'_id': 'album', 'albumz': {'$addToSet': '$album'}}},
-					{'$project': {'albumz' :1}}
-					])
-				doo = boo['result'][0]['albumz']
-				new_alb_list = []
-				for d in doo:
-					albid = db.tags.find_one({'album':d}, {'albumid':1, '_id':0})
-					moo = d, albid['albumid']
-					new_alb_list.append(moo)
-				z = {}
-				z['artist'] = art
-				z['artistid'] = artistid['artistid']
-				z['albums'] = new_alb_list
-				z['page'] = ""
-				
-				art_artid_list.append(z)
-			viewsdb.artistView.insert(art_artid_list)
-		else:
-			art_artid_list = []
-			for art in db.tempTags.distinct('artist'):
-				artistid = db.tempTags.find_one({'artist': art}, {'artistid': 1, '_id': 0})
-				boo = db.tempTags.aggregate([
-					{'$match': {'artist': art}},
-					{'$group': {'_id': 'album', 'albumz': {'$addToSet': '$album'}}},
-					{'$project': {'albumz' :1}}
-					])
-				doo = boo['result'][0]['albumz']
-				new_alb_list = []
-				for d in doo:
-					albid = db.tempTags.find_one({'album':d}, {'albumid':1, '_id':0})
-					moo = d, albid['albumid']
-					new_alb_list.append(moo)
-				z = {}
-				z['artist'] = art
-				z['artistid'] = artistid['artistid']
-				z['albums'] = new_alb_list
-				z['page'] = ""
-				
-				art_artid_list.append(z)
-			viewsdb.tempartistView.insert(art_artid_list)
-		logging.info('create_artistView_db')
-
-	def create_albumView(self, u_date):
-		if not u_date:
-			result = []
-			for a in db.tags.distinct('albumid'):
-				info = db.tags.find_one({'albumid':a}, {'album':1, 'albumid': 1, 'artist':1, 'artistid':1, 'sthumbnail':1, '_id':0})
-				songz = [(s['song'], s['songid']) for s in db.tags.find({'albumid':a}, {'song':1, 'songid':1, '_id':0})],
-				av = {}
-				av['albumid'] = info['albumid']
-				av['album'] = info['album']
-				av['artist'] = info['artist']
-				av['artistid'] = info['artistid']
-				av['thumbnail'] = info['sthumbnail']
-				av['songs'] = songz
-				av['numsongs'] = len(songz[0])
-				av['page'] = ""
-				result.append(av)
-			viewsdb.albumView.insert(result)
-		else:
-			result = []
-			for a in db.tempTags.distinct('albumid'):
-				info = db.tempTags.find_one({'albumid':a}, {'album':1, 'albumid': 1, 'artist':1, 'artistid':1, 'sthumbnail':1, '_id':0})
-				songz = [(s['song'], s['songid']) for s in db.tempTags.find({'albumid':a}, {'song':1, 'songid':1, '_id':0})],
-				av = {}
-				av['albumid'] = info['albumid']
-				av['album'] = info['album']
-				av['artist'] = info['artist']
-				av['artistid'] = info['artistid']
-				av['thumbnail'] = info['sthumbnail']
-				av['songs'] = songz
-				av['numsongs'] = len(songz)
-				av['page'] = ""
-				result.append(av)
-			viewsdb.tempalbumView.insert(result)
-		logging.info('create_albumView is complete')
-
 	def db_stats(self, u_date):
 		picbytes = 	sum([self._get_lthumb_bytes(), self._get_sthumb_bytes()])
 		totdisk = sum([picbytes, self._get_mp3_bytes(), self._get_vid_bytes()])
@@ -415,7 +329,6 @@ class SetUp():
 		x['total_albums'] = self._get_album_count()
 		x['total_songs'] = self._get_song_count()
 		x['total_videos'] = self._get_video_count()
-
 		if not u_date:
 			db.ampnado_stats.insert(x)
 		else:	
@@ -431,129 +344,11 @@ class SetUp():
 			}})
 		logging.info('db stats complete')							
 
-	def _get_init_artist_info(self, off_set):
-		slist = [artist for artist in viewsdb.artistView.find({}, {'_id':0})]
-		s = {'init_art_info': slist[:off_set]}
-		viewsdb.initartView.insert(s)
-		logging.info('_get_init_artist_info is complete')
-
-	def _get_init_album_info(self, off_set):
-		samplelist2 = [album for album in viewsdb.albumView.find({}, {'_id':0})]
-		samplelist = samplelist2[:off_set]
-		salist = {'init_alb_info': samplelist}
-		viewsdb.initalbView.insert(salist)
-		logging.info('_get_init_album_info is complete')
-
-	def _get_init_songs_info(self, off_set):
-		samplelist3 = [song for song in db.tags.find({}, {'_id':0, 'song':1, 'songid':1, 'artist':1})]
-		samplelist = samplelist3[:off_set]
-		samlist = {'init_song_info': samplelist}
-		viewsdb.initsongView.insert(samlist)
-		logging.info('_get_init_songs_info is complete')
-		
 	#This takes a list and splits it up into a tup of chunks, n="number per list"	
 	def chunks(self, l, n):
 		if n < 1:
 			n = 1
 		return [l[i:i + n] for i in range(0, len(l), n)]
-
-	def get_offset_list(self, osc):
-		alphaoffsetlist = []
-		scount = 0
-		count = osc
-		while count > 0:
-			count -= 1
-			scount += 1
-			alphaoffsetlist.append(scount)
-		logging.info('get_offset_list complete')
-		return alphaoffsetlist
-
-	def get_artist_offset(self, chunk_size):
-		allartID = [{'art1': a['artist'], 'artid1': a['artistid']} for a in viewsdb.artistView.find({}, {'artist':1, 'artistid':1, '_id':0})]
-		random.shuffle(allartID)
-		artchunks = self.chunks(allartID, chunk_size)
-		artoffsetcount = len(artchunks)
-		z = {}
-		z['artchunks'] = artchunks
-		z['artalphaoffsetlist'] = self.get_offset_list(artoffsetcount)
-		logging.info(' get_artist_offset is complete')
-		return z
-
-	def _artist_offsets(self, ARTOD, apaths):
-		viewsdb.artalpha.insert(dict(artalpha=ARTOD['artalphaoffsetlist']))
-		count = 0
-		for r in ARTOD['artalphaoffsetlist']:
-			r = int(r) - 1
-			count += 1
-			for a in ARTOD['artchunks'][r]:
-				fone = viewsdb.artistView.find_one({'artistid': a['artid1']})
-				ftwo = {}
-				ftwo['albums'] = fone['albums']
-				ftwo['artist'] = fone['artist']
-				ftwo['artistid'] = fone['artistid']
-				ftwo['page'] = count
-				viewsdb.artistViewOffSet.insert(ftwo)
-		logging.info('_artist_offsets is complete')
-
-	def get_album_offset(self, chunk_size):
-		allalbID = [alb for alb in viewsdb.albumView.find({}, {'_id':1})]
-		random.shuffle(allalbID)
-		albchunks = self.chunks(allalbID, chunk_size)
-		alboffsetcount = len(albchunks)
-		z = {}
-		z['albchunks'] = albchunks
-		z['albalphaoffsetlist'] = self.get_offset_list(alboffsetcount)
-		logging.info(' get_album_offset is complete')
-		return z
-
-	def _album_offsets(self, ALBOD, apaths):
-		viewsdb.albalpha.insert(dict(albalpha=ALBOD['albalphaoffsetlist']))
-		count = 0
-		for r in ALBOD['albalphaoffsetlist']:
-			r = int(r) - 1
-			count += 1
-			for a in ALBOD['albchunks'][r]:
-				b = viewsdb.albumView.find_one({'_id': a['_id']})
-				y = {}
-				y['artist'] = b['artist']
-				y['artistid'] = b['artistid']
-				y['albumid'] = b['albumid']
-				y['album'] = b['album']
-				y['thumbnail'] = b['thumbnail']
-				y['songs'] = b['songs'],
-				y['numsongs'] = b['numsongs']
-				y['page'] = count
-				viewsdb.albumViewOffSet.insert(y)	
-		logging.info(' get_album_offset is complete')
-
-	def get_song_offset(self, chunk_size):
-		allsonID = [song['songid'] for song in db.tags.find({}, {'songid':1, '_id':0})]
-		random.shuffle(allsonID)
-		sonchunks = self.chunks(allsonID, chunk_size)
-		sonoffsetcount = len(sonchunks)
-		z = {}
-		z['sonchunks'] = sonchunks
-		z['sonalphaoffsetlist'] = self.get_offset_list(sonoffsetcount)
-		logging.info('get_song_offset is complete')
-		return z
-
-	def _song_offsets(self, SONOD, apaths):
-		viewsdb.songalpha.insert(dict(songalpha=SONOD['sonalphaoffsetlist']))
-		count = 0
-		for r in SONOD['sonalphaoffsetlist']:
-			r = int(r) - 1
-			#z = []
-			count += 1
-			for a in SONOD['sonchunks'][r]:
-				for s in db.tags.find({'songid':a}, {'song':1, 'songid':1, 'artist':1, '_id':0}):
-					x = {}
-					x['song'] = s['song']
-					x['songid'] = s['songid']
-					x['artist'] = s['artist']
-					x['page'] = count
-					#z.append(x)
-					viewsdb.songViewOffSet.insert(x)	
-		logging.info('get_song_offset is complete')
 
 	def _hash_func(self, a_string):
 		return str(hashlib.sha512(a_string.encode('utf-8')).hexdigest())
@@ -623,7 +418,7 @@ class SetUp():
 				vthumb = 100, 100
 				self._img_size_check_and_save(PP, vthumb, tpath)
 				v['vid_poster_string'] = self._get_b64_image(tpath)
-				self._remove_file(tpath)
+				os.remove(tpath)
 			else:
 				default = '/'.join((path['programPath'], 'static', 'images', 'no_art_pic_100x100.png'))
 				v['vid_poster_string'] = self._get_b64_image(default)
@@ -724,9 +519,15 @@ class SetUp():
 		
 		logging.info('Creating artistview has started')
 		print('Creating artistView')
-		create_artistView_db = self.create_artistView_db(aupdate)
-		calbV = self.create_albumView(aupdate)
+		ArtV = artv.ArtistView()
+		ArtV.create_artistView_db(aupdate, OPT['offset'])
 		logging.info('Creating artistview has completed')
+		AlbV = albv.AlbumView()
+		AlbV.create_albumView_db(aupdate, OPT['offset'])
+		logging.info('Creating albumview has completed')
+		SongV = songv.SongView()
+		SongV.create_songView_db(aupdate, OPT['offset'])
+		logging.info('Creating songview has completed')
 		
 		logging.info("Copying tempDBs to main DB has started")
 		if aupdate:
@@ -751,25 +552,7 @@ class SetUp():
 		print('Getting Stats')
 		dbstats = self.db_stats(aupdate)
 		logging.info('Getting Stats has completed')
-		
-		logging.info('Creating Initial Views has started')
-		print('Creating Initial Views')
-		iv1 = self._get_init_artist_info(OPT['offset'])
-		iv2 = self._get_init_album_info(OPT['offset'])
-		iv3 = self._get_init_songs_info(OPT['offset'])
-		logging.info('Creating Initial Views has completed')
 
-		logging.info('Creating Offsets has started')
-		print('Creating Offsets')
-		artOD = self.get_artist_offset(OPT['offset'])
-		ao = self._artist_offsets(artOD, paths)
-		albOD = self.get_album_offset(OPT['offset'])
-		aao = self._album_offsets(albOD, paths)
-		sonOD = self.get_song_offset(OPT['offset'])
-		aaoo = self._song_offsets(sonOD, paths)
-		print("Offsets Complete")
-		logging.info('Creating Offsets has completed')
-		
 		logging.info('Creating initial user has started')
 		print('Creating initial user')
 		adduser = self.insert_user(OPT['uname'], OPT['pword'])

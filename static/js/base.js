@@ -556,10 +556,8 @@ $(document).on('click', '.artOF', function () {
 			var alba33 = '';
 			$.each(val.songs, function (ka, val) {
 				$.each(val, function (kk, vv) {
-					$.each(vv, function (k, v) {
-						alba33 = alba33 + oc_albumOF2(v);
-						return alba33
-					});
+					alba33 = alba33 + oc_albumOF2(vv);
+					return alba33
 				});
 			});
 			var result = alb8 + alba33 + "</ul></div>";
@@ -842,9 +840,8 @@ $(document).on('click', '.artOF', function () {
 			$.each(va.songs, function (k, v) {
 				$.each(v, function (kk, vv) {
 					console.log('this is albumsearchBut vv[0]');
-					console.log(vv[0]);
-					var albab4 = oc_albsearchBut2(vv);
-					alba33 = alba33 + albab4;
+					console.log(vv);
+					alba33 = alba33 + oc_albsearchBut2(vv);
 					return alba33
 				});
 			});

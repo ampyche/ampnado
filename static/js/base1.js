@@ -101,7 +101,7 @@ function initAlbum1P1Fun2(c1) {
 };
 function initAlbum1P1() {
 	$.get('GetInitialAlbumInfo', function (data) {
-		$.each(data.ial, function (key, val) {		
+		$.each(data.ial, function (key, val) {	
 			var alb8 = initAlbum1P1Fun1(val)
 			var alba3 = '';
 			$.each(val.songs, function (k, v) {
