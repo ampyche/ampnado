@@ -9,7 +9,7 @@ Install the following softwares:
 	tornado
 	mongodb
 	
-To enable text search in versions of mongodb where textsearch is not enabled do:
+To enable text search in versions of mongodb where textsearch is not enabled by default do:
 
 	mongod --setParameter textSearchEnabled=true
 
@@ -20,31 +20,21 @@ To enable text search in versions of mongodb where textsearch is not enabled do:
 
 To setup AmpNado use the setup script in /usr/share/ampnado:
 
-	usage: ampnado_setup.py [-h] [-c CAT_NAME] [-o OFFSET_SIZE] [-P PWORD]
-	                        [-U UNAME]
-	                        MusicPath ServerAddr
-	
-	Setup AmpNado
-	
-	positional arguments:
-	  MusicPath             Path to the Music Collection
-	  ServerAddr            The Server Address
-	
-	optional arguments:
-	  -h, --help            show this help message and exit
-	  -c CAT_NAME, --cat-name CAT_NAME
-	                        Catalog Name or Music collection name, default is
-	                        current date
-	  -o OFFSET_SIZE, --offset-size OFFSET_SIZE
-	                        Items per page to show, default is 15
-	  -P PWORD, --pword PWORD
-	                        Initial user password, 'ampnado' is the default
-	  -U UNAME, --uname UNAME
-                        Initial user username, 'admin' is the default
 
 	Example:
 		python3 ampnado_setup.py /path/to/music/collection http://192.168.1.001/ampnado -o 40 -U Rodger -P rabbit
- 
+
+
+
+
+
+
+
+
+
+
+
+
 
 To add additional music after the initial setup script has been run, use the
 add_music.py script:

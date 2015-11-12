@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import os, sys, uuid, base64, uuid, logging, pymongo
+import os, sys, uuid, base64, glob, logging, pymongo
 from pymongo import MongoClient, ASCENDING, DESCENDING
 from multiprocessing import Pool
 from PIL import Image
@@ -27,13 +27,23 @@ class FindIt():
 		x['programPath'] = fn[2]
 		audio  = File(fn[0])
 		try: track = audio['TRCK'].text[0]
-		except KeyError:	pass
+		except KeyError:	
+			track = '50'
 		try: artist = audio["TPE1"].text[0]
-		except KeyError: logging.info(''.join(("KeyError: No TPE1 tag... ", fn)))
+		except KeyError: 
+			artist = 'Fuck Artist'
+			print(fn[0])
+			logging.info(''.join(("KeyError: No TPE1 tag... ", fn[0])))
 		try: album = audio["TALB"].text[0]
-		except KeyError: logging.info(''.join(("KeyError No TALB tag ... ", a)))
+		except KeyError: 
+			album = 'Fuck Album'
+			print(fn[0])
+			logging.info(''.join(("KeyError No TALB tag ... ", fn[0])))
 		try: song = audio['TIT2'].text[0]
-		except KeyError: logging.info(''.join(("KeyError: No TIT2 tag... ", song)))
+		except KeyError: 
+			song = 'Fuck Song'
+			print(fn[0])
+			logging.info(''.join(("KeyError: No TIT2 tag... ", fn[0])))
 		x['track'] = track
 		x['artist'] = artist
 		x['album'] = album
@@ -124,8 +134,8 @@ class GetAlbumArt():
 	def create_thumbs(self, p):
 		dthumb = (200, 200)
 		d2thumb = (100, 100)
-		loc2 = ''.join((p[1], '200x200.jpg'))
-		loc1 = ''.join((p[1], '100x100.jpg'))
+		loc2 = ''.join((p[1], p[0][1], '200x200.jpg'))
+		loc1 = ''.join((p[1], p[0][1], '100x100.jpg'))
 		im2 = self._get_smallthumb(loc1, p[0][0], d2thumb)
 		x = {}
 		x['albumartPath'] = p[0][0]
@@ -137,15 +147,24 @@ class GetAlbumArt():
 		x['largethumb_size'] = self._get_thumb_size(loc2)
 		x['largethumb'] = self._get_b64_image(loc2)
 		db.tags.update({'albumartPath': p[0][0]}, {'$set': {'sthumbnail': x['smallthumb'], 'smallthumb_size': x['smallthumb_size'], 'lthumbnail' : x['largethumb'], 'largethumb_size': x['largethumb_size']}}, multi=True)
-
+#		os.remove(loc1)
+#		os.remove(loc2)
+		
+		
+		
+		
 	def main(self, alblist, apaths):
 		sl10 = ''.join([apaths['tempPath'], '/'])
+		
 		alist = [(x, sl10) for x in alblist]
-		pool = Pool(processes=8)
+		pool = Pool(processes=4)
 		boogle = pool.map(self.create_thumbs, alist)
 		cleaned = [x for x in boogle if x != None]
 		pool.close()
 		pool.join()
+		sl11 = ''.join([apaths['tempPath'], '/', '*.jpg'])
+		rmlist = glob.glob(sl11)
+		for r in rmlist: os.remove(r)
 		return cleaned	
 
 class SetNoArtPic():

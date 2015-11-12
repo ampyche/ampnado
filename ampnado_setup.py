@@ -25,8 +25,6 @@ import amp.functions as fun
 import amp.remove_old as rmOld
 import amp.drop_db_indexes as dDBi
 
-from pprint import pprint
-
 ALNEW_ERROR_MESSAGE = """
 	Please only enter alpha numeric characters."""
 MODE_ERROR_MESSAGE = """
@@ -40,22 +38,27 @@ Please select which mode to use (Install/Update/AddUser/RemoveUser). Install is 
 to initial setup AmpNado.  Update is used when adding new media to AmpNado. AddUser is used to
 add new users to AmpNado, and RemoveUser, removes users from AmpNado."""
 MEDIA_PATH_HELP = """
-	Path to the Music Collection. ex: /home/fred/Music"""
+	Path to the music collection, multiple paths may be entered
+	for example: '-m /home/fred/Music /home/fred/MyOtherMusicFolder'"""
 SERVER_ADDR_HELP = """
 	The Server Address. ex: http://192.168.1.100/ampnado"""
 CAT_NAME_HELP = """
 	Catalog Name or Music collection name, default is current date"""
 OFFSET_SIZE_HELP = """
 	Items per page to show, default is 15"""
-ADD_USER_HELP = """
-	Add users to AmpNado.  Please also set the '-u' and '-p' options."""
-REMOVE_USER_HELP = """
-	Remove users from AmpNado.  Please also set the '-u' and '-p' options."""
-PWORD_HELP = """
-	Initial user password, 'ampnado' is the default"""
 UNAME_HELP = """
 	Initial user username, 'Admin' is the default"""
-		
+PWORD_HELP = """
+	Initial user password, 'ampnado' is the default"""
+ADD_UNAME_HELP = """
+	Add additional users, username, 'Admin' is the default"""
+ADD_PWORD_HELP = """
+	Add additional users, password, 'ampnado' is the default"""
+RM_UNAME_HELP = """
+	Remove user, username, 'Admin' is the default"""
+RM_PWORD_HELP = """
+	Remove user, password, 'ampnado' is the default"""	
+
 class SetUp():
 	def __init__(self):
 		client = MongoClient()
@@ -90,47 +93,40 @@ class SetUp():
 		parser_install.add_argument("-u", "--username", default='Admin', help=UNAME_HELP)
 		parser_install.add_argument("-p", "--password", default='ampnado', help=PWORD_HELP)
 		
+#		
+#		#Need to re think this
+#		parser_addmusic = subparsers.add_parser('AddMusic')
+#		parser_addmusic.add_argument("-mp", "--music-path", required=True, help=MEDIA_PATH_HELP)
+#		parser_addmusic.add_argument("-mc", "--music-catalog-name", default=a_uuid, help=CAT_NAME_HELP)
+#		
+#		
+#		
+#		#Need to re think this
+#		parser_addAlbumArt = subparsers.add_parser('AddAlbumArt')
+#		parser_addAlbumArt.add_argument("-mart", "--albumart-path", help='not implemented yet')
+#		parser_addAlbumArt.add_argument("-alb", "--album", help='not implemented yet')
+#		
+#		
+#		#Need to re think this
+#		parser_addvideo = subparsers.add_parser('AddVideo')
+#		parser_addvideo.add_argument("-v", "--video-path", required=True, help=MEDIA_PATH_HELP)
+#		parser_addvideo.add_argument("-vc", "--video-catalog-name", default=a_uuid, help=CAT_NAME_HELP)
+#		
+#		
+#		#Need to re think this
+#		parser_addvideoart = subparsers.add_parser('AddVideoArt')
+#		parser_addvideoart.add_argument("-vart", "--videoart-path", help='not implemented yet')
+#		parser_addvideoart.add_argument("-vid", "--video", help='not implemented yet')
+#		
+#		
+#		
+#		
 		
-		#Need to re think this
-		parser_addmusic = subparsers.add_parser('AddMusic')
-		parser_addmusic.add_argument("-mp", "--music-path", required=True, help=MEDIA_PATH_HELP)
-		parser_addmusic.add_argument("-mc", "--music-catalog-name", default=a_uuid, help=CAT_NAME_HELP)
-		
-		
-		
-		#Need to re think this
-		parser_addAlbumArt = subparsers.add_parser('AddAlbumArt')
-		parser_addAlbumArt.add_argument("-mart", "--albumart-path", help='not implemented yet')
-		parser_addAlbumArt.add_argument("-alb", "--album", help='not implemented yet')
-		
-		
-		#Need to re think this
-		parser_addvideo = subparsers.add_parser('AddVideo')
-		parser_addvideo.add_argument("-v", "--video-path", required=True, help=MEDIA_PATH_HELP)
-		parser_addvideo.add_argument("-vc", "--video-catalog-name", default=a_uuid, help=CAT_NAME_HELP)
-		
-		
-		#Need to re think this
-		parser_addvideoart = subparsers.add_parser('AddVideoArt')
-		parser_addvideoart.add_argument("-vart", "--videoart-path", help='not implemented yet')
-		parser_addvideoart.add_argument("-vid", "--video", help='not implemented yet')
-		
-
-#		parser_utils = subparsers.add_parser('Utils')
-#		parser_utils.add_argument("-ut", "--update-tags", help='not implemented yet')
-
-
-		
-		
-		parser_adduser = subparsers.add_parser('AddUser')
-		parser_adduser.add_argument("-au", "--add-user-name", help='not implemented yet')
-		parser_adduser.add_argument("-ap", "--add-user-password", help='not implemented yet')
-		
-		
-		
-		parser_rmuser = subparsers.add_parser('RemoveUser')
-		parser_rmuser.add_argument("-ru", "--remove-user-name", help='not implemented yet')
-		parser_rmuser.add_argument("-rp", "--remove-user-password", help='not implemented yet')
+		parser_utils = subparsers.add_parser('Utils')
+		parser_utils.add_argument("-aun", "--add-user-name", help=ADD_UNAME_HELP)
+		parser_utils.add_argument("-aup", "--add-user-password", help=ADD_PWORD_HELP)
+		parser_utils.add_argument("-rmn", "--remove-user-name", help=RM_UNAME_HELP)
+		parser_utils.add_argument("-rmp", "--remove-user-password", help=RM_PWORD_HELP)
 		args = parser.parse_args()
 		return args
 

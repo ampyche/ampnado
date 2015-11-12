@@ -32,7 +32,7 @@ try: from PIL import Image
 except ImportError: print('ImportError:  PIL is not installed')
 try: from mutagen import File
 except ImportError: from mutagenx import File
-else: print('ImportError:  Mutagen or mutagenx is not installed')
+
 
 client = MongoClient()
 db = client.ampnadoDB
