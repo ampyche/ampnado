@@ -26,7 +26,7 @@ db = client.ampnadoDB
 viewsdb = client.ampviewsDB
 
 class SongView():
-	def create_songView_db(self, u_date, OFC):
+	def create_songView_db(self, OFC):
 		count = 0
 		page = 1	
 		songalphaoffsetlist = []

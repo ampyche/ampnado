@@ -84,26 +84,50 @@ class SetUp():
 		subparsers = parser.add_subparsers(title="Setup AmpNado", description="AmpNado SubCommands", help='this is the help message')
 		parser_install = subparsers.add_parser('Install')
 		parser_install.add_argument("-s", "--serv-addr", required=True, help=SERVER_ADDR_HELP)
-		parser_install.add_argument("-m", "--media-path", required=True, help=MEDIA_PATH_HELP)
+		parser_install.add_argument("-m", "--media-path", nargs="*", required=True, help=MEDIA_PATH_HELP)
 		parser_install.add_argument("-c", "--install_catalog-name", default=a_uuid, help=CAT_NAME_HELP)
 		parser_install.add_argument("-o", "--offset-size", type=int, default=15, help=OFFSET_SIZE_HELP)
 		parser_install.add_argument("-u", "--username", default='Admin', help=UNAME_HELP)
 		parser_install.add_argument("-p", "--password", default='ampnado', help=PWORD_HELP)
+		
+		
+		#Need to re think this
 		parser_addmusic = subparsers.add_parser('AddMusic')
 		parser_addmusic.add_argument("-mp", "--music-path", required=True, help=MEDIA_PATH_HELP)
 		parser_addmusic.add_argument("-mc", "--music-catalog-name", default=a_uuid, help=CAT_NAME_HELP)
+		
+		
+		
+		#Need to re think this
 		parser_addAlbumArt = subparsers.add_parser('AddAlbumArt')
 		parser_addAlbumArt.add_argument("-mart", "--albumart-path", help='not implemented yet')
 		parser_addAlbumArt.add_argument("-alb", "--album", help='not implemented yet')
+		
+		
+		#Need to re think this
 		parser_addvideo = subparsers.add_parser('AddVideo')
 		parser_addvideo.add_argument("-v", "--video-path", required=True, help=MEDIA_PATH_HELP)
 		parser_addvideo.add_argument("-vc", "--video-catalog-name", default=a_uuid, help=CAT_NAME_HELP)
+		
+		
+		#Need to re think this
 		parser_addvideoart = subparsers.add_parser('AddVideoArt')
 		parser_addvideoart.add_argument("-vart", "--videoart-path", help='not implemented yet')
 		parser_addvideoart.add_argument("-vid", "--video", help='not implemented yet')
+		
+
+#		parser_utils = subparsers.add_parser('Utils')
+#		parser_utils.add_argument("-ut", "--update-tags", help='not implemented yet')
+
+
+		
+		
 		parser_adduser = subparsers.add_parser('AddUser')
 		parser_adduser.add_argument("-au", "--add-user-name", help='not implemented yet')
 		parser_adduser.add_argument("-ap", "--add-user-password", help='not implemented yet')
+		
+		
+		
 		parser_rmuser = subparsers.add_parser('RemoveUser')
 		parser_rmuser.add_argument("-ru", "--remove-user-name", help='not implemented yet')
 		parser_rmuser.add_argument("-rp", "--remove-user-password", help='not implemented yet')
@@ -123,6 +147,10 @@ class SetUp():
 		path2 = '/etc/cron.hourly/ampnado'
 		try: os.remove(path2)
 		except FileNotFoundError: os.symlink(path1, path2)
+		
+	def gettime(self, at):
+		b = time.time()
+		return (b - at)
 
 	def main(self):
 		atime = time.time()
@@ -140,9 +168,17 @@ class SetUp():
 				gi = self.GI.run_get_install_inputs(args)
 				print('Creating the DB')
 				logging.info('Creating the DB')
-				self.db.user_options.insert(gi[0])
-				self.db.prog_paths.insert(gi[1])
-				music = self.SU.run_setup(gi[0], gi[1], gi[2], self.UPDATE)						
+				self.db.options.insert(gi[0])#OPT 
+				print('this is   db.options.insert   time')
+				print(self.gettime(atime))
+				
+				self.db.prog_paths.insert(gi[1])#PATHS
+				print('this is   db.prog_paths.insert   time')
+				print(self.gettime(atime))
+				
+				music = self.SU.run_setup(gi[0], gi[1], atime)
+				print('this is  run_setup    time')
+				print(self.gettime(atime))
 		except AttributeError: pass
 		#this is for addmusic
 		try:

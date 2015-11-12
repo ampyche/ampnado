@@ -26,64 +26,67 @@ db = client.ampnadoDB
 viewsdb = client.ampviewsDB
 
 class ArtistView():
-	def create_artistView_db(self, u_date, OFC):
+	def create_artistView_db(self, OFC):
 		count = 0
 		page = 1
 		art_artid_list = []
 		artalphaoffsetlist = []
-		if not u_date:
-			for art in db.tags.distinct('artist'):
-				z = {}
-				z['artist'] = art
-				count += 1
-				if count == OFC:
-					page += 1
-					count = 0
-				artalphaoffsetlist.append(page)
-				z['page'] = page
-				artistid = db.tags.find_one({'artist': art}, {'artistid': 1, '_id': 0})
-				z['artistid'] = artistid['artistid']
-				boo = db.tags.aggregate([
-					{'$match': {'artist': art}},
-					{'$group': {'_id': 'album', 'albumz': {'$addToSet': '$album'}}},
-					{'$project': {'albumz' :1}}
-					])
-				doo = boo['result'][0]['albumz']
-				new_alb_list = []
-				for d in doo:
-					albid = db.tags.find_one({'album':d}, {'albumid':1, '_id':0})
-					moo = d, albid['albumid']
-					new_alb_list.append(moo)
-				z['albums'] = new_alb_list
-				art_artid_list.append(z)
-				artalphaoffsetlist = list(set(artalphaoffsetlist))
-			viewsdb.artalpha.insert(dict(artalpha=artalphaoffsetlist))
-			viewsdb.artistView.insert(art_artid_list)
-		else:
-			for art in db.tempTags.distinct('artist'):
-				z = {}
-				z['artist'] = art
-				count += 1
-				if count == OFC:
-					page += 1
-					count = 0
-					artalphaoffsetlist.append(page)
-				z['page'] = page
-				artistid = db.tempTags.find_one({'artist': art}, {'artistid': 1, '_id': 0})
-				z['artistid'] = artistid['artistid']
-				boo = db.tempTags.aggregate([
-					{'$match': {'artist': art}},
-					{'$group': {'_id': 'album', 'albumz': {'$addToSet': '$album'}}},
-					{'$project': {'albumz' :1}}
-					])
-				doo = boo['result'][0]['albumz']
-				new_alb_list = []
-				for d in doo:
-					albid = db.tempTags.find_one({'album':d}, {'albumid':1, '_id':0})
-					moo = d, albid['albumid']
-					new_alb_list.append(moo)
-				z['albums'] = new_alb_list
-				art_artid_list.append(z)
-			viewsdb.artalpha.insert(dict(artalpha=artalphaoffsetlist))
-			viewsdb.tempartistView.insert(art_artid_list)
+		
+		for art in db.tags.distinct('artist'):
+			z = {}
+			z['artist'] = art
+			count += 1
+			if count == OFC:
+				page += 1
+				count = 0
+			artalphaoffsetlist.append(page)
+			z['page'] = page
+			artistid = db.tags.find_one({'artist': art}, {'artistid': 1, '_id': 0})
+			z['artistid'] = artistid['artistid']
+			boo = db.tags.aggregate([
+				{'$match': {'artist': art}},
+				{'$group': {'_id': 'album', 'albumz': {'$addToSet': '$album'}}},
+				{'$project': {'albumz' :1}}
+				])
+			doo = boo['result'][0]['albumz']
+			new_alb_list = []
+			for d in doo:
+				albid = db.tags.find_one({'album':d}, {'albumid':1, '_id':0})
+				moo = d, albid['albumid']
+				new_alb_list.append(moo)
+			z['albums'] = new_alb_list
+			art_artid_list.append(z)
+			artalphaoffsetlist = list(set(artalphaoffsetlist))
+		viewsdb.artalpha.insert(dict(artalpha=artalphaoffsetlist))
+		viewsdb.artistView.insert(art_artid_list)
+#		else:
+#			for art in db.tempTags.distinct('artist'):
+#				z = {}
+#				z['artist'] = art
+#				count += 1
+#				if count == OFC:
+#					page += 1
+#					count = 0
+#					artalphaoffsetlist.append(page)
+#				z['page'] = page
+#				artistid = db.tempTags.find_one({'artist': art}, {'artistid': 1, '_id': 0})
+#				z['artistid'] = artistid['artistid']
+#				boo = db.tempTags.aggregate([
+#					{'$match': {'artist': art}},
+#					{'$group': {'_id': 'album', 'albumz': {'$addToSet': '$album'}}},
+#					{'$project': {'albumz' :1}}
+#					])
+#				doo = boo['result'][0]['albumz']
+#				new_alb_list = []
+#				for d in doo:
+#					albid = db.tempTags.find_one({'album':d}, {'albumid':1, '_id':0})
+#					moo = d, albid['albumid']
+#					new_alb_list.append(moo)
+#				z['albums'] = new_alb_list
+#				art_artid_list.append(z)
+#			viewsdb.artalpha.insert(dict(artalpha=artalphaoffsetlist))
+#			viewsdb.tempartistView.insert(art_artid_list)
+
+
+
 		logging.info('create_artistView_db')

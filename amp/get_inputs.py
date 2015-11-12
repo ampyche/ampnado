@@ -48,11 +48,15 @@ class GetInputs():
 			print("Please enter a path to the music collection")
 			sys.exit()
 		else:
-			if not os.path.exists(a_path):
-				logging.error("%s path does not exist" % a_path)
-				print("%s path does not exist" % a_path)
-				sys.exit()
-			else: return a_path	
+			plist = []
+			for a in a_path:
+				if not os.path.exists(a):
+					logging.error("%s path does not exist" % a)
+					print("%s path does not exist" % a)
+					sys.exit()
+				else:
+					plist.append(a)
+		return plist
 
 	def _get_regex(self, a_name):
 		un = re.match(r'^[\w]+$', a_name)
@@ -70,9 +74,8 @@ class GetInputs():
 			print("need error message here")
 			#need a log message here also
 
-	def _check_cat_name(self, a_catname, a_uuid):
-		catname = self._get_regex(a_catname)
-		return (self._get_regex(a_catname), a_uuid, ''.join((catname.upper(), '_', a_uuid)))
+	def _check_cat_name(self, a_catname):
+		return self._get_regex(a_catname)
 
 	def _check_uname(self, a_uname):
 		return self._get_regex(a_uname)
@@ -98,29 +101,14 @@ class GetInputs():
 		if po.port is None: return 80
 		else: return po.port
 
-	def create_catalog_dict(self, mpath, cname, cid, ppath, ocat):
-		cat_dict = {
-			'musicpath' : mpath,
-			'catname'   : cname,
-			'catid'     : cid,
-			'origcatname' : ocat,
-			'catpath'   : '/'.join((ppath, 'static', 'MUSIC', cname)),
-		}
-		logging.info('Catalog dict created')
-		return cat_dict
-
-	def create_options_dict(self, a_args, mupath, caname, caid):
+	def create_options_dict(self, a_args, cm, cn):
 		options_dict = {
-			"musicpath"   : mupath,
-			'catname'     : caname,
-			'catids'      : caid,
+			'catmeta'     : cm,
+			'catname'     : cn,
 			"hostaddress" : self._check_server_addr(a_args.serv_addr),
-			"uname"       : self._check_uname(a_args.username),
-			"pword"       : self._check_pword(a_args.password),
 			"offset"      : a_args.offset_size,
 			"port"        : self._get_port(self._check_server_addr(a_args.serv_addr)),
 		}
-		logging.info('Options dict created')
 		return options_dict
 
 	def create_paths_dict(self, aprogpath, ahttp):
@@ -159,55 +147,36 @@ class GetInputs():
 		print("The user   %s   with password   %s   has been removed" % (a_uname, a_pword))
 
 	def run_get_install_inputs(self, args):
-		h = self.FUN.gen_hash(args.username, args.password)
 		progpath = self.db.progpath.find_one({}, {'_id':0, 'progpath':1})
 		progpath = progpath['progpath']
-		musicpath = self._check_media_path(args.media_path)
-		cname = self._check_cat_name(args.install_catalog_name, self._get_uuid())
-		catname = cname[0]
-		catid = cname[1]
-		origcat = cname[2]
-		CAT = self.create_catalog_dict(musicpath, catname, catid, progpath, origcat)
-		OPT = self.create_options_dict(args, musicpath, catname, catid)
-		httpaddr = OPT['hostaddress']
-		http1 = httpaddr.split('/', 3)
-		http = ''.join([http1[0], '//', http1[2]])
-		PATHS = self.create_paths_dict(progpath, http)
-		RM_OLD = self.RM._remove_all_old(PATHS)
+		
 		RMDBI = self.DBI.drop_all_indexes()
 		RMDB = self.DB.rm_all_dbs()
-		os.symlink(OPT['musicpath'], CAT['catpath'])
+		
+		httpaddr = self._check_server_addr(args.serv_addr)
+		http1 = httpaddr.split('/', 3)
+		http = ''.join([http1[0], '//', http1[2]])
+		PATHS = self.create_paths_dict(progpath, http)		
+		RM_OLD = self.RM._remove_all_old(PATHS)
+
+		h = self.FUN.gen_hash(args.username, args.password)
 		if args.username and args.password:
 			users = self.insert_user(h[0], h[1], h[2], args.password)
-		return OPT, PATHS, CAT
 
-	def check_if_cat_is_in_db(self, u_cat_orig):
-		dbcatslist = [dbc for dbc in self.db.catalogs.find({}) if u_cat_orig == dbc['origcatname']]
-		if len(dbcatslist) > 0: return dbcatslist
-		else: return None
-
-	def run_get_add_music_inputs(self, args):
-		OPT = self.db.user_options.find_one({})
-		PATHS = self.db.prog_paths.find_one({})
-		progpath = self.db.progpath.find_one({}, {'_id':0, 'progpath':1})
-		progpath = progpath['progpath']
-		usn = self._check_cat_name(args.music_catalog_name, self._get_uuid())
-		user_cat_name = usn[0]
-		user_cat_id = usn[1]
-		user_cat_orig = usn[2]
-		cat_check = self.check_if_cat_is_in_db(user_cat_orig)
-		user_cat_path = args.music_path
-		print('this is user_cat_path')
-		if cat_check is None:
-			CAT = self.create_catalog_dict(user_cat_path, user_cat_name, user_cat_id, progpath, user_cat_orig)
-			os.symlink(user_cat_path, CAT['catpath'])
-			return OPT, PATHS, CAT
-		else:
-			os.symlink(user_cat_path, cat_check['catpath'])
-			return OPT, PATHS, cat_check
+		catname = self._check_cat_name(args.install_catalog_name)
+		catdirpath = '/'.join((progpath, 'static', 'MUSIC', catname))
+		os.mkdir(catdirpath)
 		
-	def run_get_add_albumart_inputs(self, args):
-		album = self._get_regex(args.album)
-		alb_exists = self.db.tags.find_one({'album': album}, {'_id':1})
-		if alb_exists is None: print("The album %s does not exist in the database" % album)
-		else: return alb_exists['_id']
+		musicpathlist = self._check_media_path(args.media_path)
+		CAT_META = []
+		for mp in musicpathlist:
+			catid = self._get_uuid()
+			catpath = '/'.join((catdirpath, catid))
+			try:
+				os.symlink(mp, catpath)
+			except FileExistsError: print('fuck')
+			cat = (mp, catname, catid, catpath)
+			CAT_META.append(cat)
+		
+		OPT = self.create_options_dict(args, CAT_META, catname)
+		return OPT, PATHS

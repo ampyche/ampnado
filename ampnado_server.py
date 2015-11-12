@@ -41,7 +41,7 @@ viewsdb = mclient.ampviewsDB
 FUN = Fun.SetUp()
 RM = Rm.RemoveOld()
 
-US_OP = db.user_options.find_one({})
+US_OP = db.options.find_one({})
 define('port', default=US_OP['port'], help='run on the given port', type=int)
 off_set = US_OP['offset']
 
@@ -132,7 +132,7 @@ class LogoutHandler(BaseHandler):
 class GetAllPlaylistsHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def getpls(self):
-		try: return [(d['playlistname'], d['playlistid']) for d in db.playlists.find({})]
+		try: return [(d['playlistname'], d['playlistid']) for d in db.playlists.find({}).sort([('playlistname', pymongo.ASCENDING)])]
 		except KeyError: return []
 		
 	@tornado.web.authenticated
@@ -155,14 +155,15 @@ class GetInitialArtistInfoHandler(BaseHandler):
 	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
-		ia = [artist for artist in viewsdb.artistView.find({}, {'_id':0}).limit(off_set)]
-		random.shuffle(ia)
+		ia = [artist for artist in viewsdb.artistView.find({}, {'_id':0}).sort([('artist', pymongo.ASCENDING)]).limit(off_set)]
+		
+		#random.shuffle(ia)
 		self.write(dict(ia=ia))	
 		
 class GetArtistInfoHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def _get_art_info(self, sel):
-		artinfo = [art for art in viewsdb.artistView.find({'page': sel}, {'_id':0})]
+		artinfo = [art for art in viewsdb.artistView.find({'page': sel}, {'_id':0}).sort([('artist', pymongo.ASCENDING)]).limit(off_set)]
 		return artinfo
 
 	@tornado.web.authenticated
@@ -198,7 +199,7 @@ class GetAlbumInfoHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
-		albs = yield self._get_alb_info(int(p['selected'][0]))
+		albs = yield self._get_alb_info(p['selected'][0])
 		self.write(dict(albs=albs))
 
 class GetSongAlphaHandler(BaseHandler):
@@ -299,6 +300,8 @@ class AddPlayListNameToDBHandler(BaseHandler):
 	@tornado.gen.coroutine		
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
+		print('this is p')
+		print(p)
 		insert_it = yield self._insert_plname(p['playlistname'][0])
 		pls = yield self._get_playlists()
 		self.write(dict(pnames=pls))
@@ -329,9 +332,17 @@ class AddRandomPlaylistHandler(BaseHandler):
 	def create_random_playlist(self, aplname, aplcount):
 		pl = {}
 		aplcount = int(aplcount)
+		ids = db.tags.distinct('_id')
+		random.shuffle(ids)
+		random_ids = random.sample(ids, aplcount)
+		new_song_list = []
+		for r in random_ids:
+			songs = db.tags.find_one({'_id': r}, {'_id':0})
+			new_song_list.append(songs)
+		random.shuffle(new_song_list)
+		pl['songs'] = new_song_list
 		pl['playlistname'] = aplname
 		pl['playlistid'] = str(uuid.uuid4().hex)
-		pl['songs'] = random.shuffle([song for song in db.tags.find({})])
 		db.playlists.insert(pl)
 		return [{'playlistname': pl['playlistname'], 'playlistid': pl['playlistid']} for pl in db.playlists.find({}, {'_id':0})]
 
@@ -347,11 +358,17 @@ class CreatePlayerPlaylistHandler(BaseHandler):
 	def _make_playlist(self, a_plid):
 		playlist = db.playlists.find_one({'playlistid':a_plid})
 		fart = []
-		tracks = 0
 		try:
 			for pl in playlist['songs']:
-				tracks += 1
-				z = {'tracks': tracks, 'name': pl['song'], 'file': pl['playlistpath'], 'thumbnail': pl['lthumbnail'], 'album': pl['album']}				
+				plp = pl['httpmusicpath'].split('/', 4)
+				plp = '/' + os.path.splitext(plp[4])[0]
+				z = {
+					'name': pl['song'], 
+					#'file': pl['playlistpath'],
+					'file': plp,
+					'thumbnail': pl['lthumbnail'], 
+					'album': pl['album'],
+				}		
 				fart.append(z)
 			return fart
 		except KeyError: return []
@@ -537,7 +554,7 @@ class GetAllVideoHandler(BaseHandler):
 	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
-		vlist = [vid for vid in db.video.find({}, {'vid_playpath': 1, 'vid_id': 1, 'vid_name':1, 'vid_poster_string': 1, '_id':0})]
+		vlist = [vid for vid in db.video.find({}, {'vid_playpath': 1, 'vid_id': 1, 'vid_name':1, 'vid_poster_string': 1, '_id':0}).sort([('vid_name', pymongo.ASCENDING)])]
 		self.write(dict(vlist=vlist))
 
 class RamdomAlbumPicPlaySongHandler(BaseHandler):
