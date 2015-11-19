@@ -93,6 +93,16 @@ class SetUp():
 		parser_install.add_argument("-u", "--username", default='Admin', help=UNAME_HELP)
 		parser_install.add_argument("-p", "--password", default='ampnado', help=PWORD_HELP)
 		
+		
+		
+		parser_utils = subparsers.add_parser('Utils')
+		parser_utils.add_argument("-aun", "--add-user-name", help=ADD_UNAME_HELP)
+		parser_utils.add_argument("-aup", "--add-user-password", help=ADD_PWORD_HELP)
+		parser_utils.add_argument("-rmn", "--remove-user-name", help=RM_UNAME_HELP)
+		parser_utils.add_argument("-rmp", "--remove-user-password", help=RM_PWORD_HELP)
+		
+		
+		
 #		
 #		#Need to re think this
 #		parser_addmusic = subparsers.add_parser('AddMusic')
@@ -122,11 +132,9 @@ class SetUp():
 #		
 #		
 		
-		parser_utils = subparsers.add_parser('Utils')
-		parser_utils.add_argument("-aun", "--add-user-name", help=ADD_UNAME_HELP)
-		parser_utils.add_argument("-aup", "--add-user-password", help=ADD_PWORD_HELP)
-		parser_utils.add_argument("-rmn", "--remove-user-name", help=RM_UNAME_HELP)
-		parser_utils.add_argument("-rmp", "--remove-user-password", help=RM_PWORD_HELP)
+
+		
+		
 		args = parser.parse_args()
 		return args
 
@@ -144,13 +152,10 @@ class SetUp():
 		try: os.remove(path2)
 		except FileNotFoundError: os.symlink(path1, path2)
 		
-	def gettime(self, at):
-		b = time.time()
-		return (b - at)
+	def gettime(self, at): return (time.time() - at)
 
 	def main(self):
 		atime = time.time()
-		
 		logging.basicConfig(filename='/usr/share/ampnado/logs/setup.log', 
 			format='%(asctime)s %(levelname)s:%(message)s', filemode='w', level=logging.INFO)
 		ppath = os.path.dirname(os.path.abspath(__file__))
@@ -176,75 +181,8 @@ class SetUp():
 				print('this is  run_setup    time')
 				print(self.gettime(atime))
 		except AttributeError: pass
-		#this is for addmusic
-		try:
-			if args.music_path and args.music_catalog_name:
-				self.UPDATE = True
-				gi = self.GI.run_get_add_music_inputs(args)
-				new_music = self.SU.run_setup(gi[0], gi[1], gi[2], self.UPDATE)
-		except AttributeError: pass
-		#this is for addalbumart
-		try:
-			if args.albumart_path and args.album:
-				aagi = self.GI.run_get_add_albumart_inputs(args)#returns album objectID if album is in database
-				if not os.path.exists(args.albumart_path):
-					print('Path to albumart does not exist.')
-				else:
-					l_1 = self.db.prog_paths.find_one({}, {'tempPath':1})
-					Sloc = '/'.join((l_1['tempPath'], 'smalltemp'))
-					Lloc = '/'.join((l_1['tempPath'], 'largetemp'))
-					Ssize = (100, 100)
-					self.SU._get_smallthumb(Sloc, args.albumart_path, Ssize)
-					small_b64 = self.SU._get_b64_image(Sloc)
-					os.remove(Sloc)
-					Lsize = (200, 200)
-					self.SU._img_size_check_and_save(args.albumart_path, Lsize, Lloc)
-					large_b64 = self.SU._get_b64_image(Lloc)
-					os.remove(Lloc)
-					self.db.tags.update({'_id': aagi}, {'sthumbnail': small_b64, 'lthumbnail': large_b64})#update db with new small thumb
-		except AttributeError: pass
-		#this if for addvideo
-		try:
-			opt = self.db.user_options.find_one({})
-			if args.video_catalog_name:
-				vcn = self.db.catalogs.find_one({'origcatname': args.video_catalog_name})
-				acatid = self._get_uuid()
-				if vcn != None: acat = vcn
-				else: acat = {'catname': args.video_catalog_name + "_" + acatid, 'musicpath': args.video_path}
-			else: print('Please enter a catalog name.')
-			if args.video_path:
-				vidlist = []
-				avidlist = self.SU._find_music_video(args.video_path)
-				self.UPDATE = True
-				udp = self.UPDATE
-				vvinfo = self.SU._create_vid_dict(avidlist[2], opt, acat, udp)
-				pp = self.db.progpath.find_one({})
-				path = {'programPath': pp['progpath']}
-				find_VP = self.SU.find_video_posters(vvinfo, path)
-				insert_video = self.db.video.insert(find_VP)			
-			else: print('Please enter path to video')
-		except AttributeError: pass
-		#this is for addvideoart
-		try:
-			path = self.db.prog_paths.find_one({})
-			if args.video_art_path:
-				if os.path.isfile(args.video_art_path):
-					vidposterString = self._get_b64_image(args.video_art_path)	
-				else:
-					print('Video poster path does not exist')
-			else:
-				print('Please enter path to video poster')
-			if args.video:
-				#need regex check here
-				vid = self.db.video.find({'vid_name': args.video})
-				if vid != None:
-					self.db.video.update({'vid_name': args.video}, {'$set': {'video_poster_string': vidposterString}})
-				else:
-					print('Video is not in the Database')
-			else:
-				print('Please enter a video name')
-		except AttributeError: pass
-		#this is for adduser
+
+
 		try:
 			if args.add_user_name and args.add_user_password:
 				h = self.SU.gen_hash(args.add_user_name, args.add_user_password)
@@ -262,6 +200,87 @@ class SetUp():
 		t = ptime - atime
 		print(t)
 		logging.info(t)
+
+
+
+
+
+
+
+
+
+
+
+		#this is for addmusic
+#		try:
+#			if args.music_path and args.music_catalog_name:
+#				self.UPDATE = True
+#				gi = self.GI.run_get_add_music_inputs(args)
+#				new_music = self.SU.run_setup(gi[0], gi[1], gi[2], self.UPDATE)
+#		except AttributeError: pass
+#		#this is for addalbumart
+#		try:
+#			if args.albumart_path and args.album:
+#				aagi = self.GI.run_get_add_albumart_inputs(args)#returns album objectID if album is in database
+#				if not os.path.exists(args.albumart_path):
+#					print('Path to albumart does not exist.')
+#				else:
+#					l_1 = self.db.prog_paths.find_one({}, {'tempPath':1})
+#					Sloc = '/'.join((l_1['tempPath'], 'smalltemp'))
+#					Lloc = '/'.join((l_1['tempPath'], 'largetemp'))
+#					Ssize = (100, 100)
+#					self.SU._get_smallthumb(Sloc, args.albumart_path, Ssize)
+#					small_b64 = self.SU._get_b64_image(Sloc)
+#					os.remove(Sloc)
+#					Lsize = (200, 200)
+#					self.SU._img_size_check_and_save(args.albumart_path, Lsize, Lloc)
+#					large_b64 = self.SU._get_b64_image(Lloc)
+#					os.remove(Lloc)
+#					self.db.tags.update({'_id': aagi}, {'sthumbnail': small_b64, 'lthumbnail': large_b64})#update db with new small thumb
+#		except AttributeError: pass
+#		#this if for addvideo
+#		try:
+#			opt = self.db.user_options.find_one({})
+#			if args.video_catalog_name:
+#				vcn = self.db.catalogs.find_one({'origcatname': args.video_catalog_name})
+#				acatid = self._get_uuid()
+#				if vcn != None: acat = vcn
+#				else: acat = {'catname': args.video_catalog_name + "_" + acatid, 'musicpath': args.video_path}
+#			else: print('Please enter a catalog name.')
+#			if args.video_path:
+#				vidlist = []
+#				avidlist = self.SU._find_music_video(args.video_path)
+#				self.UPDATE = True
+#				udp = self.UPDATE
+#				vvinfo = self.SU._create_vid_dict(avidlist[2], opt, acat, udp)
+#				pp = self.db.progpath.find_one({})
+#				path = {'programPath': pp['progpath']}
+#				find_VP = self.SU.find_video_posters(vvinfo, path)
+#				insert_video = self.db.video.insert(find_VP)			
+#			else: print('Please enter path to video')
+#		except AttributeError: pass
+#		#this is for addvideoart
+#		try:
+#			path = self.db.prog_paths.find_one({})
+#			if args.video_art_path:
+#				if os.path.isfile(args.video_art_path):
+#					vidposterString = self._get_b64_image(args.video_art_path)	
+#				else:
+#					print('Video poster path does not exist')
+#			else:
+#				print('Please enter path to video poster')
+#			if args.video:
+#				#need regex check here
+#				vid = self.db.video.find({'vid_name': args.video})
+#				if vid != None:
+#					self.db.video.update({'vid_name': args.video}, {'$set': {'video_poster_string': vidposterString}})
+#				else:
+#					print('Video is not in the Database')
+#			else:
+#				print('Please enter a video name')
+#		except AttributeError: pass
+#		#this is for adduser
+
 
 if __name__ == "__main__":
 	su = SetUp()

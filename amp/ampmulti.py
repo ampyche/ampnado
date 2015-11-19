@@ -1,60 +1,82 @@
 #!/usr/bin/python3
-import os, sys, uuid, base64, glob, logging, pymongo
-from pymongo import MongoClient, ASCENDING, DESCENDING
+import os, sys, uuid, base64, glob, logging, pymongo, hashlib, multiprocessing
 from multiprocessing import Pool
 from PIL import Image
-try: from mutagen import File
-except ImportError: from mutagenx import File
-
+cores = multiprocessing.cpu_count()
+from pymongo import MongoClient, ASCENDING, DESCENDING
 client = MongoClient()
 db = client.ampnadoDB
 viewsdb = client.ampviewsDB
 
+try: from mutagen import File
+except ImportError: from mutagenx import File
+
 class FindIt():
-	def gen_size(self, f): return os.stat(f).st_size
+	def gen_md5(self, afile):
+		with open(afile['filename'], 'rb') as mp: 
+			afile['md5'] = str(hashlib.md5(mp.read()).hexdigest())
+		return afile
+
+	def _gen_md5_main(self, alist):
+		pool = Pool(processes=cores)
+		pm = pool.map(self.gen_md5, alist)
+		cleaned = [x for x in pm if x != None]
+		pool.close()
+		pool.join()
+		return cleaned
+	
+	def get_file_meta(self, fn):
+		fn['filesize'] = os.stat(fn['filename']).st_size
+		fn['dirpath'] = os.path.dirname(fn['filename'])
+		fn['filetype'] = os.path.splitext(fn['filename'])[1].lower()
+		fn['songid'] = str(uuid.uuid4().hex)
+		return fn 
 		
-	def gen_dirname(self, f): return os.path.dirname(f)
-		
-	def get_mp3(self, fn):
-		fnse = os.path.splitext(fn[0])
-		low = fnse[1].lower()
-		x = {}
-		x['filename'] = fn[0]
-		x['filesize'] = os.stat(fn[0]).st_size
-		x['dirpath'] = os.path.dirname(fn[0])
-		x['filetype'] = low
-		x['catname'] = fn[1]
-		x['programPath'] = fn[2]
-		audio  = File(fn[0])
-		try: track = audio['TRCK'].text[0]
-		except KeyError:	
-			track = '50'
-		try: artist = audio["TPE1"].text[0]
+	def _file_meta_main(self, files):		
+		pool = Pool(processes=cores)
+		pm = pool.map(self.get_file_meta, files)
+		cleaned = [x for x in pm if x != None]
+		pool.close()
+		pool.join()
+		return cleaned
+
+	def get_audio_tag_info(self, fn):
+		audio = File(fn['filename'])
+		try: fn['track'] = audio['TRCK'].text[0]
+		except KeyError: fn['track'] = '50'
+		try: fn['artist'] = audio["TPE1"].text[0]
 		except KeyError: 
-			artist = 'Fuck Artist'
-			print(fn[0])
-			logging.info(''.join(("KeyError: No TPE1 tag... ", fn[0])))
-		try: album = audio["TALB"].text[0]
+			fn['artist'] = 'Fuck Artist'
+			print(fn['filename'])
+			logging.info(''.join(("KeyError: No TPE1 tag... ", fn['filename'])))	
+		try: fn['album'] = audio["TALB"].text[0]
 		except KeyError: 
-			album = 'Fuck Album'
-			print(fn[0])
-			logging.info(''.join(("KeyError No TALB tag ... ", fn[0])))
-		try: song = audio['TIT2'].text[0]
+			fn['album'] = 'Fuck Album'
+			print(fn['filename'])
+			logging.info(''.join(("KeyError No TALB tag ... ", fn['filename'])))	
+		try: fn['song'] = audio['TIT2'].text[0]
 		except KeyError: 
-			song = 'Fuck Song'
-			print(fn[0])
-			logging.info(''.join(("KeyError: No TIT2 tag... ", fn[0])))
-		x['track'] = track
-		x['artist'] = artist
-		x['album'] = album
-		x['song'] = song
-		x['songid'] = str(uuid.uuid4().hex)
+			fn['song'] = 'Fuck Song'
+			print(fn['filename'])
+			logging.info(''.join(("KeyError: No TIT2 tag... ", fn['filename'])))
+		return fn
+
+	def _get_audio_tag_info_main(self, files):
+		pool = Pool(processes=cores)
+		pm = pool.map(self.get_audio_tag_info, files)
+		cleaned = [x for x in pm if x != None]
+		pool.close()
+		pool.join()
+		return cleaned
+
+	def _albumart_search(self, x):
 		ppath = '/'.join((os.path.dirname(x['filename']), "folder.jpg"))
 		if os.path.isfile(ppath):
 			x['albumartPath'] = ppath
 			x['NoTagArt'] = 1
 		else:
 			try:
+				audio = File(x['filename'])
 				artwork = audio.tags[u'APIC:'].data
 				with open(ppath, 'wb') as img: img.write(artwork)
 			except (KeyError, TypeError):
@@ -67,25 +89,25 @@ class FindIt():
 		db.tags.insert(x)			
 		return x
 
-	def main(self, fns, OPT, PATHS):
-		files = [(f, OPT['catname'], PATHS['programPath']) for f in fns] 
-		pool = Pool(processes=4)
-		poopoo = pool.map(self.get_mp3, files)
-		cleaned = [x for x in poopoo if x != None]
+	def albumart_search_main(self, afile):
+		pool = Pool(processes=cores)
+		pm = pool.map(self._albumart_search, afile)
+		cleaned = [x for x in pm if x != None]
 		pool.close()
 		pool.join()
+		return cleaned
 
 class HttpMusicPath():
 	def add_http_music_path_to_db(self, t):
-		fn1 = t[0].split(t[1])[1]
-		fn2 = ''.join((t[2], fn1))
+		#fn1 = t[0].split(t[1])[1]
+		fn2 = ''.join((t[2], t[0].split(t[1])[1]))
 		db.tags.update({'filename':t[0]}, {'$set': {'httpmusicpath':fn2}})
 
 	def main(self, a_path):
 		httpmusicpath = a_path['httpmusicPath']
 		musiccatpath = a_path['musiccatPath']
 		p = [(p['filename'], musiccatpath, httpmusicpath) for p in db.tags.find({})]
-		pool = Pool(processes=4)
+		pool = Pool(processes=cores)
 		yahoo = pool.map(self.add_http_music_path_to_db, p)
 		cleaned = [x for x in yahoo if x != None]
 		pool.close()
@@ -103,7 +125,7 @@ class GetAlbumArtLists():
 
 	def main(self):
 		albumartPaths = db.tags.distinct('albumartPath')
-		pool = Pool(processes=4)
+		pool = Pool(processes=cores)
 		google = pool.map(self.get_albumart_lists, albumartPaths)
 		cleaned = [x for x in google if x != None]
 		pool.close()
@@ -147,17 +169,11 @@ class GetAlbumArt():
 		x['largethumb_size'] = self._get_thumb_size(loc2)
 		x['largethumb'] = self._get_b64_image(loc2)
 		db.tags.update({'albumartPath': p[0][0]}, {'$set': {'sthumbnail': x['smallthumb'], 'smallthumb_size': x['smallthumb_size'], 'lthumbnail' : x['largethumb'], 'largethumb_size': x['largethumb_size']}}, multi=True)
-#		os.remove(loc1)
-#		os.remove(loc2)
-		
-		
-		
 		
 	def main(self, alblist, apaths):
 		sl10 = ''.join([apaths['tempPath'], '/'])
-		
 		alist = [(x, sl10) for x in alblist]
-		pool = Pool(processes=4)
+		pool = Pool(processes=cores)
 		boogle = pool.map(self.create_thumbs, alist)
 		cleaned = [x for x in boogle if x != None]
 		pool.close()
@@ -194,7 +210,7 @@ class SetNoArtPic():
 		nat200 = self.nat200(path)
 		ntaid = [(nta['_id'], nat100[0], nat100[1], nat200[0], nat200[1]) for nta in db.tags.find({'NoTagArt': 0}, {'_id':1})]
 		
-		pool = Pool(processes=4)
+		pool = Pool(processes=cores)
 		moogle = pool.map(self.get_no_art_ids, ntaid)
 		cleaned = [x for x in moogle if x != None]
 		pool.close()
@@ -240,7 +256,7 @@ class CreateVidDict():
 
 	def main(self, avidlist, opt):
 		avid = [(avid, opt['catname']) for avid in avidlist]
-		pool = Pool(processes=4)
+		pool = Pool(processes=cores)
 		booty = pool.map(self._create_vid_dict, avid)
 		cleaned = [x for x in booty if x != None]
 		pool.close()
@@ -280,7 +296,39 @@ class GetVideoPoster():
 
 	def main(self, vinfo, PATH):
 		vid = [(v, PATH['programPath']) for v in vinfo]
-		pool = Pool(processes=4)
+		pool = Pool(processes=cores)
 		booty = pool.map(self.find_video_posters, vid)
 		pool.close()
 		pool.join()
+		
+		
+class UpdateTags():
+	def get_all_db_tags(self):
+		return db.tags.find({}, {'_id':1, 'filename':1, 'artist':1, 'album':1, 'song':1})
+		
+	def tag_check(self, af, ft):
+		if af == ft:
+			return True
+		else:
+			return False
+
+	def get_file_tags(self, afile):
+		gt = FindIt()
+		file_tags = gt.get_mp3(afile['filename'])
+		art_check = self.tag_check(file_tags['artist'], afile['artist'])
+		alb_check = self.tag_check(file_tags['album'], afile['album'])
+		song_check = self.tag.check(file_tags['song'], afile['song'])
+		if art_check and alb_check and song_check:
+			pass
+		else:
+			db.tags.update({'filename': afile['filename']}, {'$set' ,{'artist': file_tags['artist'], 'album': file_tags['album'], 'song': file_tags['song']}})
+		return file_tags
+		
+	
+	def main(self):
+		fns = get_all_db_tags()
+		pool = Pool(processes=cores)
+		booty = pool.map(self.get_file_tags, fns)
+		pool.close()
+		pool.join()
+		

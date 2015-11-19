@@ -18,12 +18,13 @@
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 ###############################################################################
-import logging
 from pymongo import MongoClient
-
 client = MongoClient()
 db = client.ampnadoDB
 viewsdb = client.ampviewsDB
+
+import  multiprocessing, logging
+cores = multiprocessing.cpu_count()
 
 class ArtistView():
 	def create_artistView_db(self, OFC):
@@ -31,7 +32,6 @@ class ArtistView():
 		page = 1
 		art_artid_list = []
 		artalphaoffsetlist = []
-		
 		for art in db.tags.distinct('artist'):
 			z = {}
 			z['artist'] = art
@@ -43,14 +43,15 @@ class ArtistView():
 			z['page'] = page
 			artistid = db.tags.find_one({'artist': art}, {'artistid': 1, '_id': 0})
 			z['artistid'] = artistid['artistid']
-			boo = db.tags.aggregate([
-				{'$match': {'artist': art}},
-				{'$group': {'_id': 'album', 'albumz': {'$addToSet': '$album'}}},
-				{'$project': {'albumz' :1}}
+			doo = [
+				a['albumz'] for a in db.tags.aggregate([
+					{'$match': {'artist': art}},
+					{'$group': {'_id': 'album', 'albumz': {'$addToSet': '$album'}}},
+					{'$project': {'albumz' :1}}
 				])
-			doo = boo['result'][0]['albumz']
+			]	
 			new_alb_list = []
-			for d in doo:
+			for d in doo[0]:
 				albid = db.tags.find_one({'album':d}, {'albumid':1, '_id':0})
 				moo = d, albid['albumid']
 				new_alb_list.append(moo)
@@ -59,34 +60,35 @@ class ArtistView():
 			artalphaoffsetlist = list(set(artalphaoffsetlist))
 		viewsdb.artalpha.insert(dict(artalpha=artalphaoffsetlist))
 		viewsdb.artistView.insert(art_artid_list)
-#		else:
-#			for art in db.tempTags.distinct('artist'):
-#				z = {}
-#				z['artist'] = art
-#				count += 1
-#				if count == OFC:
-#					page += 1
-#					count = 0
-#					artalphaoffsetlist.append(page)
-#				z['page'] = page
-#				artistid = db.tempTags.find_one({'artist': art}, {'artistid': 1, '_id': 0})
-#				z['artistid'] = artistid['artistid']
-#				boo = db.tempTags.aggregate([
-#					{'$match': {'artist': art}},
-#					{'$group': {'_id': 'album', 'albumz': {'$addToSet': '$album'}}},
-#					{'$project': {'albumz' :1}}
-#					])
-#				doo = boo['result'][0]['albumz']
-#				new_alb_list = []
-#				for d in doo:
-#					albid = db.tempTags.find_one({'album':d}, {'albumid':1, '_id':0})
-#					moo = d, albid['albumid']
-#					new_alb_list.append(moo)
-#				z['albums'] = new_alb_list
-#				art_artid_list.append(z)
-#			viewsdb.artalpha.insert(dict(artalpha=artalphaoffsetlist))
-#			viewsdb.tempartistView.insert(art_artid_list)
-
-
-
-		logging.info('create_artistView_db')
+		
+		
+		
+#class ArtistChunkIt():
+#	def chunks(self, l, n):
+#		if n < 1:
+#			n = 1
+#		return [l[i:i + n] for i in range(0, len(l), n)]		
+#
+#	def _get_alphaoffset(self, chunks):		
+#		count = 0
+#		albidPlist = []
+#		albalphaoffsetlist = []
+#		for chu in chunks:
+#			count += 1
+#			for c in chu:
+#				albid_page = c['albumid'], str(count)
+#				albidPlist.append(albid_page)
+#			albalphaoffsetlist.append(str(count))
+#		viewsdb.albalpha.insert(dict(albalpha=albalphaoffsetlist))
+#		return albidPlist
+#			
+#	def _get_pages(self, c):
+#		viewsdb.albumView.update({'albumid': c[0]}, {'$set': {'page': c[1]}})
+#
+#	def main(self, albv, OFC):
+#		chunks = self.chunks(albv, OFC)
+#		gaos = self._get_alphaoffset(chunks)
+#		pool = Pool(processes=cores)
+#		voodoo = pool.map(self._get_pages, gaos)
+#		pool.close()
+#		pool.join()

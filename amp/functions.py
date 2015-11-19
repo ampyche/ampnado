@@ -111,13 +111,13 @@ class SetUp():
 				fnse = os.path.splitext(fn)
 				low = fnse[1].lower()
 				if low == '.mp3':
-					self.mp3list.append(fn)
+					self.mp3list.append({'filename': fn})
 				elif low == '.ogg':
 					self.ogglist.append(fn)
 				elif low == '.m4v' or low == '.mp4': 
 					self.vidlist.append(fn)
 				else: pass
-		logging.info('Finding music complete')
+		logging.info('SETUP: Finding music complete')
 		return self.mp3list, self.ogglist, self.vidlist
 
 	def _get_bytes(self, upd):
@@ -125,16 +125,16 @@ class SetUp():
 			return db.tags.aggregate({'$group': {'_id': 'soup', 'total' : {'$sum': '$filesize'}}})
 		else: 
 			return db.tempTags.aggregate({'$group': {'_id': 'soup', 'total' : {'$sum': '$filesize'}}})
-		logging.info('_get_bytes is complete')
+		logging.info('SETUP: _get_bytes is complete')
 
 	def _get_ids(self, bupd):
 		if not bupd: return [o['_id'] for o in db.tags.find({})]
 		else: return [o['_id'] for o in db.tempTags.find({})]
-		logging.info('_get_ids is now complete')
+		logging.info('SETUP: _get_ids is now complete')
 
 	def _insert_catalog_info(self, adict):
 		db.catalogs.insert(adict)
-		logging.info('_insert_catalog_info is complete')
+		logging.info('SETUP: _insert_catalog_info is complete')
 
 	def _create_catalog_db(self, cdict, aupd):
 		bytes = self._get_bytes(aupd)
@@ -142,17 +142,17 @@ class SetUp():
 		cdict['catTotal'] = self._convert_bytes(bytes['result'][0]['total']),
 		self._insert_catalog_info(cdict)
 		self._update_tagsdb_with_cat_info(cdict, aupd)
-		logging.info('create_catalog_db is complete')
+		logging.info('SETUP: create_catalog_db is complete')
 
 	def add_artistids(self):		
 		artlist = [{'artist' : a, 'artistid' : self.gen_uuid()} for a in db.tags.distinct('artist')]
 		[db.tags.update({'artist': n['artist']}, {'$set': {'artistid': n['artistid']}}, multi=True) for n in artlist] 
-		logging.info('add_artistids complete')
+		logging.info('SETUP: add_artistids complete')
 
 	def add_albumids(self):
 		alblist = [{'album': a, 'albumid': self.gen_uuid()} for a in db.tags.distinct('album')]
 		[db.tags.update({'album': alb['album']}, {'$set': {'albumid': alb['albumid']}}, multi=True) for alb in alblist]
-		logging.info('add_albumids complete')
+		logging.info('SETUP: add_albumids complete')
 
 	def db_stats(self):
 		picbytes = 	sum([self._get_lthumb_bytes(), self._get_sthumb_bytes()])
@@ -167,7 +167,7 @@ class SetUp():
 		x['total_songs'] = self._get_song_count()
 		x['total_videos'] = self._get_video_count()
 		db.ampnado_stats.insert(x)
-		logging.info('db stats complete')							
+		logging.info('SETUP: db stats complete')							
 
 	#This takes a list and splits it up into a tup of chunks, n="number per list"	
 	def chunks(self, l, n):
@@ -184,12 +184,13 @@ class SetUp():
 		hash3 = self._hash_func(str(time.time()))
 		hash4 = ''.join((hash1, hash2, hash3))
 		hash5 = self._hash_func(hash4)
+		logging.info('SETUP: creditials hash has been created')
 		return auname, hash2, hash5
 
 	def insert_user(self, a_uname, a_pword):
 		h = self.gen_hash(a_uname, a_pword)
 		db.user_creds.insert({'username': a_uname, 'password': h[1], 'user_id': h[2]})
-		logging.info('insert_user is complete')
+		logging.info('SETUP: insert_user is complete')
 
 	def _create_random_art_db(self):
 		db.randthumb.remove({})
@@ -209,7 +210,7 @@ class SetUp():
 			else:
 				print('something fucked up')
 		db.randthumb.insert(mc)		
-		logging.info('_create_random_art_db is complete')
+		logging.info('SETUP: _create_random_art_db is complete')
 
 	def _creat_db_indexes(self):
 		pymongo.TEXT='text'
@@ -226,13 +227,15 @@ class SetUp():
 		viewsdb.artistView.create_index([('artist', 'text')])
 		viewsdb.albumView.create_index([('album', 'text')])
 		viewsdb.albumView.create_index([('artistid', DESCENDING), ('albumid', ASCENDING)])
-		viewsdb.albumView.create_index([('albumid', DESCENDING), ('thumbnail', ASCENDING)])
+		
+		#viewsdb.albumView.create_index([('albumid', DESCENDING), ('thumbnail', ASCENDING)])
+		
 		viewsdb.albumView.create_index([('albumid', DESCENDING), ('songs', ASCENDING)])
-		logging.info('_creat_db_indexes is complete')
+		logging.info('SETUP: _creat_db_indexes is complete')
 
 	def gettime(self, at):
 		b = time.time()
-		return (b - at)
+		return str(b - at)
 
 	def run_setup(self, aopt, apath, a_time):
 		logging.info('Setup Started')
@@ -243,50 +246,87 @@ class SetUp():
 		FM = self._find_music_video(PATHS['musiccatPath'])
 		print('this is  _find_music_video    time')
 		print(self.gettime(a_time))
+		
+		
+		
 		if len(FM[0]) >= 1: filesfound_mp3 = True
 		else: filesfound_mp3 = False
 		if len(FM[1]) >= 1: filesfound_ogg = True
 		else: filesfound_ogg = False
 		if len(FM[2]) >= 1: filesfound_vid = True
 		else: filesfound_vid = False
+		
+		
+		
 		print("Finding music complete")
 		logging.info('Finding music complete')
-		logging.info('Getting tag info started')		
+		
+		logging.info('Getting tag info started')
+		print('Getting tag info started')	
 		if filesfound_mp3: 
+			print('filesfound complete')
+			files = []
+			for f in FM[0]:
+				f['catname'] = OPT['catname']
+				f['programPath'] = PATHS['programPath']
+				files.append(f)
+			
 			B = amul.FindIt()
-			Bmp3 = B.main(FM[0], OPT, PATHS)
+			print('starting md5s')
+			add_md5 = B._gen_md5_main(files)
+			
+			print('add_md5 complete')
+			newmeta = B._file_meta_main(add_md5)
+			
+			print('newmeta complete')
+			newtags = B._get_audio_tag_info_main(newmeta)
+			print('newtags complete')
+			insert_media = B.albumart_search_main(newtags)
+			
+			print('insert media complete')
 		else: pass
 		print('this is _get_tags and Insert tags     time')
 		print(self.gettime(a_time))
 		logging.info('Getting tag info complete')
+		
 		C = amul.HttpMusicPath()
 		ZoLu = C.main(PATHS)
+		
 		print('this is   add_http_music_path_to_db     time')
 		print(self.gettime(a_time))
 		addartistid = self.add_artistids()
+		
 		print('this is   addartistid     time')
 		print(self.gettime(a_time))
 		addalbumid = self.add_albumids()
+		
 		print('this is   addalbumid     time')
 		print(self.gettime(a_time))
 		D = amul.GetAlbumArtLists()
 		ZeBe = D.main()
+		
 		E = amul.GetAlbumArt()
 		Zero = E.main(ZeBe, PATHS)
+		
 		F = amul.SetNoArtPic()
 		Zoo = F.main()
+		
 		print('this is   get_albumart     time')
 		print(self.gettime(a_time))
 		logging.info('Finding videos has started')
+		
 		print('Finding Video')
 		if filesfound_vid:
 			G = amul.CreateVidDict()
 			H = amul.GetVideoPoster()
 			VID = G.main(FM[2], OPT)
+			
 			VIDI = H.main(VID, PATHS)
+			
 		print('this is   find and insert vid info     time')
 		print(self.gettime(a_time))
 		logging.info('Finding video is complete')
+		
 		logging.info('Creating artistview has started')
 		print('Creating artistView')
 		ArtV = artv.ArtistView()
@@ -294,29 +334,34 @@ class SetUp():
 		print('this is   ArtistView     time')
 		print(self.gettime(a_time))
 		logging.info('Creating albumview has completed')
+		
 		print('Creating albumview')
 		AlbV = albvv.AlbumView()
 		albv = AlbV.main(OPT['offset'])
-		albv2 = albvv.ChunkIt()
+		albv2 = albvv.AlbumChunkIt()
 		chunk = albv2.main(albv, OPT['offset'])
 		print('this is   AlbumView     time')
 		print(self.gettime(a_time))
 		logging.info('Creating songview has completed')
+		
 		print('Creating songview')
 		SongV = songv.SongView()
 		SongV.create_songView_db(OPT['offset'])
 		print('this is   SongView     time')
 		print(self.gettime(a_time))
 		logging.info('Creating indexes has started')
+		
 		creat_indexes = self._creat_db_indexes()
 		print('this is   creat_indexes     time')
 		print(self.gettime(a_time))
 		logging.info('Creating indexes has completed')
+		
 		logging.info('Creating random art has started')
 		cradb = self._create_random_art_db()
 		print('this is   cradb     time')
 		print(self.gettime(a_time))
 		logging.info('Creating random art has completed')
+		
 		stats = self.db_stats()
 		print('this is   db_stats     time')
 		print(self.gettime(a_time))
