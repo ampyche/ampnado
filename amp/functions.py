@@ -23,20 +23,32 @@ import amp.artistview as artv
 import amp.albumview as albvv
 import amp.songview as songv
 import amp.ampmulti as amul
-from multiprocessing import Pool
-try:
-	import pymongo
-	from pymongo import MongoClient, ASCENDING, DESCENDING
-except ImportError: print('ImportError:  PyMongo is not installed')
+import amp.httpmusicpath as httpmp
+import amp.mdfivegen as mdfg
+import amp.filemeta as fmeta
+import amp.gettags as gtag
+import amp.albumartscan as aas
+import amp.albumartlist as aal
+import amp.getalbumart as gaa
+import amp.setnoartpic as snap
+import amp.createviddic as cvd
+import amp.videoposter as vp
 try: from PIL import Image
 except ImportError: print('ImportError:  PIL is not installed')
 try: from mutagen import File
 except ImportError: from mutagenx import File
 
-
+try:
+	import pymongo
+	from pymongo import MongoClient, ASCENDING, DESCENDING
+except ImportError: print('ImportError:  PyMongo is not installed')
 client = MongoClient()
 db = client.ampnadoDB
 viewsdb = client.ampviewsDB
+
+import multiprocessing
+cores = multiprocessing.cpu_count()
+from multiprocessing import Pool
 
 class SetUp():
 	def __init__(self):
@@ -48,6 +60,8 @@ class SetUp():
 		
 		vidlist = []
 		self.vidlist = vidlist
+		
+		
 
 	def gen_size(self, f): return os.stat(f).st_size
 		
@@ -236,18 +250,27 @@ class SetUp():
 	def gettime(self, at):
 		b = time.time()
 		return str(b - at)
+		
+		
+		
+
+		
+		
+		
 
 	def run_setup(self, aopt, apath, a_time):
 		logging.info('Setup Started')
+		
 		PATHS = apath
 		OPT = aopt
+		
 		logging.info('Finding music started')
 		print("Constants Setup Complete\nSetup Started\nFinding Music")
+
 		FM = self._find_music_video(PATHS['musiccatPath'])
+		
 		print('this is  _find_music_video    time')
 		print(self.gettime(a_time))
-		
-		
 		
 		if len(FM[0]) >= 1: filesfound_mp3 = True
 		else: filesfound_mp3 = False
@@ -255,14 +278,12 @@ class SetUp():
 		else: filesfound_ogg = False
 		if len(FM[2]) >= 1: filesfound_vid = True
 		else: filesfound_vid = False
-		
-		
-		
+
 		print("Finding music complete")
 		logging.info('Finding music complete')
-		
 		logging.info('Getting tag info started')
-		print('Getting tag info started')	
+		print('Getting tag info started')
+		
 		if filesfound_mp3: 
 			print('filesfound complete')
 			files = []
@@ -271,97 +292,130 @@ class SetUp():
 				f['programPath'] = PATHS['programPath']
 				files.append(f)
 			
-			B = amul.FindIt()
+			#B = amul.FindIt()
 			print('starting md5s')
-			add_md5 = B._gen_md5_main(files)
-			
+
+			genmd5 = mdfg.MD5Gen()
+			GENMD5 = genmd5._gen_md5_main(files, cores)
+
 			print('add_md5 complete')
-			newmeta = B._file_meta_main(add_md5)
-			
+			print('newmeta started')
+
+			metaf = fmeta.GetFileMeta() 
+			FILEMETA = metaf._file_meta_main(GENMD5, cores)
+	
 			print('newmeta complete')
-			newtags = B._get_audio_tag_info_main(newmeta)
+			print('newtags started')
+
+			tagget = gtag.GetMP3Tags()
+			MP3TAGS = tagget._get_audio_tag_info_main(FILEMETA, cores)
+						
 			print('newtags complete')
-			insert_media = B.albumart_search_main(newtags)
+			print('insert media started')
+			
+			asm = aas.AlbumArtScan()
+			ALBUMARTSCAN = asm.albumart_search_main(MP3TAGS, cores)
 			
 			print('insert media complete')
 		else: pass
+		
 		print('this is _get_tags and Insert tags     time')
 		print(self.gettime(a_time))
 		logging.info('Getting tag info complete')
-		
-		C = amul.HttpMusicPath()
-		ZoLu = C.main(PATHS)
-		
+
+		httpm = httpmp.HttpMusicPath()
+		HTTPMP = httpm.main(PATHS, cores)
+
 		print('this is   add_http_music_path_to_db     time')
 		print(self.gettime(a_time))
+		
 		addartistid = self.add_artistids()
 		
 		print('this is   addartistid     time')
 		print(self.gettime(a_time))
+		
 		addalbumid = self.add_albumids()
 		
 		print('this is   addalbumid     time')
 		print(self.gettime(a_time))
-		D = amul.GetAlbumArtLists()
-		ZeBe = D.main()
 		
-		E = amul.GetAlbumArt()
-		Zero = E.main(ZeBe, PATHS)
-		
-		F = amul.SetNoArtPic()
-		Zoo = F.main()
-		
+		Aal = aal.GetAlbumArtLists()
+		ALBUMARTLIST = Aal.get_albumart_list_main(cores)
+
+		Gaa = gaa.GetAlbumArt()
+		GETALBUMART = Gaa.get_albumart_main(ALBUMARTLIST, PATHS, cores)
+
+		Snap = snap.SetNoArtPic()
+		SETNOARTPIC = Snap.set_no_art_pic_main(cores)
+
 		print('this is   get_albumart     time')
 		print(self.gettime(a_time))
 		logging.info('Finding videos has started')
-		
 		print('Finding Video')
+		
+		
+		
+		
+		
+		
+		
 		if filesfound_vid:
-			G = amul.CreateVidDict()
-			H = amul.GetVideoPoster()
-			VID = G.main(FM[2], OPT)
 			
-			VIDI = H.main(VID, PATHS)
+			Cvd = cvd.CreateVidDict()
+			CREATEVIDDIC = create_vid_dic_main(FM[2], OPT, cores)
+
+			Vp = vp.GetVideoPoster()
+			GETVIDEOPOSTER = Vp.get_video_poster_main(CREATEVIDDIC, PATHS, cores)
 			
 		print('this is   find and insert vid info     time')
 		print(self.gettime(a_time))
 		logging.info('Finding video is complete')
-		
 		logging.info('Creating artistview has started')
 		print('Creating artistView')
+		
 		ArtV = artv.ArtistView()
-		ArtV.create_artistView_db(OPT['offset'])
+		av = ArtV.main()
+		ArtC = artv.ArtistChunkIt()
+		
+		ArtC.main(av, OPT['offset'])
+
 		print('this is   ArtistView     time')
 		print(self.gettime(a_time))
 		logging.info('Creating albumview has completed')
-		
 		print('Creating albumview')
-		AlbV = albvv.AlbumView()
-		albv = AlbV.main(OPT['offset'])
+		
+		AlbV = albvv.AlbumView()		
+		albv = AlbV.main()
 		albv2 = albvv.AlbumChunkIt()
 		chunk = albv2.main(albv, OPT['offset'])
+		
+		
 		print('this is   AlbumView     time')
 		print(self.gettime(a_time))
 		logging.info('Creating songview has completed')
-		
 		print('Creating songview')
+		
 		SongV = songv.SongView()
 		SongV.create_songView_db(OPT['offset'])
+		
 		print('this is   SongView     time')
 		print(self.gettime(a_time))
 		logging.info('Creating indexes has started')
 		
 		creat_indexes = self._creat_db_indexes()
+		
 		print('this is   creat_indexes     time')
 		print(self.gettime(a_time))
 		logging.info('Creating indexes has completed')
-		
 		logging.info('Creating random art has started')
+		
 		cradb = self._create_random_art_db()
+		
 		print('this is   cradb     time')
 		print(self.gettime(a_time))
 		logging.info('Creating random art has completed')
 		
 		stats = self.db_stats()
+		
 		print('this is   db_stats     time')
 		print(self.gettime(a_time))

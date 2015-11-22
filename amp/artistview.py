@@ -26,69 +26,65 @@ viewsdb = client.ampviewsDB
 import  multiprocessing, logging
 cores = multiprocessing.cpu_count()
 
+from multiprocessing import Pool
+
 class ArtistView():
-	def create_artistView_db(self, OFC):
+	def create_artistView_db(self, art):
+		z = {}
+		z['artist'] = art
+		artistid = db.tags.find_one({'artist': art}, {'artistid': 1, '_id': 0})
+		z['artistid'] = artistid['artistid']
+		doo = [
+			a['albumz'] for a in db.tags.aggregate([
+				{'$match': {'artist': art}},
+				{'$group': {'_id': 'album', 'albumz': {'$addToSet': '$album'}}},
+				{'$project': {'albumz' :1}}
+			])
+		]
+		new_alb_list = []
+		for d in doo[0]:
+			albid = db.tags.find_one({'album':d}, {'albumid':1, '_id':0})
+			moo = d, albid['albumid']
+			new_alb_list.append(moo)
+		z['albums'] = new_alb_list
+		viewsdb.artistView.insert(z)
+		return z 
+
+	def main(self):
+		art = db.tags.distinct('artist')
+		pool = Pool(processes=cores)
+		artv = pool.map(self.create_artistView_db, art)
+		cleaned = [x for x in artv if x != None]
+		pool.close()
+		pool.join()
+		return cleaned
+	
+class ArtistChunkIt():
+	def chunks(self, l, n):
+		if n < 1:
+			n = 1
+		return [l[i:i + n] for i in range(0, len(l), n)]		
+
+	def _get_alphaoffset(self, chunks):		
 		count = 0
-		page = 1
-		art_artid_list = []
+		artidPlist = []
 		artalphaoffsetlist = []
-		for art in db.tags.distinct('artist'):
-			z = {}
-			z['artist'] = art
+		for chu in chunks:
 			count += 1
-			if count == OFC:
-				page += 1
-				count = 0
-			artalphaoffsetlist.append(page)
-			z['page'] = page
-			artistid = db.tags.find_one({'artist': art}, {'artistid': 1, '_id': 0})
-			z['artistid'] = artistid['artistid']
-			doo = [
-				a['albumz'] for a in db.tags.aggregate([
-					{'$match': {'artist': art}},
-					{'$group': {'_id': 'album', 'albumz': {'$addToSet': '$album'}}},
-					{'$project': {'albumz' :1}}
-				])
-			]	
-			new_alb_list = []
-			for d in doo[0]:
-				albid = db.tags.find_one({'album':d}, {'albumid':1, '_id':0})
-				moo = d, albid['albumid']
-				new_alb_list.append(moo)
-			z['albums'] = new_alb_list
-			art_artid_list.append(z)
-			artalphaoffsetlist = list(set(artalphaoffsetlist))
+			for c in chu:
+				albid_page = c['artist'], str(count)
+				artidPlist.append(albid_page)
+			artalphaoffsetlist.append(str(count))
 		viewsdb.artalpha.insert(dict(artalpha=artalphaoffsetlist))
-		viewsdb.artistView.insert(art_artid_list)
-		
-		
-		
-#class ArtistChunkIt():
-#	def chunks(self, l, n):
-#		if n < 1:
-#			n = 1
-#		return [l[i:i + n] for i in range(0, len(l), n)]		
-#
-#	def _get_alphaoffset(self, chunks):		
-#		count = 0
-#		albidPlist = []
-#		albalphaoffsetlist = []
-#		for chu in chunks:
-#			count += 1
-#			for c in chu:
-#				albid_page = c['albumid'], str(count)
-#				albidPlist.append(albid_page)
-#			albalphaoffsetlist.append(str(count))
-#		viewsdb.albalpha.insert(dict(albalpha=albalphaoffsetlist))
-#		return albidPlist
-#			
-#	def _get_pages(self, c):
-#		viewsdb.albumView.update({'albumid': c[0]}, {'$set': {'page': c[1]}})
-#
-#	def main(self, albv, OFC):
-#		chunks = self.chunks(albv, OFC)
-#		gaos = self._get_alphaoffset(chunks)
-#		pool = Pool(processes=cores)
-#		voodoo = pool.map(self._get_pages, gaos)
-#		pool.close()
-#		pool.join()
+		return artidPlist
+			
+	def _get_pages(self, c):
+		viewsdb.artistView.update({'artist': c[0]}, {'$set': {'page': c[1]}})
+
+	def main(self, artv, OFC):
+		chunks = self.chunks(artv, OFC)
+		gaos = self._get_alphaoffset(chunks)
+		pool = Pool(processes=cores)
+		voodoo = pool.map(self._get_pages, gaos)
+		pool.close()
+		pool.join()

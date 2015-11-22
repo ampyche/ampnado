@@ -156,13 +156,12 @@ class GetInitialArtistInfoHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def get(self):
 		ia = [artist for artist in viewsdb.artistView.find({}, {'_id':0}).sort([('artist', pymongo.ASCENDING)]).limit(off_set)]
-		
-		#random.shuffle(ia)
 		self.write(dict(ia=ia))	
 		
 class GetArtistInfoHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def _get_art_info(self, sel):
+		sel = str(sel)
 		artinfo = [art for art in viewsdb.artistView.find({'page': sel}, {'_id':0}).sort([('artist', pymongo.ASCENDING)]).limit(off_set)]
 		return artinfo
 

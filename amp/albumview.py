@@ -52,8 +52,8 @@ class AlbumView():
 		av['songs'] = new_song_list
 		viewsdb.albumView.insert(av)
 		return av
-	
-	def main(self, OFC):
+
+	def main(self):
 		albid = db.tags.distinct('albumid')
 		pool = Pool(processes=cores)
 		poogle = pool.map(self.create_albumView_db, albid)
