@@ -18,6 +18,16 @@
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 ###############################################################################
+import os
+import pymongo
+v = pymongo.version
+version = v.split('.')[0]
+version = int(version)
+
+
+
+
+
 from pymongo import MongoClient
 client = MongoClient()
 db = client.ampnadoDB
@@ -37,16 +47,33 @@ class AlbumView():
 		av['artist'] = info['artist']
 		av['artistid'] = info['artistid']
 		av['thumbnail'] = info['sthumbnail']
-		doo = [
-			a['songz'] for a in db.tags.aggregate([
+		if version < 3:
+		
+		
+			boo = db.tags.aggregate([
 				{'$match': {'albumid': a}},
 				{'$group': {'_id': 'song', 'songz': {'$addToSet': '$song'}}},
 				{'$project': {'songz' :1}}
 			])
-		]	
+			doo = boo['result'][0]['songz']
+		else:
+		
+			boo = [
+				a['songz'] for a in db.tags.aggregate([
+					{'$match': {'albumid': a}},
+					{'$group': {'_id': 'song', 'songz': {'$addToSet': '$song'}}},
+					{'$project': {'songz' :1}}
+				])
+			]
+			doo = boo[0]
+		
+		
 		av['numsongs'] = len(doo)
 		new_song_list = []
-		for d in doo[0]:
+		
+		
+		
+		for d in doo:
 			sids = [(s['song'], s['songid']) for s in db.tags.find({'song':d}, {'song':1, 'songid':1, '_id':0})]
 			new_song_list.append(sids)
 		av['songs'] = new_song_list

@@ -18,11 +18,11 @@
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 ###############################################################################
-import os, re, sys, glob, json, shutil, random, time, hashlib, uuid, base64, logging
+import os, shutil, random, time, hashlib, uuid, base64, logging
+
 import amp.artistview as artv
 import amp.albumview as albvv
 import amp.songview as songv
-import amp.ampmulti as amul
 import amp.httpmusicpath as httpmp
 import amp.mdfivegen as mdfg
 import amp.filemeta as fmeta
@@ -33,15 +33,9 @@ import amp.getalbumart as gaa
 import amp.setnoartpic as snap
 import amp.createviddic as cvd
 import amp.videoposter as vp
-try: from PIL import Image
-except ImportError: print('ImportError:  PIL is not installed')
-try: from mutagen import File
-except ImportError: from mutagenx import File
-
-try:
-	import pymongo
-	from pymongo import MongoClient, ASCENDING, DESCENDING
-except ImportError: print('ImportError:  PyMongo is not installed')
+from PIL import Image
+import pymongo
+from pymongo import MongoClient, ASCENDING, DESCENDING
 client = MongoClient()
 db = client.ampnadoDB
 viewsdb = client.ampviewsDB
@@ -49,6 +43,13 @@ viewsdb = client.ampviewsDB
 import multiprocessing
 cores = multiprocessing.cpu_count()
 from multiprocessing import Pool
+
+try: from mutagen import File
+except ImportError: from mutagenx import File
+
+
+
+
 
 class SetUp():
 	def __init__(self):
@@ -60,8 +61,6 @@ class SetUp():
 		
 		vidlist = []
 		self.vidlist = vidlist
-		
-		
 
 	def gen_size(self, f): return os.stat(f).st_size
 		
@@ -362,7 +361,7 @@ class SetUp():
 		if filesfound_vid:
 			
 			Cvd = cvd.CreateVidDict()
-			CREATEVIDDIC = create_vid_dic_main(FM[2], OPT, cores)
+			CREATEVIDDIC = Cvd.create_vid_dic_main(FM[2], OPT, cores)
 
 			Vp = vp.GetVideoPoster()
 			GETVIDEOPOSTER = Vp.get_video_poster_main(CREATEVIDDIC, PATHS, cores)

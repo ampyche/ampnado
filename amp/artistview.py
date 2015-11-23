@@ -18,6 +18,12 @@
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 ###############################################################################
+import os
+import pymongo
+v = pymongo.version
+version = v.split('.')[0]
+version = int(version)
+
 from pymongo import MongoClient
 client = MongoClient()
 db = client.ampnadoDB
@@ -34,15 +40,34 @@ class ArtistView():
 		z['artist'] = art
 		artistid = db.tags.find_one({'artist': art}, {'artistid': 1, '_id': 0})
 		z['artistid'] = artistid['artistid']
-		doo = [
-			a['albumz'] for a in db.tags.aggregate([
+		if version < 3:
+
+
+
+			boo = db.tags.aggregate([
 				{'$match': {'artist': art}},
 				{'$group': {'_id': 'album', 'albumz': {'$addToSet': '$album'}}},
 				{'$project': {'albumz' :1}}
 			])
-		]
+			doo = boo['result'][0]['albumz']
+
+		else:
+
+
+			boo = [
+				a['albumz'] for a in db.tags.aggregate([
+					{'$match': {'artist': art}},
+					{'$group': {'_id': 'album', 'albumz': {'$addToSet': '$album'}}},
+					{'$project': {'albumz' :1}}
+				])
+			]
+			doo = boo[0]
+		
+		
+		
 		new_alb_list = []
-		for d in doo[0]:
+		#for d in doo[0]:
+		for d in doo:
 			albid = db.tags.find_one({'album':d}, {'albumid':1, '_id':0})
 			moo = d, albid['albumid']
 			new_alb_list.append(moo)

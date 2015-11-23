@@ -19,11 +19,19 @@
 ###############################################################################
 ###############################################################################
 import os, time, argparse, uuid, logging
+
+
+
 from pymongo import MongoClient
 import amp.get_inputs as gp
 import amp.functions as fun
 import amp.remove_old as rmOld
 import amp.drop_db_indexes as dDBi
+import amp.updatetags as ut
+import multiprocessing
+cores = multiprocessing.cpu_count()
+
+
 
 ALNEW_ERROR_MESSAGE = """
 	Please only enter alpha numeric characters."""
@@ -68,15 +76,16 @@ class SetUp():
 		RM = rmOld.RemoveOld()
 		DBI = dDBi.DropDBIndexes()
 		DB = dDBi.DropDBs()
-		UPDATE = False
+		UT = ut.UpdateTagsDB()
 		
-		self.UPDATE = UPDATE
+		
 		self.db = db
 		self.GI = GI
 		self.SU = SU
 		self.RM = RM
 		self.DBI = DBI
 		self.DB = DB
+		self.UT = UT
 		
 	def _get_uuid(self):
 		return str(uuid.uuid4().hex)
@@ -96,10 +105,20 @@ class SetUp():
 		
 		
 		parser_utils = subparsers.add_parser('Utils')
-		parser_utils.add_argument("-aun", "--add-user-name", help=ADD_UNAME_HELP)
-		parser_utils.add_argument("-aup", "--add-user-password", help=ADD_PWORD_HELP)
-		parser_utils.add_argument("-rmn", "--remove-user-name", help=RM_UNAME_HELP)
-		parser_utils.add_argument("-rmp", "--remove-user-password", help=RM_PWORD_HELP)
+		
+		
+		
+		
+#		parser_utils.add_argument("-aun", "--add-user-name", help=ADD_UNAME_HELP)
+#		parser_utils.add_argument("-aup", "--add-user-password", help=ADD_PWORD_HELP)
+#		parser_utils.add_argument("-rmn", "--remove-user-name", help=RM_UNAME_HELP)
+#		parser_utils.add_argument("-rmp", "--remove-user-password", help=RM_PWORD_HELP)
+		
+		parser_utils.add_argument("--add-user-name", help=ADD_UNAME_HELP)
+		parser_utils.add_argument("--add-user-password", help=ADD_PWORD_HELP)
+		parser_utils.add_argument("--remove-user-name", help=RM_UNAME_HELP)
+		parser_utils.add_argument("--remove-user-password", help=RM_PWORD_HELP)
+		parser_utils.add_argument("--update-tags", default='yes', help='help')
 		
 		
 		
@@ -145,12 +164,12 @@ class SetUp():
 		else:
 			return False
 
-	def symlink_cronPY(self):
-		pp = self.db.progpath.find_one({})
-		path1 = pp['progpath'] + '/ampnado_cron.sh'
-		path2 = '/etc/cron.hourly/ampnado'
-		try: os.remove(path2)
-		except FileNotFoundError: os.symlink(path1, path2)
+#	def symlink_cronPY(self):
+#		pp = self.db.progpath.find_one({})
+#		path1 = pp['progpath'] + '/ampnado_cron.sh'
+#		path2 = '/etc/cron.hourly/ampnado'
+#		try: os.remove(path2)
+#		except FileNotFoundError: os.symlink(path1, path2)
 		
 	def gettime(self, at): return (time.time() - at)
 
@@ -162,6 +181,9 @@ class SetUp():
 		progpath = {'progpath': ppath}
 		self.db.progpath.insert(progpath)
 		args = self._get_args(ppath)
+		print('this is args')
+		print(args)
+		
 		
 		#this is for install
 		try:
@@ -194,8 +216,16 @@ class SetUp():
 				h = self.SU.gen_hash(args.remove_user_name, args.remove_user_password)
 				ruser = self.GI._remove_user(h[0], h[1])
 		except AttributeError: pass
+		
+		try:
+			L1 = ['yes', 'y', 'Y', 'Yes','YES']
+			if args.update_tags in L1: self.UT.update_tags_main(cores)
+			else: pass
+		except AttributeError: pass
+				
+				
 
-		sc = self.symlink_cronPY()	
+		#sc = self.symlink_cronPY()	
 		ptime = time.time()
 		t = ptime - atime
 		print(t)
