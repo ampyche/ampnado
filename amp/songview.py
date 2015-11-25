@@ -20,7 +20,6 @@
 ###############################################################################
 import logging
 from pymongo import MongoClient
-
 client = MongoClient()
 db = client.ampnadoDB
 viewsdb = client.ampviewsDB

@@ -18,8 +18,6 @@
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 ###############################################################################
-import os, shutil, random, time, hashlib, uuid, base64, logging
-
 import amp.artistview as artv
 import amp.albumview as albvv
 import amp.songview as songv
@@ -33,7 +31,7 @@ import amp.getalbumart as gaa
 import amp.setnoartpic as snap
 import amp.createviddic as cvd
 import amp.videoposter as vp
-from PIL import Image
+import os, random, time, hashlib, uuid, base64, logging
 import pymongo
 from pymongo import MongoClient, ASCENDING, DESCENDING
 client = MongoClient()
@@ -47,19 +45,13 @@ from multiprocessing import Pool
 try: from mutagen import File
 except ImportError: from mutagenx import File
 
-
-
-
-
 class SetUp():
 	def __init__(self):
 		mp3list = []
-		self.mp3list = mp3list
-		
 		ogglist = []
-		self.ogglist = ogglist
-		
 		vidlist = []
+		self.mp3list = mp3list
+		self.ogglist = ogglist
 		self.vidlist = vidlist
 
 	def gen_size(self, f): return os.stat(f).st_size
@@ -227,6 +219,9 @@ class SetUp():
 
 	def _creat_db_indexes(self):
 		pymongo.TEXT='text'
+		db.tags.create_index([('song', 'text')])
+		viewsdb.artistView.create_index([('artist', 'text')])
+		viewsdb.albumView.create_index([('album', 'text')])
 		db.tags.create_index([('artist', DESCENDING), ('album', ASCENDING)])
 		db.tags.create_index([('artistid', DESCENDING), ('albumid', ASCENDING)])
 		db.tags.create_index([('album', DESCENDING), ('song', ASCENDING)])
@@ -235,27 +230,14 @@ class SetUp():
 		db.tags.create_index([('albumid', DESCENDING), ('thumbnail', ASCENDING)])
 		db.tags.create_index([('albumid', DESCENDING), ('song', ASCENDING)])
 		db.tags.create_index([('albumid', DESCENDING), ('songid', ASCENDING)])
-		db.tags.create_index([('song', 'text')])
 		db.video.create_index([('vid_id', DESCENDING), ('vid_name', ASCENDING)])
-		viewsdb.artistView.create_index([('artist', 'text')])
-		viewsdb.albumView.create_index([('album', 'text')])
 		viewsdb.albumView.create_index([('artistid', DESCENDING), ('albumid', ASCENDING)])
-		
-		#viewsdb.albumView.create_index([('albumid', DESCENDING), ('thumbnail', ASCENDING)])
-		
 		viewsdb.albumView.create_index([('albumid', DESCENDING), ('songs', ASCENDING)])
 		logging.info('SETUP: _creat_db_indexes is complete')
 
 	def gettime(self, at):
 		b = time.time()
 		return str(b - at)
-		
-		
-		
-
-		
-		
-		
 
 	def run_setup(self, aopt, apath, a_time):
 		logging.info('Setup Started')
@@ -290,19 +272,12 @@ class SetUp():
 				f['catname'] = OPT['catname']
 				f['programPath'] = PATHS['programPath']
 				files.append(f)
-			
-			#B = amul.FindIt()
-			print('starting md5s')
 
-			genmd5 = mdfg.MD5Gen()
-			GENMD5 = genmd5._gen_md5_main(files, cores)
-
-			print('add_md5 complete')
 			print('newmeta started')
 
 			metaf = fmeta.GetFileMeta() 
-			FILEMETA = metaf._file_meta_main(GENMD5, cores)
-	
+			FILEMETA = metaf._file_meta_main(files, cores)
+			
 			print('newmeta complete')
 			print('newtags started')
 
@@ -351,13 +326,7 @@ class SetUp():
 		print(self.gettime(a_time))
 		logging.info('Finding videos has started')
 		print('Finding Video')
-		
-		
-		
-		
-		
-		
-		
+
 		if filesfound_vid:
 			
 			Cvd = cvd.CreateVidDict()
@@ -374,8 +343,8 @@ class SetUp():
 		
 		ArtV = artv.ArtistView()
 		av = ArtV.main()
-		ArtC = artv.ArtistChunkIt()
 		
+		ArtC = artv.ArtistChunkIt()		
 		ArtC.main(av, OPT['offset'])
 
 		print('this is   ArtistView     time')
@@ -387,8 +356,7 @@ class SetUp():
 		albv = AlbV.main()
 		albv2 = albvv.AlbumChunkIt()
 		chunk = albv2.main(albv, OPT['offset'])
-		
-		
+
 		print('this is   AlbumView     time')
 		print(self.gettime(a_time))
 		logging.info('Creating songview has completed')

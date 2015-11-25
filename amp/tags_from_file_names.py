@@ -20,19 +20,11 @@
 ###############################################################################
 import os, sys
 from pymongo import MongoClient
-from pprint import pprint
+client = MongoClient()
+db = client.ampnadoDB
 
 class TagsFromFilename():
-	
-	def __init__(self):
-		client1 = MongoClient()
-		db = client1.ampnadoDB
-		self.db = db
-		
-		client2 = MongoClient()
-		dba = client2.fnDB
-		self.dba = dba
-		
+
 	def get_files(self):
 		return [d['filename'] for d in self.db.tags.find({}, {'filename': 1, '_id':0})]
 		
@@ -66,15 +58,5 @@ class TagsFromFilename():
 			else:
 				print('boooooo')
 				print(fn)
-		pprint(result)
-		self.dba.tags.insert(result)
+		db.tags.insert(result)
 		return result
-		
-		
-if __name__ == "__main__":
-	TFF = TagsFromFilename()
-	tff = TFF._get_sp_filenames()
-
-
-
-

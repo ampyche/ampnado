@@ -20,23 +20,23 @@
 ###############################################################################
 import os, re, sys, uuid, logging
 from urllib.parse import urlparse
-from pymongo import MongoClient
 import amp.functions as fun
 import amp.remove_old as rmOld
 import amp.drop_db_indexes as dDBi
+
+from pymongo import MongoClient
+client = MongoClient()
+db = client.ampnadoDB
+
 
 class GetInputs():
 	def __init__(self):
 		RM = rmOld.RemoveOld()
 		FUN = fun.SetUp()
-		client = MongoClient()
-		db = client.ampnadoDB
 		DBI = dDBi.DropDBIndexes()
 		DB = dDBi.DropDBs()
-
 		self.RM = RM
 		self.FUN = FUN
-		self.db = db
 		self.DBI = DBI
 		self.DB = DB
 
@@ -127,7 +127,7 @@ class GetInputs():
 
 	def _check_if_uname_already_in_db(self, auname, apword):
 		try:
-			ace = self.db.user_creds.find_one({'username': auname, 'password': apword})
+			ace = db.user_creds.find_one({'username': auname, 'password': apword})
 			if ace['username'] != '':
 				a = True
 		except TypeError:
@@ -138,16 +138,16 @@ class GetInputs():
 		if self._check_if_uname_already_in_db(a_uname, a_pword):
 			print("The user %s with password %s already exist in the database" % (a_uname, txt_pword))
 		else:
-			self.db.user_creds.insert({'username': a_uname, 'password': a_pword, 'user_id': a_hash})
+			db.user_creds.insert({'username': a_uname, 'password': a_pword, 'user_id': a_hash})
 			print("The user   %s   with password   %s   has been created" % (a_uname, a_pword))
 
 	def _remove_user(self, a_uname, a_pword):
-		aid = self.db.user_creds.find_one({'username': a_uname, 'password': a_pword}, {'_id':1})
-		self.db.user_creds.remove(aid['_id'])
+		aid = db.user_creds.find_one({'username': a_uname, 'password': a_pword}, {'_id':1})
+		db.user_creds.remove(aid['_id'])
 		print("The user   %s   with password   %s   has been removed" % (a_uname, a_pword))
 
 	def run_get_install_inputs(self, args):
-		progpath = self.db.progpath.find_one({}, {'_id':0, 'progpath':1})
+		progpath = db.progpath.find_one({}, {'_id':0, 'progpath':1})
 		progpath = progpath['progpath']
 		
 		RMDBI = self.DBI.drop_all_indexes()

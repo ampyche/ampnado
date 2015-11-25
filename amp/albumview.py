@@ -24,10 +24,6 @@ v = pymongo.version
 version = v.split('.')[0]
 version = int(version)
 
-
-
-
-
 from pymongo import MongoClient
 client = MongoClient()
 db = client.ampnadoDB
@@ -48,8 +44,6 @@ class AlbumView():
 		av['artistid'] = info['artistid']
 		av['thumbnail'] = info['sthumbnail']
 		if version < 3:
-		
-		
 			boo = db.tags.aggregate([
 				{'$match': {'albumid': a}},
 				{'$group': {'_id': 'song', 'songz': {'$addToSet': '$song'}}},
@@ -57,7 +51,6 @@ class AlbumView():
 			])
 			doo = boo['result'][0]['songz']
 		else:
-		
 			boo = [
 				a['songz'] for a in db.tags.aggregate([
 					{'$match': {'albumid': a}},
@@ -66,13 +59,8 @@ class AlbumView():
 				])
 			]
 			doo = boo[0]
-		
-		
 		av['numsongs'] = len(doo)
 		new_song_list = []
-		
-		
-		
 		for d in doo:
 			sids = [(s['song'], s['songid']) for s in db.tags.find({'song':d}, {'song':1, 'songid':1, '_id':0})]
 			new_song_list.append(sids)

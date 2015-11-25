@@ -21,7 +21,7 @@
 import os, base64
 from multiprocessing import Pool
 from PIL import Image
-from pymongo import MongoClient, ASCENDING, DESCENDING
+from pymongo import MongoClient
 client = MongoClient()
 db = client.ampnadoDB
 

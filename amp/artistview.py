@@ -41,19 +41,13 @@ class ArtistView():
 		artistid = db.tags.find_one({'artist': art}, {'artistid': 1, '_id': 0})
 		z['artistid'] = artistid['artistid']
 		if version < 3:
-
-
-
 			boo = db.tags.aggregate([
 				{'$match': {'artist': art}},
 				{'$group': {'_id': 'album', 'albumz': {'$addToSet': '$album'}}},
 				{'$project': {'albumz' :1}}
 			])
 			doo = boo['result'][0]['albumz']
-
 		else:
-
-
 			boo = [
 				a['albumz'] for a in db.tags.aggregate([
 					{'$match': {'artist': art}},
@@ -62,11 +56,7 @@ class ArtistView():
 				])
 			]
 			doo = boo[0]
-		
-		
-		
 		new_alb_list = []
-		#for d in doo[0]:
 		for d in doo:
 			albid = db.tags.find_one({'album':d}, {'albumid':1, '_id':0})
 			moo = d, albid['albumid']
