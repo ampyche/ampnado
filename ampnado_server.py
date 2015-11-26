@@ -38,7 +38,7 @@ mclient = MongoClient()
 db = mclient.ampnadoDB
 viewsdb = mclient.ampviewsDB
 
-FUN = Fun.SetUp()
+FUN = Fun.Functions()
 RM = Rm.RemoveOld()
 
 US_OP = db.options.find_one({})

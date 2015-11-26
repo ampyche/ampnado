@@ -46,15 +46,13 @@ class CreateVidDict():
 		front = ln[0]
 		middle = ln1[2]
 		p1 = '/'.join(('Music', cat_name, link_addr, middle, vid_name1))
-		pussy = ''.join((p1, extension))	#as in cat
-		vid['vid_playpath'] = pussy
+		vid['vid_playpath'] = ''.join((p1, extension))
 		for c in self.crap: vid_name1.replace(c, '')
 		viddy1 = vid_name1.replace('.', ' ')
 		viddy = viddy1.replace('_', ' ')
 		vid_name2 = viddy.split(' ')
 		vid_name3 = [v.capitalize() for v in vid_name2]
-		vid_name = ' '.join(vid_name3)
-		vid['vid_name'] = vid_name
+		vid['vid_name'] = ' '.join(vid_name3)
 		vid['vid_id'] = str(uuid.uuid4().hex)
 		db.video.insert(vid)
 		return vid

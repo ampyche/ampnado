@@ -32,7 +32,7 @@ db = client.ampnadoDB
 class GetInputs():
 	def __init__(self):
 		RM = rmOld.RemoveOld()
-		FUN = fun.SetUp()
+		FUN = fun.Functions()
 		DBI = dDBi.DropDBIndexes()
 		DB = dDBi.DropDBs()
 		self.RM = RM
@@ -128,11 +128,8 @@ class GetInputs():
 	def _check_if_uname_already_in_db(self, auname, apword):
 		try:
 			ace = db.user_creds.find_one({'username': auname, 'password': apword})
-			if ace['username'] != '':
-				a = True
-		except TypeError:
-			a = False
-		return a
+			if ace['username'] != '': return True
+		except TypeError: return False
 
 	def insert_user(self, a_uname, a_pword, a_hash, txt_pword):
 		if self._check_if_uname_already_in_db(a_uname, a_pword):

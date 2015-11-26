@@ -29,20 +29,23 @@ class GetMP3Tags():
 		audio = File(fn['filename'])
 		try: fn['track'] = audio['TRCK'].text[0]
 		except KeyError: fn['track'] = '50'
+		
 		try: fn['artist'] = audio["TPE1"].text[0]
 		except KeyError: 
 			fn['artist'] = 'Fuck Artist'
-			print(fn['filename'])
-			logging.info(''.join(("KeyError: No TPE1 tag... ", fn['filename'])))	
+			print(''.join(("KeyError: No TPE1 tag... ", fn['filename'])))
+			logging.info(''.join(("KeyError: No TPE1 tag... ", fn['filename'])))
+			
 		try: fn['album'] = audio["TALB"].text[0]
 		except KeyError: 
 			fn['album'] = 'Fuck Album'
-			print(fn['filename'])
-			logging.info(''.join(("KeyError No TALB tag ... ", fn['filename'])))	
+			print(''.join(("KeyError No TALB tag ... ", fn['filename'])))
+			logging.info(''.join(("KeyError No TALB tag ... ", fn['filename'])))
+			
 		try: fn['song'] = audio['TIT2'].text[0]
 		except KeyError: 
 			fn['song'] = 'Fuck Song'
-			print(fn['filename'])
+			print(''.join(("KeyError: No TIT2 tag... ", fn['filename'])))
 			logging.info(''.join(("KeyError: No TIT2 tag... ", fn['filename'])))
 		return fn
 

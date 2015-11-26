@@ -19,6 +19,7 @@
 ###############################################################################
 ###############################################################################
 import os, time, argparse, uuid, logging
+import amp.setup as su
 import amp.get_inputs as gp
 import amp.functions as fun
 import amp.remove_old as rmOld
@@ -69,13 +70,15 @@ RM_PWORD_HELP = """
 class SetUp():
 	def __init__(self):
 		GI = gp.GetInputs()
-		SU = fun.SetUp()
+		FUN = fun.Functions()
+		SU = su.Setup()
 		RM = rmOld.RemoveOld()
 		DBI = dDBi.DropDBIndexes()
 		DB = dDBi.DropDBs()
 		UT = ut.UpdateTagsDB()
 		self.GI = GI
 		self.SU = SU
+		self.FUN = FUN
 		self.RM = RM
 		self.DBI = DBI
 		self.DB = DB
@@ -137,19 +140,17 @@ class SetUp():
 				print(self.gettime(atime))
 				
 				music = self.SU.run_setup(gi[0], gi[1], atime)
-				print('this is  run_setup    time')
-				print(self.gettime(atime))
 		except AttributeError: pass
 
 		try:
 			if args.add_user_name and args.add_user_password:
-				h = self.SU.gen_hash(args.add_user_name, args.add_user_password)
+				h = self.FUN.gen_hash(args.add_user_name, args.add_user_password)
 				users = self.GI.insert_user(h[0], h[1], h[2], args.add_user_password)
 		except AttributeError: pass
 		#this is for removeuser
 		try:
 			if args.remove_user_name and args.remove_user_password:
-				h = self.SU.gen_hash(args.remove_user_name, args.remove_user_password)
+				h = self.FUN.gen_hash(args.remove_user_name, args.remove_user_password)
 				ruser = self.GI._remove_user(h[0], h[1])
 		except AttributeError: pass
 		

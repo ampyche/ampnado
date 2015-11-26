@@ -18,34 +18,16 @@
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 ###############################################################################
-import amp.artistview as artv
-import amp.albumview as albvv
-import amp.songview as songv
-import amp.httpmusicpath as httpmp
-import amp.mdfivegen as mdfg
-import amp.filemeta as fmeta
-import amp.gettags as gtag
-import amp.albumartscan as aas
-import amp.albumartlist as aal
-import amp.getalbumart as gaa
-import amp.setnoartpic as snap
-import amp.createviddic as cvd
-import amp.videoposter as vp
 import os, random, time, hashlib, uuid, base64, logging
-import pymongo
 from pymongo import MongoClient, ASCENDING, DESCENDING
 client = MongoClient()
 db = client.ampnadoDB
 viewsdb = client.ampviewsDB
 
-import multiprocessing
-cores = multiprocessing.cpu_count()
-from multiprocessing import Pool
-
 try: from mutagen import File
 except ImportError: from mutagenx import File
 
-class SetUp():
+class Functions():
 	def __init__(self):
 		mp3list = []
 		ogglist = []
@@ -125,28 +107,23 @@ class SetUp():
 		logging.info('SETUP: Finding music complete')
 		return self.mp3list, self.ogglist, self.vidlist
 
-	def _get_bytes(self, upd):
-		if not upd:
-			return db.tags.aggregate({'$group': {'_id': 'soup', 'total' : {'$sum': '$filesize'}}})
-		else: 
-			return db.tempTags.aggregate({'$group': {'_id': 'soup', 'total' : {'$sum': '$filesize'}}})
+	def _get_bytes(self):
+		return db.tags.aggregate({'$group': {'_id': 'soup', 'total' : {'$sum': '$filesize'}}})
 		logging.info('SETUP: _get_bytes is complete')
 
-	def _get_ids(self, bupd):
-		if not bupd: return [o['_id'] for o in db.tags.find({})]
-		else: return [o['_id'] for o in db.tempTags.find({})]
+	def _get_ids(self):
+		return [o['_id'] for o in db.tags.find({})]
 		logging.info('SETUP: _get_ids is now complete')
 
 	def _insert_catalog_info(self, adict):
 		db.catalogs.insert(adict)
 		logging.info('SETUP: _insert_catalog_info is complete')
 
-	def _create_catalog_db(self, cdict, aupd):
-		bytes = self._get_bytes(aupd)
-		cdict['catobjList'] = self._get_ids(aupd)
+	def _create_catalog_db(self, cdict):
+		bytes = self._get_bytes()
+		cdict['catobjList'] = self._get_ids()
 		cdict['catTotal'] = self._convert_bytes(bytes['result'][0]['total']),
 		self._insert_catalog_info(cdict)
-		self._update_tagsdb_with_cat_info(cdict, aupd)
 		logging.info('SETUP: create_catalog_db is complete')
 
 	def add_artistids(self):		
@@ -218,6 +195,7 @@ class SetUp():
 		logging.info('SETUP: _create_random_art_db is complete')
 
 	def _creat_db_indexes(self):
+		import pymongo
 		pymongo.TEXT='text'
 		db.tags.create_index([('song', 'text')])
 		viewsdb.artistView.create_index([('artist', 'text')])
@@ -238,151 +216,3 @@ class SetUp():
 	def gettime(self, at):
 		b = time.time()
 		return str(b - at)
-
-	def run_setup(self, aopt, apath, a_time):
-		logging.info('Setup Started')
-		
-		PATHS = apath
-		OPT = aopt
-		
-		logging.info('Finding music started')
-		print("Constants Setup Complete\nSetup Started\nFinding Music")
-
-		FM = self._find_music_video(PATHS['musiccatPath'])
-		
-		print('this is  _find_music_video    time')
-		print(self.gettime(a_time))
-		
-		if len(FM[0]) >= 1: filesfound_mp3 = True
-		else: filesfound_mp3 = False
-		if len(FM[1]) >= 1: filesfound_ogg = True
-		else: filesfound_ogg = False
-		if len(FM[2]) >= 1: filesfound_vid = True
-		else: filesfound_vid = False
-
-		print("Finding music complete")
-		logging.info('Finding music complete')
-		logging.info('Getting tag info started')
-		print('Getting tag info started')
-		
-		if filesfound_mp3: 
-			print('filesfound complete')
-			files = []
-			for f in FM[0]:
-				f['catname'] = OPT['catname']
-				f['programPath'] = PATHS['programPath']
-				files.append(f)
-
-			print('newmeta started')
-
-			metaf = fmeta.GetFileMeta() 
-			FILEMETA = metaf._file_meta_main(files, cores)
-			
-			print('newmeta complete')
-			print('newtags started')
-
-			tagget = gtag.GetMP3Tags()
-			MP3TAGS = tagget._get_audio_tag_info_main(FILEMETA, cores)
-						
-			print('newtags complete')
-			print('insert media started')
-			
-			asm = aas.AlbumArtScan()
-			ALBUMARTSCAN = asm.albumart_search_main(MP3TAGS, cores)
-			
-			print('insert media complete')
-		else: pass
-		
-		print('this is _get_tags and Insert tags     time')
-		print(self.gettime(a_time))
-		logging.info('Getting tag info complete')
-
-		httpm = httpmp.HttpMusicPath()
-		HTTPMP = httpm.main(PATHS, cores)
-
-		print('this is   add_http_music_path_to_db     time')
-		print(self.gettime(a_time))
-		
-		addartistid = self.add_artistids()
-		
-		print('this is   addartistid     time')
-		print(self.gettime(a_time))
-		
-		addalbumid = self.add_albumids()
-		
-		print('this is   addalbumid     time')
-		print(self.gettime(a_time))
-		
-		Aal = aal.GetAlbumArtLists()
-		ALBUMARTLIST = Aal.get_albumart_list_main(cores)
-
-		Gaa = gaa.GetAlbumArt()
-		GETALBUMART = Gaa.get_albumart_main(ALBUMARTLIST, PATHS, cores)
-
-		Snap = snap.SetNoArtPic()
-		SETNOARTPIC = Snap.set_no_art_pic_main(cores)
-
-		print('this is   get_albumart     time')
-		print(self.gettime(a_time))
-		logging.info('Finding videos has started')
-		print('Finding Video')
-
-		if filesfound_vid:
-			
-			Cvd = cvd.CreateVidDict()
-			CREATEVIDDIC = Cvd.create_vid_dic_main(FM[2], OPT, cores)
-
-			Vp = vp.GetVideoPoster()
-			GETVIDEOPOSTER = Vp.get_video_poster_main(CREATEVIDDIC, PATHS, cores)
-			
-		print('this is   find and insert vid info     time')
-		print(self.gettime(a_time))
-		logging.info('Finding video is complete')
-		logging.info('Creating artistview has started')
-		print('Creating artistView')
-		
-		ArtV = artv.ArtistView()
-		av = ArtV.main()
-		
-		ArtC = artv.ArtistChunkIt()		
-		ArtC.main(av, OPT['offset'])
-
-		print('this is   ArtistView     time')
-		print(self.gettime(a_time))
-		logging.info('Creating albumview has completed')
-		print('Creating albumview')
-		
-		AlbV = albvv.AlbumView()		
-		albv = AlbV.main()
-		albv2 = albvv.AlbumChunkIt()
-		chunk = albv2.main(albv, OPT['offset'])
-
-		print('this is   AlbumView     time')
-		print(self.gettime(a_time))
-		logging.info('Creating songview has completed')
-		print('Creating songview')
-		
-		SongV = songv.SongView()
-		SongV.create_songView_db(OPT['offset'])
-		
-		print('this is   SongView     time')
-		print(self.gettime(a_time))
-		logging.info('Creating indexes has started')
-		
-		creat_indexes = self._creat_db_indexes()
-		
-		print('this is   creat_indexes     time')
-		print(self.gettime(a_time))
-		logging.info('Creating indexes has completed')
-		logging.info('Creating random art has started')
-		
-		cradb = self._create_random_art_db()
-		
-		print('this is   cradb     time')
-		print(self.gettime(a_time))
-		logging.info('Creating random art has completed')
-		
-		stats = self.db_stats()
-		
-		print('this is   db_stats     time')
-		print(self.gettime(a_time))
