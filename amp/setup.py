@@ -102,6 +102,36 @@ class Setup():
 		print(FUN.gettime(a_time))
 		logging.info('Getting tag info complete')
 
+
+		if filesfound_ogg:
+			ofiles = []
+			for f in FM[1]:
+				f['catname'] = OPT['catname']
+				f['programPath'] = PATHS['programPath']
+				ofiles.append(f)
+
+
+
+			oggmetaf = fmeta.GetFileMeta() 
+			OGGFILEMETA = oggmetaf._file_meta_main(ofiles, CORES)
+			
+
+			oggtagget = gtag.GetOGGTags()
+			OGGTAGS = oggtagget._get_ogg_tag_info_main(OGGFILEMETA, CORES)
+
+			oggasm = aas.AlbumArtScan()
+			OGGALBUMARTSCAN = oggasm.albumart_search_main(OGGTAGS, CORES)
+			
+		else: pass
+
+
+
+
+
+
+
+
+
 		httpm = httpmp.HttpMusicPath()
 		HTTPMP = httpm.main(PATHS, CORES)
 

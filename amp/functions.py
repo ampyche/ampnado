@@ -18,7 +18,7 @@
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 ###############################################################################
-import os, random, time, hashlib, uuid, base64, logging
+import os, random, time, hashlib, uuid, logging
 from pymongo import MongoClient, ASCENDING, DESCENDING
 client = MongoClient()
 db = client.ampnadoDB
@@ -100,12 +100,12 @@ class Functions():
 				if low == '.mp3':
 					self.mp3list.append({'filename': fn})
 				elif low == '.ogg':
-					self.ogglist.append(fn)
+					self.ogglist.append({'filename': fn})
 				elif low == '.m4v' or low == '.mp4': 
 					self.vidlist.append(fn)
 				else: pass
 		logging.info('SETUP: Finding music complete')
-		return self.mp3list, self.ogglist, self.vidlist
+		return (self.mp3list, self.ogglist, self.vidlist)
 
 	def _get_bytes(self):
 		return db.tags.aggregate({'$group': {'_id': 'soup', 'total' : {'$sum': '$filesize'}}})
@@ -195,22 +195,22 @@ class Functions():
 		logging.info('SETUP: _create_random_art_db is complete')
 
 	def _creat_db_indexes(self):
+#		db.tags.create_index([('artist', DESCENDING), ('album', ASCENDING)])
+#		db.tags.create_index([('artistid', DESCENDING), ('albumid', ASCENDING)])
+#		db.tags.create_index([('album', DESCENDING), ('song', ASCENDING)])
+#		db.tags.create_index([('album', DESCENDING), ('songid', ASCENDING)])
+#		db.tags.create_index([('album', DESCENDING), ('thumbnail', ASCENDING)])
+#		db.tags.create_index([('albumid', DESCENDING), ('thumbnail', ASCENDING)])
+#		db.tags.create_index([('albumid', DESCENDING), ('song', ASCENDING)])
+#		db.tags.create_index([('albumid', DESCENDING), ('songid', ASCENDING)])
+#		db.video.create_index([('vid_id', DESCENDING), ('vid_name', ASCENDING)])
+#		viewsdb.albumView.create_index([('artistid', DESCENDING), ('albumid', ASCENDING)])
+#		viewsdb.albumView.create_index([('albumid', DESCENDING), ('songs', ASCENDING)])
 		import pymongo
 		pymongo.TEXT='text'
 		db.tags.create_index([('song', 'text')])
 		viewsdb.artistView.create_index([('artist', 'text')])
 		viewsdb.albumView.create_index([('album', 'text')])
-		db.tags.create_index([('artist', DESCENDING), ('album', ASCENDING)])
-		db.tags.create_index([('artistid', DESCENDING), ('albumid', ASCENDING)])
-		db.tags.create_index([('album', DESCENDING), ('song', ASCENDING)])
-		db.tags.create_index([('album', DESCENDING), ('songid', ASCENDING)])
-		db.tags.create_index([('album', DESCENDING), ('thumbnail', ASCENDING)])
-		db.tags.create_index([('albumid', DESCENDING), ('thumbnail', ASCENDING)])
-		db.tags.create_index([('albumid', DESCENDING), ('song', ASCENDING)])
-		db.tags.create_index([('albumid', DESCENDING), ('songid', ASCENDING)])
-		db.video.create_index([('vid_id', DESCENDING), ('vid_name', ASCENDING)])
-		viewsdb.albumView.create_index([('artistid', DESCENDING), ('albumid', ASCENDING)])
-		viewsdb.albumView.create_index([('albumid', DESCENDING), ('songs', ASCENDING)])
 		logging.info('SETUP: _creat_db_indexes is complete')
 
 	def gettime(self, at):

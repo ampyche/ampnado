@@ -469,6 +469,7 @@ function loadStats() {
 //////////////////////////// END SETTINGS PAGE STUFF //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 var rpw;
+var rpw1;
 function rpwStart() {
 	rpw = setInterval(function () {RandomPics()}, 80000);
 	rpw1 = setInterval(function () {randomPicProcess()}, 90000);

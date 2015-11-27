@@ -23,6 +23,9 @@ from multiprocessing import Pool
 try: from mutagen import File
 except ImportError: from mutagenx import File
 
+try: from mutagen.oggvorbis import OggVorbis
+except ImportError: from mutagenx.oggvorbis import OggVorbis
+
 class GetMP3Tags():
 
 	def get_audio_tag_info(self, fn):
@@ -49,9 +52,52 @@ class GetMP3Tags():
 			logging.info(''.join(("KeyError: No TIT2 tag... ", fn['filename'])))
 		return fn
 
+
 	def _get_audio_tag_info_main(self, files, acores):
 		pool = Pool(processes=acores)
 		pm = pool.map(self.get_audio_tag_info, files)
+		cleaned = [x for x in pm if x != None]
+		pool.close()
+		pool.join()
+		return cleaned
+		
+		
+class GetOGGTags():
+
+	def get_ogg_tag_info(self, fn):
+		audio = OggVorbis(fn['filename'])
+		print(audio['tracknumber'][0])
+		print(audio["artist"][0])
+		print(audio["album"][0])
+		print(audio['title'][0])
+			
+		
+		try: fn['track'] = audio['tracknumber'][0]
+		except KeyError: fn['track'] = '50'
+		
+		try: fn['artist'] = audio["artist"][0]
+		except KeyError: 
+			fn['artist'] = 'Fuck Artist'
+			print(''.join(("KeyError: No TPE1 tag... ", fn['filename'])))
+			logging.info(''.join(("KeyError: No TPE1 tag... ", fn['filename'])))
+			
+		try: fn['album'] = audio["album"][0]
+		except KeyError: 
+			fn['album'] = 'Fuck Album'
+			print(''.join(("KeyError No TALB tag ... ", fn['filename'])))
+			logging.info(''.join(("KeyError No TALB tag ... ", fn['filename'])))
+			
+		try: fn['song'] = audio['title'][0]
+		except KeyError: 
+			fn['song'] = 'Fuck Song'
+			print(''.join(("KeyError: No TIT2 tag... ", fn['filename'])))
+			logging.info(''.join(("KeyError: No TIT2 tag... ", fn['filename'])))
+		return fn
+
+
+	def _get_ogg_tag_info_main(self, files, acores):
+		pool = Pool(processes=acores)
+		pm = pool.map(self.get_ogg_tag_info, files)
 		cleaned = [x for x in pm if x != None]
 		pool.close()
 		pool.join()

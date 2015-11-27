@@ -18,9 +18,10 @@
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 ###############################################################################
-import os, json, random, hashlib, re, time, uuid, shutil, glob, subprocess, pymongo
+import os, json, random, hashlib, re, time, uuid, shutil, glob, subprocess
 from urllib.parse import urlparse, parse_qs
-from PIL import Image
+#from PIL import Image
+import pymongo
 from pymongo import MongoClient
 import tornado.auth
 import tornado.httpserver
@@ -29,7 +30,6 @@ import tornado.web
 from tornado.options import define, options, parse_command_line
 import amp.functions as Fun
 import amp.remove_old as Rm
-from pprint import pprint
 
 try: from mutagen import File
 except ImportError: from mutagenx import File
