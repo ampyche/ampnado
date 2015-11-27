@@ -57,22 +57,10 @@ class Functions():
 	def _get_song_count(self): return len(db.tags.distinct('song'))
 
 	def _get_video_count(self): return len(db.video.distinct('vid_name'))
-
-	def _get_temp_lthumb_bytes(self): return sum([int(s['largethumb_size']) for s in db.tempTags.find({}, {'largethumb_size':1, '_id':0})])
-
-	def _get_temp_sthumb_bytes(self): return sum([int(l['smallthumb_size']) for l in db.tempTags.find({}, {'smallthumb_size':1, '_id':0})])
-
-	def _get_temp_mp3_bytes(self): return sum([int(t['filesize']) for t in db.tempTags.find({}, {'filesize':1, '_id':0})])
-
-	def _get_temp_vid_bytes(self): return sum([int(v['filesize']) for v in db.tempVideo.find({}, {'filesize':1, '_id':0})])
-
-	def _get_temp_artist_count(self): return len(db.tempTags.distinct('artist'))
-
-	def _get_temp_album_count(self): return len(db.tempTags.distinct('album'))
-
-	def _get_temp_song_count(self): return len(db.tempTags.distinct('song'))
-
-	def _get_temp_video_count(self): return len(db.tempVideo.distinct('vid_name'))
+	
+	def _get_mp3_count(self): return db.tags.find({'filetype': '.mp3'}).count()
+	
+	def _get_ogg_count(self): return db.tags.find({'filetype': '.ogg'}).count()
 
 	def _convert_bytes(self, abytes):
 		if abytes >= 1099511627776:
@@ -148,6 +136,8 @@ class Functions():
 		x['total_albums'] = self._get_album_count()
 		x['total_songs'] = self._get_song_count()
 		x['total_videos'] = self._get_video_count()
+		x['total_mp3'] = self._get_mp3_count()
+		x['total_ogg'] = self._get_ogg_count()
 		db.ampnado_stats.insert(x)
 		logging.info('SETUP: db stats complete')							
 

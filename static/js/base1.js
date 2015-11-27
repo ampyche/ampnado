@@ -461,7 +461,10 @@ function loadStats() {
 		var statfive = "<tr><th>Music Lib Size</th><td>" + data.stats.total_music_size + "</td></tr>";
 		var statseven = "<tr><th>Video Lib Size</th><td>" + data.stats.total_video_size + "</td></tr>";
 		var stateight = "<tr><th>Total Disk Size</th><td>" + data.stats.total_disk_size + "</td></tr>";
-		var stats = stattwo + statthree + statfour + statnine + statfive + statseven + stateight;
+		var stats1 = stattwo + statthree + statfour + statnine + statfive + statseven + stateight;
+		var stone = "<tr><th>Total MP3's</th><td>" + data.stats.total_mp3 + "</td></tr>";		
+		var sttwo = "<tr><th>Total OGG's</th><td>" + data.stats.total_ogg + "</td></tr>";
+		var stats = stats1 + stone + sttwo;	
 		$('#statsTab').append(stats);
 	});
 };
