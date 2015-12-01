@@ -31,19 +31,14 @@ import amp.setnoartpic as snap
 import amp.createviddic as cvd
 import amp.videoposter as vp
 import amp.functions as fun
-import logging
-from pymongo import MongoClient
-client = MongoClient()
+import logging, pymongo
+client = pymongo.MongoClient()
 db = client.ampnadoDB
 viewsdb = client.ampviewsDB
 
-import multiprocessing
-CORES = multiprocessing.cpu_count()
-
-
 class Setup():
 
-	def run_setup(self, aopt, apath, a_time):
+	def run_setup(self, aopt, apath, a_time, CORES):
 		logging.info('Setup Started')
 		
 		PATHS = apath
@@ -177,10 +172,10 @@ class Setup():
 		print('Creating artistView')
 		
 		ArtV = artv.ArtistView()
-		av = ArtV.main()
+		av = ArtV.main(CORES)
 		
 		ArtC = artv.ArtistChunkIt()		
-		ArtC.main(av, OPT['offset'])
+		ArtC.main(av, OPT['offset'], CORES)
 
 		print('this is   ArtistView     time')
 		print(FUN.gettime(a_time))
@@ -188,9 +183,9 @@ class Setup():
 		print('Creating albumview')
 		
 		AlbV = albvv.AlbumView()		
-		albv = AlbV.main()
+		albv = AlbV.main(CORES)
 		albv2 = albvv.AlbumChunkIt()
-		chunk = albv2.main(albv, OPT['offset'])
+		chunk = albv2.main(albv, OPT['offset'], CORES)
 
 		print('this is   AlbumView     time')
 		print(FUN.gettime(a_time))

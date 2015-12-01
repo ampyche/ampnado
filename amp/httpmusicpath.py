@@ -20,7 +20,6 @@
 ###############################################################################
 from multiprocessing import Pool
 from pymongo import MongoClient
-
 client = MongoClient()
 db = client.ampnadoDB
 
@@ -31,11 +30,8 @@ class HttpMusicPath():
 		db.tags.update({'filename':t[0]}, {'$set': {'httpmusicpath':fn2}})
 
 	def main(self, a_path, acores):
-		httpmusicpath = a_path['httpmusicPath']
-		musiccatpath = a_path['musiccatPath']
-		p = [(p['filename'], musiccatpath, httpmusicpath) for p in db.tags.find({})]
+		p = [(p['filename'], a_path['musiccatPath'], a_path['httpmusicPath']) for p in db.tags.find({})]
 		pool = Pool(processes=acores)
 		yahoo = pool.map(self.add_http_music_path_to_db, p)
-		#cleaned = [x for x in yahoo if x != None]
 		pool.close()
 		pool.join()

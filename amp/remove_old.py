@@ -26,6 +26,7 @@ MKDIRS = """REMOVEOLD: All needed dirs have been created"""
 ALLRM = """REMOVEOLD: All old files have been removed"""
 
 class RemoveOld():
+	
 	def _remove_symlinks(self, apath):
 		try: shutil.rmtree(apath['musiccatPath'], ignore_errors=True)
 		except OSError: os.mkdir(apath['musiccatPath'])

@@ -89,10 +89,8 @@ class SetUp():
 
 	def _is_vid_in_db(self, apath):
 		vdb = db.tags.find_one({'filename': apath})
-		if vdb != None:
-			return True
-		else:
-			return False
+		if vdb != None: return True
+		else: return False
 
 	def gettime(self, at): return (time.time() - at)
 	
@@ -139,7 +137,7 @@ class SetUp():
 				print('this is   db.prog_paths.insert   time')
 				print(self.gettime(atime))
 				
-				music = self.SU.run_setup(gi[0], gi[1], atime)
+				music = self.SU.run_setup(gi[0], gi[1], atime, cores)
 		except AttributeError: pass
 
 		try:

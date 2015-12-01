@@ -20,7 +20,7 @@
 ###############################################################################
 import os, base64
 from multiprocessing import Pool
-from pymongo import MongoClient, ASCENDING, DESCENDING
+from pymongo import MongoClient
 client = MongoClient()
 db = client.ampnadoDB
 

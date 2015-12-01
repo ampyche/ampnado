@@ -18,27 +18,23 @@
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 ###############################################################################
-import os, json, random, hashlib, re, time, uuid, shutil, glob, subprocess
+import os, random, hashlib, re, time, uuid, shutil, subprocess
 from urllib.parse import urlparse, parse_qs
-#from PIL import Image
-import pymongo
-from pymongo import MongoClient
 import tornado.auth
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 from tornado.options import define, options, parse_command_line
+
+import pymongo
+client = pymongo.MongoClient()
+db = client.ampnadoDB
+viewsdb = client.ampviewsDB
+
 import amp.functions as Fun
-import amp.remove_old as Rm
-
-try: from mutagen import File
-except ImportError: from mutagenx import File
-
-mclient = MongoClient()
-db = mclient.ampnadoDB
-viewsdb = mclient.ampviewsDB
-
 FUN = Fun.Functions()
+
+import amp.remove_old as Rm
 RM = Rm.RemoveOld()
 
 US_OP = db.options.find_one({})
@@ -50,8 +46,11 @@ class Application(tornado.web.Application):
 		mpath = db.user_options.find_one({}, {'musicpath': 1, '_id': 0})
 		progpath = db.prog_paths.find_one({}, {'programPath':1, '_id':0})
 		progpath2 = '/'.join([progpath['programPath'], 'static', 'MUSIC'])
+		progpath3 = '/'.join([progpath['programPath'], 'static', 'TEMP'])
 		handlers = [
 			(r"/Music/(.*)", tornado.web.StaticFileHandler, {'path': progpath2}),
+			(r"/Temp/(.*)", tornado.web.StaticFileHandler, {'path': progpath3}),
+			
 			(r"/ampnado", MainHandler),
 			(r"/login", LoginHandler),
 			(r"/logout", LogoutHandler),
@@ -82,6 +81,7 @@ class Application(tornado.web.Application):
 			(r"/Download", DownloadPlaylistHandler),
 			(r"/GetAllVideo", GetAllVideoHandler),
 			(r"/RamdomAlbumPicPlaySong", RamdomAlbumPicPlaySongHandler),
+			(r"/ClearTemp", ClearTempHandler),
 		]
 		settings = dict(
 			static_path = os.path.join(os.path.dirname(__file__), "static"),
@@ -247,18 +247,117 @@ class GetImageSongsForAlbumHandler(BaseHandler):
 		songs = yield self.getsongsongid(p['selected'][0])
 		self.write(dict(getimgsonalb=songs))
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class GetPathArtHandler(BaseHandler):
 	@tornado.gen.coroutine
-	def get_song_songid_path_art(self, a_query):
-		info = db.tags.find_one({'songid':a_query}, {'_id':0})
-		return {'album': info['album'], 'song': info['song'], 'songid': info['songid'], 'httpmusicpath': info['httpmusicpath'], 'albumart': info['sthumbnail']}
+	def _get_file_info(self, asongid):
+		return db.tags.find_one({'songid': asongid}, {'_id':0})
+	
+	@tornado.gen.coroutine
+	def _get_prog_path(self):
+		return db.prog_paths.find_one({})
+
+	@tornado.gen.coroutine
+	def _transcode_mp3_to_ogg(self, afile, pa):
+		temp_path = pa['musicPath']	
+		temp_filename = str(uuid.uuid4().hex)
+		ext = '.ogg'
+		tempfilePath = temp_path + '/' + temp_filename + ext
+		temphttpPath = pa['httppath'] + '/Temp/MUSIC/' + temp_filename + ext
+		os.chdir(temp_path)
+		cmd = 'ffmpeg -i %s -vsync 2 %s' % (afile['filename'], tempfilePath)
+		try:
+			transcode = subprocess.call(cmd, shell=True)
+		except OSError: print('subprocess OSError')
+		afile['tempfilePath'] = tempfilePath
+		afile['httpmusicpath'] = temphttpPath
+		os.chdir(pa['programPath'])
+		return afile
+	
+	@tornado.gen.coroutine
+	def _transcode_ogg_to_mp3(self, afile, pa):
+		temp_path = pa['musicPath']	
+		temp_filename = str(uuid.uuid4().hex)
+		ext = '.mp3'
+		tempfilePath = temp_path + '/' + temp_filename + ext
+		temphttpPath = pa['httppath'] + '/Temp/MUSIC/' + temp_filename + ext
+		os.chdir(temp_path)	
+		cmd = 'ffmpeg -i %s -vsync 2 %s' % (afile['filename'], tempfilePath)
+		try:
+			transcode = subprocess.call(cmd, shell=True)
+		except OSError: print('subprocess OSError')
+		afile['tempfilePath'] = tempfilePath
+		afile['httpmusicpath'] = temphttpPath
+		os.chdir(pa['programPath'])
+		return afile
+
+	@tornado.gen.coroutine
+	def get_song_songid_path_art(self, a_query):		
+		return db.tags.find_one({'songid':a_query}, {'_id':0})
 
 	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
-		getpathart = yield self.get_song_songid_path_art(p['selected'][0])
-		self.write(getpathart)
+		#mp3sup = p['mp3sup'][0]
+		#oggsup = p['oggsup'][0]
+		selected = p['selected'][0]
+		transcode = p['transcode'][0]
+		paths = yield self._get_prog_path()
+		fileinfo = yield self._get_file_info(selected)
+		
+		if transcode == 'mp3':
+			if fileinfo['filetype'] == '.ogg':
+				getpathart = yield self._transcode_ogg_to_mp3(fileinfo, paths)
+				self.write(getpathart)
+			elif fileinfo['filetype'] == '.mp3':
+				getpathart = yield self.get_song_songid_path_art(selected)
+				self.write(getpathart)
+			else: pass
+
+		if transcode == 'ogg':
+			if fileinfo['filetype'] == '.mp3':
+				getpathart = yield self._transcode_mp3_to_ogg(fileinfo, paths)
+				self.write(getpathart)
+			elif fileinfo['filetype'] == '.ogg':
+				getpathart = yield self.get_song_songid_path_art(selected)
+				self.write(getpathart)
+			else: pass
+
+
+
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class GetAllPlaylistSongsFromDBHandler(BaseHandler):
 	@tornado.gen.coroutine
@@ -614,6 +713,43 @@ class RandomPicsHandler(BaseHandler):
 			x['songs'] = [(song['song'], song['songid']) for song in db.tags.find({'albumid':r}, {'song':1, 'songid':1, '_id':0})]
 			art.append(x)
 		self.write(dict(rsamp=art))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class ClearTempHandler(BaseHandler):
+	@tornado.gen.coroutine
+	def delete_temp_songs(self, sl):
+		paths = db.prog_paths.find_one({})
+		bar = sl.split('MUSIC')
+		try:
+			foo = paths['musicPath'] + bar[1]
+			if os.path.isfile(foo):
+				os.remove(foo)
+		except IndexError: pass
+
+	@tornado.web.authenticated
+	@tornado.gen.coroutine
+	def get(self):
+		p = parse_qs(urlparse(self.request.full_url()).query)
+		song = p['filetodelete'][0]
+		d = yield self.delete_temp_songs(song)
+		self.write(dict(cleared='Deleted'))
 
 def main():
 	tornado.options.parse_command_line()

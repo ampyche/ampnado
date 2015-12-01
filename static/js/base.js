@@ -568,31 +568,71 @@ $(document).on('click', '.artOF', function () {
 		});
 	});
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //This get the selected song on the albums page and sends it to the player
 .on('click', '.albsongsA', function () {
 	var selSong = $(this).attr('data-songid');
+	var mp3sup = localStorage.getItem('mp3Sup');
+	var oggsup = localStorage.getItem('oggSup');
+	var tranc = localStorage.getItem('TransCode');
+	var  audio23 = $('#audio2');
 	$.get("GetPathArt",
 	{
-		"selected": selSong
+		"selected": selSong, 'transcode': tranc,
 	},
 	function(data){
 		var foobar10 = {'song': data.song, 'songid': selSong};
-		$('#audio2').attr('src', data.httpmusicpath);
+		audio23.attr('src', data.httpmusicpath);
 		$('#introimg').attr('src', data.albumart);
 		$('#playlistalbart').attr('src', data.albumart);
 		$('#pictext').text(data.song);
 		$('#pictext2').text(data.album);
 		localStorage.setItem('albumPageGetPathArt ', JSON.stringify(data));
 		localStorage.setItem('albumPageSelected_SONG_SONGID', JSON.stringify(foobar10));
-	});
-	var  audio23 = $('#audio2');
-	audio23.on('loadedmetadata', function () {
-		var dur = audio23[0].duration;
-		var cd = calcDuration(dur);
-		$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
+		audio23.on('loadedmetadata', function () {
+			var dur = audio23[0].duration;
+			var cd = calcDuration(dur);
+			$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
+		});
+		var fileToDelete = audio23.attr('src');
+		audio23.on('ended', function () {
+			$.get('ClearTemp',
+			{
+				'filetodelete': fileToDelete,
+			},
+			function (data) {
+				console.log(data.cleared);
+			});
+		});
 	});
 	$('.albsongUL').hide();
 })
+
+
+
+
+
+
+
+
 //This adds the song and songid to localstorage 
 .on('click', '.addToPlaylist', function () {
 	var albssid = {'song': $(this).attr('data-song'), 'songid': $(this).attr('data-songid')}	
@@ -1289,7 +1329,25 @@ $.mobile.loader.prototype.options.textVisible,
 		$('.playButton, .stopButton').show();
 		$('#audio1').hide();
 	}
+})
+
+.on('change', "#select-based-flipswitch", function () {
+	var doo = this.value;
+	localStorage.setItem('TransCode', doo);
+	console.log('this is doo');
+	console.log(doo);
+	
+	
+	
 });
+
+/*.on('click', "#select-based-flipswitch", function () {
+	//$('select-based-flipswitch').flipswitch('enable');
+	var boo = $('select-based-flipswitch').attr('option');
+	console.log('this is boo flipswitch');
+	console.log(boo);
+	
+});*/
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////// END PLAYLIST PAGE STUFF //////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////

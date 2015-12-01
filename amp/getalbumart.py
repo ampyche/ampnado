@@ -21,10 +21,9 @@
 import os, base64, glob
 from PIL import Image
 from multiprocessing import Pool
-from pymongo import MongoClient, ASCENDING, DESCENDING
+from pymongo import MongoClient
 client = MongoClient()
 db = client.ampnadoDB
-viewsdb = client.ampviewsDB
 
 class GetAlbumArt():
 	def _get_smallthumb(self, location, filename, size):

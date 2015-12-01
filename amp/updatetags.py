@@ -23,7 +23,6 @@ import amp.gettags as gt
 from pymongo import MongoClient
 client = MongoClient()
 db = client.ampnadoDB
-viewsdb = client.ampviewsDB
 
 GT = gt.GetMP3Tags()
 
@@ -43,7 +42,6 @@ class UpdateTagsDB():
 		c3 = self.check(ftags['album'], tags['album'])
 		c4 = self.check(ftags['song'], tags['song'])					
 		if c1 and c2 and c3 and c4:
-			print('they are equal')
 			pass
 		else:
 			db.tags.update({'_id': tags['_id']}, {'$set', {'filename': ftags['filename'], 'artist': ftags['artist'], 'album': ftags['album'], 'song': ftags['song']}})

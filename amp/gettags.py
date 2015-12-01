@@ -52,7 +52,6 @@ class GetMP3Tags():
 			logging.info(''.join(("KeyError: No TIT2 tag... ", fn['filename'])))
 		return fn
 
-
 	def _get_audio_tag_info_main(self, files, acores):
 		pool = Pool(processes=acores)
 		pm = pool.map(self.get_audio_tag_info, files)
@@ -61,17 +60,11 @@ class GetMP3Tags():
 		pool.join()
 		return cleaned
 		
-		
 class GetOGGTags():
 
 	def get_ogg_tag_info(self, fn):
 		audio = OggVorbis(fn['filename'])
-		print(audio['tracknumber'][0])
-		print(audio["artist"][0])
-		print(audio["album"][0])
-		print(audio['title'][0])
-			
-		
+
 		try: fn['track'] = audio['tracknumber'][0]
 		except KeyError: fn['track'] = '50'
 		
@@ -93,7 +86,6 @@ class GetOGGTags():
 			print(''.join(("KeyError: No TIT2 tag... ", fn['filename'])))
 			logging.info(''.join(("KeyError: No TIT2 tag... ", fn['filename'])))
 		return fn
-
 
 	def _get_ogg_tag_info_main(self, files, acores):
 		pool = Pool(processes=acores)

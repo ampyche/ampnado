@@ -481,13 +481,47 @@ function rpwStop() {
 	clearInterval(rpw);
 	clearInterval(rpw1);
 };
+
+function checkMP3() {
+	var a = document.createElement('audio');
+	var mp3 = a.canPlayType('audio/mpeg');
+	if (mp3 === "maybe") {
+		localStorage.setItem('mp3Sup', true);
+	}
+	if (mp3 === "") {
+		localStorage.setItem('mp3Sup', false);
+	}
+};
+
+function checkOgg() {
+	var a = document.createElement('audio');
+	var ogg = a.canPlayType('audio/ogg');
+	if (ogg === "maybe") {
+		localStorage.setItem('oggSup', 'true');
+	}
+	if (ogg === "") {
+		localStorage.setItem('oggSup', 'false');
+	}
+};
+
+function setTransCode() {
+	$("#select-based-flipswitch").on('flipswitchcreate', function (event, ui) {
+		transcode = localStorage.getItem('TransCode');
+		if (transcode != '') {
+			$("#select-based-flipswitch").val(transcode).flipswitch('refresh');
+		} else {
+			$("#select-based-flipswitch").val('MP3').flipswitch('refresh');
+			localStorage.setItem('transcode', 'MP3');
+		}
+	});
+};
+
 var initAmpyche = function () {
 	initRandomPics();
 	$('#audio2').show();
 	//This hides the search boxes
 	$('#controlGrid, #albSSD1, #albSSD2, #albListViewDIV2, #artForm, #SSD1, #SSD2, #songListViewDIV2').hide();
 	RandomPics();
-	rpwStart();
 	intitArtist1P1();
 	initAlbum1P1();
 	initSong1P1();
@@ -497,6 +531,10 @@ var initAmpyche = function () {
 	initGetSongAlpha();
 	initGetAllVideo();
 	loadStats();
+	checkMP3();
+	checkOgg();
+	rpwStart();
+	setTransCode();
 };
 
 $(window).load(initAmpyche)

@@ -18,21 +18,16 @@
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 ###############################################################################
-import os
+import os, logging
+from multiprocessing import Pool
 import pymongo
 v = pymongo.version
 version = v.split('.')[0]
 version = int(version)
 
-from pymongo import MongoClient
-client = MongoClient()
+client = pymongo.MongoClient()
 db = client.ampnadoDB
 viewsdb = client.ampviewsDB
-
-import multiprocessing, logging
-cores = multiprocessing.cpu_count()
-
-from multiprocessing import Pool
 
 class AlbumView():
 	def create_albumView_db(self, a):
@@ -68,7 +63,7 @@ class AlbumView():
 		viewsdb.albumView.insert(av)
 		return av
 
-	def main(self):
+	def main(self, cores):
 		albid = db.tags.distinct('albumid')
 		pool = Pool(processes=cores)
 		poogle = pool.map(self.create_albumView_db, albid)
@@ -99,7 +94,7 @@ class AlbumChunkIt():
 	def _get_pages(self, c):
 		viewsdb.albumView.update({'albumid': c[0]}, {'$set': {'page': c[1]}})
 
-	def main(self, albv, OFC):
+	def main(self, albv, OFC, cores):
 		chunks = self.chunks(albv, OFC)
 		gaos = self._get_alphaoffset(chunks)
 		pool = Pool(processes=cores)

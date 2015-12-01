@@ -18,21 +18,15 @@
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 ###############################################################################
-import os
-import pymongo
+from multiprocessing import Pool
+import os, logging, pymongo
 v = pymongo.version
 version = v.split('.')[0]
 version = int(version)
 
-from pymongo import MongoClient
-client = MongoClient()
+client = pymongo.MongoClient()
 db = client.ampnadoDB
 viewsdb = client.ampviewsDB
-
-import  multiprocessing, logging
-cores = multiprocessing.cpu_count()
-
-from multiprocessing import Pool
 
 class ArtistView():
 	def create_artistView_db(self, art):
@@ -65,7 +59,7 @@ class ArtistView():
 		viewsdb.artistView.insert(z)
 		return z 
 
-	def main(self):
+	def main(self, cores):
 		art = db.tags.distinct('artist')
 		pool = Pool(processes=cores)
 		artv = pool.map(self.create_artistView_db, art)
@@ -96,7 +90,7 @@ class ArtistChunkIt():
 	def _get_pages(self, c):
 		viewsdb.artistView.update({'artist': c[0]}, {'$set': {'page': c[1]}})
 
-	def main(self, artv, OFC):
+	def main(self, artv, OFC, cores):
 		chunks = self.chunks(artv, OFC)
 		gaos = self._get_alphaoffset(chunks)
 		pool = Pool(processes=cores)
