@@ -279,7 +279,7 @@ class GetPathArtHandler(BaseHandler):
 		tempfilePath = temp_path + '/' + temp_filename + ext
 		temphttpPath = pa['httppath'] + '/Temp/MUSIC/' + temp_filename + ext
 		os.chdir(temp_path)
-		cmd = 'ffmpeg -i %s -vsync 2 %s' % (afile['filename'], tempfilePath)
+		cmd = "ffmpeg -i %s -vsync 2 %s" % (afile['filename'], tempfilePath)
 		try:
 			transcode = subprocess.call(cmd, shell=True)
 		except OSError: print('subprocess OSError')
@@ -296,7 +296,7 @@ class GetPathArtHandler(BaseHandler):
 		tempfilePath = temp_path + '/' + temp_filename + ext
 		temphttpPath = pa['httppath'] + '/Temp/MUSIC/' + temp_filename + ext
 		os.chdir(temp_path)	
-		cmd = 'ffmpeg -i %s -vsync 2 %s' % (afile['filename'], tempfilePath)
+		cmd = "ffmpeg -i %s -vsync 2 %s" % (afile['filename'], tempfilePath)
 		try:
 			transcode = subprocess.call(cmd, shell=True)
 		except OSError: print('subprocess OSError')
@@ -313,13 +313,10 @@ class GetPathArtHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
-		#mp3sup = p['mp3sup'][0]
-		#oggsup = p['oggsup'][0]
 		selected = p['selected'][0]
 		transcode = p['transcode'][0]
 		paths = yield self._get_prog_path()
 		fileinfo = yield self._get_file_info(selected)
-		
 		if transcode == 'mp3':
 			if fileinfo['filetype'] == '.ogg':
 				getpathart = yield self._transcode_ogg_to_mp3(fileinfo, paths)
@@ -327,8 +324,7 @@ class GetPathArtHandler(BaseHandler):
 			elif fileinfo['filetype'] == '.mp3':
 				getpathart = yield self.get_song_songid_path_art(selected)
 				self.write(getpathart)
-			else: pass
-
+			else: print('not mp3 transcode')
 		if transcode == 'ogg':
 			if fileinfo['filetype'] == '.mp3':
 				getpathart = yield self._transcode_mp3_to_ogg(fileinfo, paths)
@@ -336,10 +332,10 @@ class GetPathArtHandler(BaseHandler):
 			elif fileinfo['filetype'] == '.ogg':
 				getpathart = yield self.get_song_songid_path_art(selected)
 				self.write(getpathart)
-			else: pass
+			else: print('not ogg transcode')
 
 
-
+		
 
 		
 

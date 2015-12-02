@@ -19,7 +19,6 @@
 ###############################################################################
 ###############################################################################
 */
-
 ///////////////////////////////////////////////////////////////////////////////
 function oc_artOF1(xx) {
 	var soupArtOne = "<div><img class='artistimgS' src='" + xx + "'></img>";
@@ -469,25 +468,35 @@ $(document).on('click', '.artOF', function () {
 })
 //This get selected song from artist page and sends it to the player
 .on('click', '.artsongA1', function () {
+	var  audio24 = $('#audio2');
 	var booty = {'song': $(this).text(), 'songid': $(this).attr('data-songid')}
+	var trancArt = localStorage.getItem('TransCode');
 	localStorage.setItem('artistPageSelected_SONG_SONGID', JSON.stringify(booty));
 	$.get("GetPathArt",
 	{
-		"selected": booty.songid
+		"selected": booty.songid, 'transcode': trancArt
 	},
 	function(data) {
-		$('#audio2').attr('src', data.httpmusicpath);
+		audio24.attr('src', data.httpmusicpath);
 		$('#introimg').attr('src', data.albumart);
 		$('#playlistalbart').attr('src', data.albumart);
 		$('#pictext').text(data.song);
 		$('#pictext2').text(data.album);
 		localStorage.setItem('artistPageGetPathArt', JSON.stringify(data));
-	});
-	var  audio22 = $('#audio2');
-	audio22.on('loadedmetadata', function () {
-		var dur = audio22[0].duration;
-		var cd = calcDuration(dur);
-		$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
+		audio24.on('loadedmetadata', function () {
+			var dur = audio24[0].duration;
+			var cd = calcDuration(dur);
+			$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
+		});
+		audio24.on('ended', function () {
+			$.get('ClearTemp',
+			{
+				'filetodelete': data.httpmusicpath,
+			},
+			function (data) {
+				console.log(data.cleared);
+			});
+		});
 	});
 })
 //This fetches the selected album and displays albumart and
@@ -568,35 +577,19 @@ $(document).on('click', '.artOF', function () {
 		});
 	});
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //This get the selected song on the albums page and sends it to the player
 .on('click', '.albsongsA', function () {
-	var selSong = $(this).attr('data-songid');
-	var mp3sup = localStorage.getItem('mp3Sup');
-	var oggsup = localStorage.getItem('oggSup');
-	var tranc = localStorage.getItem('TransCode');
 	var  audio23 = $('#audio2');
+	audio23.attr('src', '');
+	$('.duration').text('00:00');
+	var selSong = $(this).attr('data-songid');
+	var trancAlb = localStorage.getItem('TransCode');
+	console.log('this is trancAlb');
+	console.log(trancAlb);
+	
 	$.get("GetPathArt",
 	{
-		"selected": selSong, 'transcode': tranc,
+		"selected": selSong, 'transcode': trancAlb,
 	},
 	function(data){
 		var foobar10 = {'song': data.song, 'songid': selSong};
@@ -612,11 +605,10 @@ $(document).on('click', '.artOF', function () {
 			var cd = calcDuration(dur);
 			$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
 		});
-		var fileToDelete = audio23.attr('src');
 		audio23.on('ended', function () {
 			$.get('ClearTemp',
 			{
-				'filetodelete': fileToDelete,
+				'filetodelete': data.httpmusicpath,
 			},
 			function (data) {
 				console.log(data.cleared);
@@ -625,14 +617,6 @@ $(document).on('click', '.artOF', function () {
 	});
 	$('.albsongUL').hide();
 })
-
-
-
-
-
-
-
-
 //This adds the song and songid to localstorage 
 .on('click', '.addToPlaylist', function () {
 	var albssid = {'song': $(this).attr('data-song'), 'songid': $(this).attr('data-songid')}	
@@ -663,13 +647,16 @@ $(document).on('click', '.artOF', function () {
 //use data-song and data-songid they are set
 //this should use songid instead of songname
 .on('click', 'a.songname', function () {
-	var selected_songid = $(this).attr('data-songid');
 	var audio2 = $('#audio2');
 	audio2.attr('src', '');
-	$('.duration').text('OO:00');
+	$('.duration').text('00:00');
+	var selected_songid = $(this).attr('data-songid');
+	var trancS = localStorage.getItem('TransCode');
+	console.log('this is trancS');
+	console.log(trancS);
 	$.get("GetPathArt",
 	{
-		"selected": selected_songid
+		"selected": selected_songid, "transcode": trancS,
 	},
 	function(data) {
 		audio2.attr('src', data.httpmusicpath);
@@ -680,11 +667,20 @@ $(document).on('click', '.artOF', function () {
 		var booob = {'song': data.song, 'songid': data.songid};
 		localStorage.setItem('songPageGetPathArt', JSON.stringify(data));
 		localStorage.setItem("songPageSelected_SONG_SONGID", JSON.stringify(booob));
-	});
-	audio2.on('loadedmetadata', function () {
-		var dur = audio2[0].duration;
-		var cd = calcDuration(dur);
-		$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
+		audio2.on('loadedmetadata', function () {
+			var dur = audio2[0].duration;
+			var cd = calcDuration(dur);
+			$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
+		});
+		audio2.on('ended', function () {
+			$.get('ClearTemp',
+			{
+				'filetodelete': data.httpmusicpath,
+			},
+			function (data) {
+				console.log(data.cleared);
+			});
+		});
 	});	
 })
 //This sets the selectedSONG and selectedSONGid in the browser localstorage
@@ -831,31 +827,6 @@ $(document).on('click', '.artOF', function () {
 		$('#songs_view2').listview('refresh');
 		$.mobile.loading("hide");
 	});
-})
-.on('click', 'a.songnameS', function () {
-	var selected_song = $(this).attr('data-songid');
-	var audio2 = $('#audio2');
-	audio2.attr('src', '');
-	$('.duration').text('OO:00');
-	$.get("GetPathArt",
-	{
-		"selected": selected_song
-	},
-	function(data,status){
-		audio2.attr('src', data.httpmusicpath);
-		$('#introimg').attr('src', data.albumart);
-		$('#playlistalbart').attr('src', data.albumart);
-		$('#pictext').text(data.song);
-		$('#pictext2').text(data.album);
-		var boob = {'song': data.song, 'songid': data.songid};
-		localStorage.setItem('songPageGetPathArt', JSON.stringify(data));
-		localStorage.setItem("songPageSelected_SONG_SONGID", JSON.stringify(boob));
-	});
-	audio2.on('loadedmetadata', function () {
-		var dur = audio2[0].duration;
-		var cd = calcDuration(dur);
-		$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
-	});	
 })
 .on('click', '#searchClear', function () {
 	$('#search-basic').val('');
@@ -1330,24 +1301,9 @@ $.mobile.loader.prototype.options.textVisible,
 		$('#audio1').hide();
 	}
 })
-
 .on('change', "#select-based-flipswitch", function () {
-	var doo = this.value;
-	localStorage.setItem('TransCode', doo);
-	console.log('this is doo');
-	console.log(doo);
-	
-	
-	
+	localStorage.setItem('TransCode', this.value);
 });
-
-/*.on('click', "#select-based-flipswitch", function () {
-	//$('select-based-flipswitch').flipswitch('enable');
-	var boo = $('select-based-flipswitch').attr('option');
-	console.log('this is boo flipswitch');
-	console.log(boo);
-	
-});*/
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////// END PLAYLIST PAGE STUFF //////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////

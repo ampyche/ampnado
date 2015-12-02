@@ -505,15 +505,14 @@ function checkOgg() {
 };
 
 function setTransCode() {
+	var transcode = localStorage.getItem('TransCode');
+	if (localStorage.getItem('TransCode') === null) {
+		transcode = 'mp3';
+	}
 	$("#select-based-flipswitch").on('flipswitchcreate', function (event, ui) {
-		transcode = localStorage.getItem('TransCode');
-		if (transcode != '') {
-			$("#select-based-flipswitch").val(transcode).flipswitch('refresh');
-		} else {
-			$("#select-based-flipswitch").val('MP3').flipswitch('refresh');
-			localStorage.setItem('transcode', 'MP3');
-		}
+		$("#select-based-flipswitch").val(transcode).flipswitch('refresh');	
 	});
+	localStorage.setItem('TransCode', transcode);
 };
 
 var initAmpyche = function () {

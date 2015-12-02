@@ -24,7 +24,9 @@ Install the Python3 versions of the following software packages:
 	PIL
 	mutagen or mutagenx
 	tornado
+	
 	mongodb
+	FFmpeg
 	
 To enable text search in versions of mongodb where textsearch is not enabled by default do:
 
@@ -54,8 +56,8 @@ To setup AmpNado use the setup script in /usr/share/ampnado/ampnado_setup.py:
 		Example of adding a new user:
 		
 		python3 ampnado_setup.py Utils
-			-aun Betty
-			-aup 456betty456
+			--add-user-name Betty
+			--add-user-password 456betty456
 
 
 To drop all databases using mongo shell use the following commands from a 
