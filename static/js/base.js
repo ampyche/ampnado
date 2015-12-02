@@ -344,14 +344,23 @@ function oc_homeBTN_fraz6(b) {
 
 ///////////////////////////////////////////////////////////////////////////////
 function singPlayer1(d) {
-	$('#introimg').attr('src', d.soho[1]);
-	$('#playlistalbart').attr('src', d.soho[1]);
-	$('#pictext').text(d.soho[2]);
-	$('#pictext2').text(d.soho[3]);
-	audio2 = $('#audio2');
-	audio2.attr('src', d.soho[0]);
-	audio2.on('loadedmetadata', function () {
-		var dur = audio2[0].duration;
+	
+	console.log('this is soho src');
+	console.log(d.soho);
+	
+	$('#introimg').attr('src', d.soho['lthumbnail']);
+	$('#playlistalbart').attr('src', d.soho['lthumbnail']);
+	$('#pictext').text(d.soho['artist']);
+	$('#pictext2').text(d.soho['album']);
+	audio25 = $('#audio2');
+	
+	
+	
+	
+	
+	audio25.attr('src', d.soho['httpmusicpath']);
+	audio25.on('loadedmetadata', function () {
+		var dur = audio25[0].duration;
 		var cd = calcDuration(dur);
 		$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
 	});
@@ -968,11 +977,14 @@ $(document).on('click', '.artOF', function () {
 .on('click', '.rart1', function () {
 	var sid = $(this).attr('data-songid');
 	$('#popup1').popup('close');
+	var tranc1 = localStorage.getItem('TransCode');
 	$.get('RamdomAlbumPicPlaySong',
 	{
-		'sid' : sid
+		'sid' : sid, 'transcode': tranc1
 	},
 	function (data) {
+		console.log('this is singplayer1 data');
+		console.log(data);
 		singPlayer1(data);
 	});
 	rpwStart();
@@ -980,9 +992,10 @@ $(document).on('click', '.artOF', function () {
 .on('click', '.rart2', function () {
 	var sid = $(this).attr('data-songid');
 	$('#popup2').popup('close');
+	var tranc2 = localStorage.getItem('TransCode');
 	$.get('RamdomAlbumPicPlaySong',
 	{
-		'sid' : sid
+		'sid' : sid, 'transcode': tranc2
 	},
 	function (data) {
 		singPlayer1(data);
@@ -992,9 +1005,10 @@ $(document).on('click', '.artOF', function () {
 .on('click', '.rart3', function () {
 	var sid = $(this).attr('data-songid');
 	$('#popup3').popup('close');
+	var tranc3 = localStorage.getItem('TransCode');
 	$.get('RamdomAlbumPicPlaySong',
 	{
-		'sid' : sid
+		'sid' : sid, 'transcode': tranc3
 	},
 	function (data) {
 		singPlayer1(data);
@@ -1004,9 +1018,10 @@ $(document).on('click', '.artOF', function () {
 .on('click', '.rart4', function () {
 	var sid = $(this).attr('data-songid');
 	$('#popup4').popup('close');
+	var tranc4 = localStorage.getItem('TransCode');
 	$.get('RamdomAlbumPicPlaySong',
 	{
-		'sid' : sid
+		'sid' : sid, 'transcode': tranc4
 	},
 	function (data) {
 		singPlayer1(data);
@@ -1016,9 +1031,10 @@ $(document).on('click', '.artOF', function () {
 .on('click', '.rart5', function () {
 	var sid = $(this).attr('data-songid');
 	$('#popup5').popup('close');
+	var tranc5 = localStorage.getItem('TransCode');
 	$.get('RamdomAlbumPicPlaySong',
 	{
-		'sid' : sid
+		'sid' : sid, 'transcode': tranc5
 	},
 	function (data) {
 		singPlayer1(data);

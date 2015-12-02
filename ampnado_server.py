@@ -322,16 +322,14 @@ class GetPathArtHandler(BaseHandler):
 				getpathart = yield self._transcode_ogg_to_mp3(fileinfo, paths)
 				self.write(getpathart)
 			elif fileinfo['filetype'] == '.mp3':
-				getpathart = yield self.get_song_songid_path_art(selected)
-				self.write(getpathart)
+				self.write(fileinfo)
 			else: print('not mp3 transcode')
 		if transcode == 'ogg':
 			if fileinfo['filetype'] == '.mp3':
 				getpathart = yield self._transcode_mp3_to_ogg(fileinfo, paths)
 				self.write(getpathart)
 			elif fileinfo['filetype'] == '.ogg':
-				getpathart = yield self.get_song_songid_path_art(selected)
-				self.write(getpathart)
+				self.write(fileinfo)
 			else: print('not ogg transcode')
 
 
@@ -651,18 +649,108 @@ class GetAllVideoHandler(BaseHandler):
 		vlist = [vid for vid in db.video.find({}, {'vid_playpath': 1, 'vid_id': 1, 'vid_name':1, 'vid_poster_string': 1, '_id':0}).sort([('vid_name', pymongo.ASCENDING)])]
 		self.write(dict(vlist=vlist))
 
+
+
+
+
+
+
+
+
+
+
+
 class RamdomAlbumPicPlaySongHandler(BaseHandler):
 	@tornado.gen.coroutine
-	def _get_song(self, apid):
-		mp = db.tags.find_one({'songid':apid}, {'httpmusicpath':1, 'lthumbnail':1, 'song':1, 'album':1, '_id':0})
-		return mp['httpmusicpath'], mp['lthumbnail'], mp['song'], mp['album']
-
+	def _get_song_info(self, apid):
+		return db.tags.find_one({'songid':apid}, {'httpmusicpath':1, 'filename':1, 'filetype':1, 'lthumbnail':1, 'song':1, 'album':1, '_id':0})
+		#mp = db.tags.find_one({'songid':apid}, {'httpmusicpath':1, 'filetype':1, 'lthumbnail':1, 'song':1, 'album':1, '_id':0})
+		#return mp['httpmusicpath'], mp['lthumbnail'], mp['song'], mp['album']
+	
+	@tornado.gen.coroutine
+	def _get_prog_path(self):
+		return db.prog_paths.find_one({})	
+	
+	@tornado.gen.coroutine
+	def _transcode_mp3_to_ogg(self, afile, pa):
+		temp_path = pa['musicPath']	
+		temp_filename = str(uuid.uuid4().hex)
+		ext = '.ogg'
+		tempfilePath = temp_path + '/' + temp_filename + ext
+		temphttpPath = pa['httppath'] + '/Temp/MUSIC/' + temp_filename + ext
+		os.chdir(temp_path)
+		cmd = "ffmpeg -i %s -vsync 2 %s" % (afile['filename'], tempfilePath)
+		try:
+			transcode = subprocess.call(cmd, shell=True)
+		except OSError: print('subprocess OSError')
+		afile['tempfilePath'] = tempfilePath
+		afile['httpmusicpath'] = temphttpPath
+		os.chdir(pa['programPath'])
+		return afile
+	
+	@tornado.gen.coroutine
+	def _transcode_ogg_to_mp3(self, afile, pa):
+		temp_path = pa['musicPath']	
+		temp_filename = str(uuid.uuid4().hex)
+		ext = '.mp3'
+		tempfilePath = temp_path + '/' + temp_filename + ext
+		temphttpPath = pa['httppath'] + '/Temp/MUSIC/' + temp_filename + ext
+		os.chdir(temp_path)	
+		cmd = "ffmpeg -i %s -vsync 2 %s" % (afile['filename'], tempfilePath)
+		try:
+			transcode = subprocess.call(cmd, shell=True)
+		except OSError: print('subprocess OSError')
+		afile['tempfilePath'] = tempfilePath
+		afile['httpmusicpath'] = temphttpPath
+		os.chdir(pa['programPath'])
+		return afile	
+		
 	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
-		soho = yield self._get_song(p['sid'][0])
-		self.write(dict(soho=soho))
+		songid = p['sid'][0]
+		transcode = p['transcode'][0]
+		foo = yield self._get_song_info(songid)
+		ppath = yield self._get_prog_path()
+		
+		print('this is mytup')
+		print(songid, transcode, foo['filetype'])
+		
+		if transcode == 'mp3':
+			if foo['filetype'] == '.mp3':
+				print(foo)
+				self.write(dict(soho=foo))
+				
+			if foo['filetype'] == '.ogg':
+				hoho = yield self._transcode_ogg_to_mp3(foo, ppath)
+				print(hoho)
+				self.write(dict(soho=hoho))
+				
+		if transcode == 'ogg':
+			if foo['filetype'] == '.mp3':
+				hoho = yield self._transcode_mp3_to_ogg(foo, ppath)
+				print(hoho)
+				self.write(dict(soho=hoho))
+			if foo['filetype'] == '.ogg':
+				print(foo)
+				self.write(dict(soho=foo))
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class RandomPicsHandler(BaseHandler):
 	@tornado.gen.coroutine
