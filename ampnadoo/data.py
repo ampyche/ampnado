@@ -75,8 +75,6 @@ class Data:
 			{'$project': {'albumz' :1}}
 		])
 
-
-
 	def tags_aggregate_albumid(self, albid):
 		return data.tags.aggregate([
 			{'$match': {'albumid': albid}},
@@ -85,15 +83,9 @@ class Data:
 		])
 
 
+	def viewsdb_artalpha_insert(self, x):
+		data2.artalpha.insert(x)
 
-
-
-
-
-
-
-		
-		
 	def viewsdb_albalpha_insert(self, v):
 		data2.albalpha.insert(v)
 
@@ -106,3 +98,6 @@ class Data:
 		
 	def viewsdb_artistview_insert(self, z): 
 		data2.artistView.insert(z)
+		
+	def viewsdb_artistview_update(self, c):
+		data2.artistView.update({'artist': c[0]}, {'$set': {'page': c[1]}})
