@@ -87,9 +87,11 @@ class Functions:
 	def _get_video_count(self):
 		return len(Data().video_distinct_vid_name())
 	
-	def _get_mp3_count(self): return db.tags.find({'filetype': '.mp3'}).count()
+	def _get_mp3_count(self):
+		return Data().tags_all_filetype_mp3()
 	
-	def _get_ogg_count(self): return db.tags.find({'filetype': '.ogg'}).count()
+	def _get_ogg_count(self):
+		return Data().tags_all_filetype_ogg()
 
 	def _convert_bytes(self, abytes):
 		if abytes >= 1099511627776:
@@ -125,15 +127,23 @@ class Functions:
 		return (self.mp3list, self.ogglist, self.vidlist)
 
 	def _get_bytes(self):
-		return db.tags.aggregate({'$group': {'_id': 'soup', 'total' : {'$sum': '$filesize'}}})
+		return Data().tags_aggregate_filesize()
 		logging.info('SETUP: _get_bytes is complete')
 
 	def _get_ids(self):
-		return [o['_id'] for o in db.tags.find({})]
+		
+		
+		alltags = Data().tags_all_id()
+		allt = []
+		for at in alltags: 
+			tid = at['_id']
+			allt.append(tid)
+		return allt
+		
 		logging.info('SETUP: _get_ids is now complete')
 
 	def _insert_catalog_info(self, adict):
-		db.catalogs.insert(adict)
+		Data().catalogs_insert(adict)
 		logging.info('SETUP: _insert_catalog_info is complete')
 
 	def _create_catalog_db(self, cdict):
@@ -143,14 +153,26 @@ class Functions:
 		self._insert_catalog_info(cdict)
 		logging.info('SETUP: create_catalog_db is complete')
 
-	def add_artistids(self):		
-		artlist = [{'artist' : a, 'artistid' : self.gen_uuid()} for a in db.tags.distinct('artist')]
-		[db.tags.update({'artist': n['artist']}, {'$set': {'artistid': n['artistid']}}, multi=True) for n in artlist] 
+	def add_artistids(self):
+		artist = Data().tags_distinct_artist()
+		artlist = []
+		for a in artist:
+			x = {}
+			x['artist'] = a
+			x['artistid'] = self.gen_uuid()
+			artlist.append(x)
+		Data().tags_update_artistid(artlist)
 		logging.info('SETUP: add_artistids complete')
 
 	def add_albumids(self):
-		alblist = [{'album': a, 'albumid': self.gen_uuid()} for a in db.tags.distinct('album')]
-		[db.tags.update({'album': alb['album']}, {'$set': {'albumid': alb['albumid']}}, multi=True) for alb in alblist]
+		album = Data().tags_distinct_album()
+		alblist = []
+		for a in album:
+			z = {}
+			z['album'] = a
+			z['albumid'] = self.gen_uuid()
+			alblist.append(z)
+		Data().tags_update_albumid(alblist)
 		logging.info('SETUP: add_albumids complete')
 
 	def db_stats(self):
@@ -167,7 +189,7 @@ class Functions:
 		x['total_videos'] = self._get_video_count()
 		x['total_mp3'] = self._get_mp3_count()
 		x['total_ogg'] = self._get_ogg_count()
-		db.ampnado_stats.insert(x)
+		Data().stats_insert(x)
 		logging.info('SETUP: db stats complete')							
 
 	#This takes a list and splits it up into a tup of chunks, n="number per list"	
@@ -190,12 +212,12 @@ class Functions:
 
 	def insert_user(self, a_uname, a_pword):
 		h = self.gen_hash(a_uname, a_pword)
-		db.user_creds.insert({'username': a_uname, 'password': h[1], 'user_id': h[2]})
+		Data().usercreds_insert_user_pword(a_uname, h[1], h[2])
 		logging.info('SETUP: insert_user is complete')
 
 	def _create_random_art_db(self):
-		db.randthumb.remove({})
-		alist = db.tags.distinct('albumid')
+		Data().randthumb_rm()
+		alist = Data().tags_distinct_albumid()
 		random.shuffle(alist)
 		bean = self.chunks(alist, 5)
 		mc = []

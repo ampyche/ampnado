@@ -24,6 +24,10 @@ data = client.ampnadoDB
 data2 = client.ampviewsDB
 
 class Data:
+	"""
+	This creates a data layer essentially all the programs data base calls.
+	This will assist with unit testing
+	"""
 	
 	def fone_usercreds_user_pword(self, auname, apword):
 		return data.user_creds.find_one({'username': auname, 'password': apword})
@@ -36,6 +40,14 @@ class Data:
 
 #######################################################################
 
+	def catalogs_insert(self, x):
+		return data.catalogs.insert(x)
+
+##################################################################
+
+	def tags_insert(self, x):
+		data.tags.insert(x)
+		
 	def tags_distinct_albumartPath(self):
 		return data.tags.distinct('albumartPath')
 		
@@ -51,13 +63,8 @@ class Data:
 	def tags_distinct_song(self):
 		return data.tags.distinct('song')
 			
-	
-		
-		
-
-	def tags_insert(self, x):
-		data.tags.insert(x)
-	
+	def tags_all_id(self):
+		return data.tags.find({}, {'_id':1})
 	
 	def tags_all_lthumb_size(self):
 		return data.tags.find({}, {'largethumb_size':1, '_id':0})
@@ -68,14 +75,15 @@ class Data:
 	def tags_all_filesize(self):
 		return data.tags.find({}, {'filesize':1, '_id':0})
 
-
-
-
-
-
+	def tags_all_filetype_mp3(self):
+		return data.tags.find({'filetype': '.mp3'}).count()
+		
+	def tags_all_filetype_ogg(self):
+		return data.tags.find({'filetype': '.ogg'}).count()
 
 	def tags_all_song(self, d):
 		return data.tags.find({'song':d}, {'song':1, 'songid':1, '_id':0})
+
 
 	def fone_tags_albumid(self, albid):
 		return data.tags.find_one({'albumid':albid}, {'album':1, 'albumid': 1, 'artist':1, 'artistid':1, 'sthumbnail':1, '_id':0})
@@ -85,7 +93,6 @@ class Data:
 
 	def fone_tags_artist(self, art):
 		return data.tags.find_one({'artist': art}, {'artistid': 1, '_id': 0})
-
 
 	def fone_tags_album(self, alb):
 		return data.tags.find_one({'album':alb}, {'albumid':1, '_id':0})
@@ -98,17 +105,26 @@ class Data:
 			{'$group': {'_id': 'album', 'albumz': {'$addToSet': '$album'}}},
 			{'$project': {'albumz' :1}}
 		])
-
+		
 	def tags_aggregate_albumid(self, albid):
 		return data.tags.aggregate([
 			{'$match': {'albumid': albid}},
 			{'$group': {'_id': 'song', 'songz': {'$addToSet': '$song'}}},
 			{'$project': {'songz' :1}}
-		])
+		])	
+		
+	def tags_aggregate_filesize(self):
+		return data.tags.aggregate({'$group': {'_id': 'soup', 'total' : {'$sum': '$filesize'}}})
 
 
 
+	def tags_update_artistid(self, artlist):
+		[data.tags.update({'artist': n['artist']}, {'$set': {'artistid': n['artistid']}}, multi=True) for n in artlist] 
 
+	def tags_update_albumid(self, alblist):
+		[data.tags.update({'album': alb['album']}, {'$set': {'albumid': alb['albumid']}}, multi=True) for alb in alblist]
+
+###############################################################################
 
 	def video_all_filesize(self):
 		return data.video.find({}, {'filesize':1, '_id':0})
@@ -116,9 +132,12 @@ class Data:
 	def video_distinct_vid_name(self):
 		return data.video.distinct('vid_name')
 
+###############################################################################
 
+	def stats_insert(self, x):
+		data.ampnado_stats.insert(x)
 
-
+###############################################################################
 
 
 	def viewsdb_artalpha_insert(self, x):
@@ -129,8 +148,7 @@ class Data:
 
 	def viewsdb_insert(self, av):
 		data2.albumView.insert(av)
-		
-		
+
 	def viewsdb_albumview_updata(self, albid):
 		data2.albumView.update({'albumid': albid[0]}, {'$set': {'page': albid[1]}})
 		
@@ -139,3 +157,11 @@ class Data:
 		
 	def viewsdb_artistview_update(self, c):
 		data2.artistView.update({'artist': c[0]}, {'$set': {'page': c[1]}})
+		
+###############################################################################	
+		
+	def randthumb_rm(self):
+		data.randthumb.remove({})
+		
+	def randthumb_insert(self, x):
+		db.randthumb.insert(x)		

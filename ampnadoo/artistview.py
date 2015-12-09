@@ -25,10 +25,6 @@ v = pymongo.version
 version = v.split('.')[0]
 version = int(version)
 
-client = pymongo.MongoClient()
-db = client.ampnadoDB
-viewsdb = client.ampviewsDB
-
 class ArtistView():
 	def __init__(self):
 		art = Data().tags_distinct_artist()
