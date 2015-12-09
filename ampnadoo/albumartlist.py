@@ -19,25 +19,33 @@
 ###############################################################################
 ###############################################################################
 from multiprocessing import Pool
+from ampnadoo.data import Data
 from pymongo import MongoClient
 client = MongoClient()
 db = client.ampnadoDB
 
 class GetAlbumArtLists():
+	def __init__(self):
+		albumartPaths = Data().tags_distinct_albumartPath()
+		self.albumartPaths = albumartPaths
 
 	def get_albumart_lists(self, a):
 		asp = a.split('/')
 		if asp[-1:][0] == 'NOTAGART':
 			pass
 		else:
-			albinfo = db.tags.find_one({'albumartPath':a}, {'albumid':1, 'album':1, '_id':0})
+			#albinfo = db.tags.find_one({'albumartPath':a}, {'albumid':1, 'album':1, '_id':0})
+			albinfo = Data().fone_tags_albumartPath(a)
+			
 			ainfo = a, albinfo['albumid'], albinfo['album']
 			return ainfo
 
 	def get_albumart_list_main(self, acores):
-		albumartPaths = db.tags.distinct('albumartPath')
+		
+		#albumartPaths = db.tags.distinct('albumartPath')
+		
 		pool = Pool(processes=acores)
-		google = pool.map(self.get_albumart_lists, albumartPaths)
+		google = pool.map(self.get_albumart_lists, self.albumartPaths)
 		cleaned = [x for x in google if x != None]
 		pool.close()
 		pool.join()		
