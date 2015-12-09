@@ -21,11 +21,8 @@
 from multiprocessing import Pool
 from ampnadoo.data import Data
 
-class GetAlbumArtLists():
-	def __init__(self):
-		albumartPaths = Data().tags_distinct_albumartPath()
-		self.albumartPaths = albumartPaths
-
+class GetAlbumArtLists:
+	
 	def get_albumart_lists(self, a):
 		asp = a.split('/')
 		if asp[-1:][0] == 'NOTAGART':
@@ -36,8 +33,9 @@ class GetAlbumArtLists():
 			return ainfo
 
 	def get_albumart_list_main(self, acores):
+		albumartPaths = Data().tags_distinct_albumartPath()
 		pool = Pool(processes=acores)
-		google = pool.map(self.get_albumart_lists, self.albumartPaths)
+		google = pool.map(self.get_albumart_lists, albumartPaths)
 		cleaned = [x for x in google if x != None]
 		pool.close()
 		pool.join()		

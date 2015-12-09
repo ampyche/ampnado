@@ -20,11 +20,10 @@
 ###############################################################################
 import os, base64
 from multiprocessing import Pool
-from pymongo import MongoClient
-client = MongoClient()
-db = client.ampnadoDB
+from ampnadoo.data import Data
 
-class SetNoArtPic():
+
+class SetNoArtPic:
 	def _get_b64_image(self, location):	
 		with open(location, 'rb') as imagefile:
 			 return ''.join(('data:image/png;base64,', base64.b64encode(imagefile.read()).decode('utf-8')))
@@ -42,14 +41,18 @@ class SetNoArtPic():
 		return NAP2imgstr, NAP2_size
 
 	def get_no_art_ids(self, nt):
-		moo = db.tags.update({'_id':nt[0]}, {'$set': {'sthumbnail': nt[1], 'lthumbnail': nt[3], 'smallthumb_size': nt[2], 'largethumb_size': nt[4]}}) 
-
+		moo = Data().tags_update_thumbs_and_sizes2(nt)
+				 
 	def set_no_art_pic_main(self, acores):
-		pp = db.prog_paths.find_one({})
+		pp = Data().fone_prog_paths()
 		path = pp['programPath']
 		nat100 = self.nat100(path)
 		nat200 = self.nat200(path)
-		ntaid = [(nta['_id'], nat100[0], nat100[1], nat200[0], nat200[1]) for nta in db.tags.find({'NoTagArt': 0}, {'_id':1})]
+		noart = Data().tags_all_notagart()
+		ntaid = []
+		for nta in noart:
+			boohoo = (nta['_id'], nat100[0], nat100[1], nat200[0], nat200[1])
+			ntaid.append(boohoo)
 		pool = Pool(processes=acores)
 		moogle = pool.map(self.get_no_art_ids, ntaid)
 		cleaned = [x for x in moogle if x != None]

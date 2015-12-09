@@ -21,11 +21,9 @@
 import os, base64, glob
 from PIL import Image
 from multiprocessing import Pool
-from pymongo import MongoClient
-client = MongoClient()
-db = client.ampnadoDB
+from ampnadoo.data import Data
 
-class GetAlbumArt():
+class GetAlbumArt:
 	def _get_smallthumb(self, location, filename, size):
 		im2 = Image.open(filename)
 		im2.thumbnail(size, Image.ANTIALIAS)
@@ -61,7 +59,9 @@ class GetAlbumArt():
 		self._img_size_check_and_save(p[0][0], dthumb, loc2)
 		x['largethumb_size'] = self._get_thumb_size(loc2)
 		x['largethumb'] = self._get_b64_image(loc2)
-		db.tags.update({'albumartPath': p[0][0]}, {'$set': {'sthumbnail': x['smallthumb'], 'smallthumb_size': x['smallthumb_size'], 'lthumbnail' : x['largethumb'], 'largethumb_size': x['largethumb_size']}}, multi=True)
+		a = (p[0][0], x['smallthumb'], x['smallthumb_size'], x['largethumb'], x['largethumb_size'])
+		Data().tags_update_sthumb_lthumb_and_sizes(a)
+
 		
 	def get_albumart_main(self, alblist, apaths, acores):
 		sl10 = ''.join([apaths['tempPath'], '/'])

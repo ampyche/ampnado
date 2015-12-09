@@ -37,13 +37,18 @@ class Data:
 
 	def usercreds_remove_user_pword(self, anid):
 		data.user_creds.remove(anid)
+		
+###############################################################################		
+		
+	def fone_prog_paths(self):
+		return data.prog_paths.find_one({})	
 
-#######################################################################
+###############################################################################
 
 	def catalogs_insert(self, x):
 		return data.catalogs.insert(x)
 
-##################################################################
+###############################################################################
 
 	def tags_insert(self, x):
 		data.tags.insert(x)
@@ -62,6 +67,9 @@ class Data:
 		
 	def tags_distinct_song(self):
 		return data.tags.distinct('song')
+		
+	def tags_all(self):
+		return data.tags.find({})
 			
 	def tags_all_id(self):
 		return data.tags.find({}, {'_id':1})
@@ -83,6 +91,11 @@ class Data:
 
 	def tags_all_song(self, d):
 		return data.tags.find({'song':d}, {'song':1, 'songid':1, '_id':0})
+
+	def tags_all_notagart(self):
+		return data.tags.find({'NoTagArt': 0}, {'_id':1})
+
+
 
 
 	def fone_tags_albumid(self, albid):
@@ -124,13 +137,30 @@ class Data:
 	def tags_update_albumid(self, alblist):
 		[data.tags.update({'album': alb['album']}, {'$set': {'albumid': alb['albumid']}}, multi=True) for alb in alblist]
 
+
+	def tags_update_sthumb_lthumb_and_sizes(self, a):
+		data.tags.update({'albumartPath': a[0]}, {'$set': {'sthumbnail': a[1], 'smallthumb_size': a[2], 'lthumbnail' : a[3], 'largethumb_size': a[4]}}, multi=True)
+
+
+
+	def tags_update_thumbs_and_sizes2(self, nt):
+		data.tags.update({'_id':nt[0]}, {'$set': {'sthumbnail': nt[1], 'lthumbnail': nt[3], 'smallthumb_size': nt[2], 'largethumb_size': nt[4]}}) 
+
+	def tags_update_httpmusicpath(self, x, z):
+		data.tags.update({'filename':x}, {'$set': {'httpmusicpath':z}})
+
+
+
 ###############################################################################
+	def video_insert(self, x):
+		data.video.insert(x)
 
 	def video_all_filesize(self):
 		return data.video.find({}, {'filesize':1, '_id':0})
 
 	def video_distinct_vid_name(self):
 		return data.video.distinct('vid_name')
+		
 
 ###############################################################################
 
@@ -158,7 +188,7 @@ class Data:
 	def viewsdb_artistview_update(self, c):
 		data2.artistView.update({'artist': c[0]}, {'$set': {'page': c[1]}})
 		
-###############################################################################	
+###############################################################################
 		
 	def randthumb_rm(self):
 		data.randthumb.remove({})

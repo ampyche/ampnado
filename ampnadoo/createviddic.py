@@ -20,6 +20,7 @@
 ###############################################################################
 import os, uuid
 from multiprocessing import Pool
+from ampnadoo.data import Data
 from pymongo import MongoClient
 client = MongoClient()
 db = client.ampnadoDB
@@ -54,7 +55,7 @@ class CreateVidDict():
 		vid_name3 = [v.capitalize() for v in vid_name2]
 		vid['vid_name'] = ' '.join(vid_name3)
 		vid['vid_id'] = str(uuid.uuid4().hex)
-		db.video.insert(vid)
+		Data().video_insert(vid)
 		return vid
 
 	def create_vid_dic_main(self, avidlist, opt, acores):

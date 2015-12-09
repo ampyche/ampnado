@@ -143,14 +143,21 @@ class Setup():
 		print('this is   addalbumid     time')
 		print(FUN.gettime(a_time))
 		
+		print('start ALBUMARTLIST')
 		Aal = aal.GetAlbumArtLists()
 		ALBUMARTLIST = Aal.get_albumart_list_main(CORES)
+		print('end ALBUMARTLIST')
 
+		print('start GETALBUMART')
 		Gaa = gaa.GetAlbumArt()
 		GETALBUMART = Gaa.get_albumart_main(ALBUMARTLIST, PATHS, CORES)
+		print('end GETALBUMART')
 
+		print('start noartpic')
 		Snap = snap.SetNoArtPic()
 		SETNOARTPIC = Snap.set_no_art_pic_main(CORES)
+		print('end noartpic')
+
 
 		print('this is   get_albumart     time')
 		print(FUN.gettime(a_time))
