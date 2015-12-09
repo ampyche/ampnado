@@ -18,19 +18,19 @@
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 ###############################################################################
-import ampnado.artistview as artv
-import ampnado.albumview as albvv
-import ampnado.songview as songv
-import ampnado.httpmusicpath as httpmp
-import ampnado.filemeta as fmeta
-import ampnado.gettags as gtag
-import ampnado.albumartscan as aas
-import ampnado.albumartlist as aal
-import ampnado.getalbumart as gaa
-import ampnado.setnoartpic as snap
-import ampnado.createviddic as cvd
-import ampnado.videoposter as vp
-import ampnado.functions as fun
+import ampnadoo.artistview as artv
+import ampnadoo.albumview as albvv
+import ampnadoo.songview as songv
+import ampnadoo.httpmusicpath as httpmp
+import ampnadoo.filemeta as fmeta
+import ampnadoo.gettags as gtag
+import ampnadoo.albumartscan as aas
+import ampnadoo.albumartlist as aal
+import ampnadoo.getalbumart as gaa
+import ampnadoo.setnoartpic as snap
+import ampnadoo.createviddic as cvd
+import ampnadoo.videoposter as vp
+import ampnadoo.functions as fun
 import logging, pymongo
 client = pymongo.MongoClient()
 db = client.ampnadoDB

@@ -20,9 +20,9 @@
 ###############################################################################
 import os, re, sys, uuid, logging
 from urllib.parse import urlparse
-from ampnado.functions import Functions
-from ampnado.removeold import RemoveOld
-import ampnado.dbindexes as dDBi
+from ampnadoo.functions import Functions
+from ampnadoo.removeold import RemoveOld
+import ampnadoo.dbindexes as dDBi
 
 from pymongo import MongoClient
 client = MongoClient()
