@@ -95,8 +95,8 @@ class Data:
 	def tags_all_notagart(self):
 		return data.tags.find({'NoTagArt': 0}, {'_id':1})
 
-
-
+	def tags_all_song_songid_artist(self):
+		return data.tags.find({}, {'song':1, 'songid':1, 'artist':1, '_id':0})
 
 	def fone_tags_albumid(self, albid):
 		return data.tags.find_one({'albumid':albid}, {'album':1, 'albumid': 1, 'artist':1, 'artistid':1, 'sthumbnail':1, '_id':0})
@@ -187,6 +187,13 @@ class Data:
 		
 	def viewsdb_artistview_update(self, c):
 		data2.artistView.update({'artist': c[0]}, {'$set': {'page': c[1]}})
+
+
+	def viewsdb_songalpha_insert(self, x):
+		data2.songalpha.insert(x)
+		
+	def viewsdb_songview_insert(self, svl):
+		data2.songView.insert(svl)
 		
 ###############################################################################
 		

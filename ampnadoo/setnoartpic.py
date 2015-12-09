@@ -22,7 +22,6 @@ import os, base64
 from multiprocessing import Pool
 from ampnadoo.data import Data
 
-
 class SetNoArtPic:
 	def _get_b64_image(self, location):	
 		with open(location, 'rb') as imagefile:
@@ -40,7 +39,7 @@ class SetNoArtPic:
 		NAP2imgstr = self._get_b64_image(NAP2)
 		return NAP2imgstr, NAP2_size
 
-	def get_no_art_ids(self, nt):
+	def no_art_ids(self, nt):
 		moo = Data().tags_update_thumbs_and_sizes2(nt)
 				 
 	def set_no_art_pic_main(self, acores):
@@ -54,7 +53,7 @@ class SetNoArtPic:
 			boohoo = (nta['_id'], nat100[0], nat100[1], nat200[0], nat200[1])
 			ntaid.append(boohoo)
 		pool = Pool(processes=acores)
-		moogle = pool.map(self.get_no_art_ids, ntaid)
+		moogle = pool.map(self.no_art_ids, ntaid)
 		cleaned = [x for x in moogle if x != None]
 		pool.close()
 		pool.join()
