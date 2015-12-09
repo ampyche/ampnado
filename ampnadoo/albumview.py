@@ -26,10 +26,6 @@ v = pymongo.version
 version = v.split('.')[0]
 version = int(version)
 
-client = pymongo.MongoClient()
-db = client.ampnadoDB
-viewsdb = client.ampviewsDB
-
 class AlbumView():
 	def __init__(self):
 		albid = Data().tags_distinct_albumid()
@@ -87,13 +83,10 @@ class AlbumChunkIt():
 				albidPlist.append(albid_page)
 			albalphaoffsetlist.append(str(count))
 		Data().viewsdb_albalpha_insert(dict(albalpha=albalphaoffsetlist))
-		#viewsdb.albalpha.insert(dict(albalpha=albalphaoffsetlist))
 		return albidPlist
 			
 	def _get_pages(self, c):
-		#viewsdb.albumView.update({'albumid': c[0]}, {'$set': {'page': c[1]}})
 		Data().viewsdb_albumview_updata(c)
-		
 
 	def main(self, albv, OFC, cores):
 		chunks = self.chunks(albv, OFC)

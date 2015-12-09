@@ -42,18 +42,41 @@ class Data:
 	def tags_distinct_albumid(self):
 		return data.tags.distinct('albumid')
 		
+	def tags_distinct_artist(self):		
+		return data.tags.distinct('artist')
+
+	def tags_insert(self, x):
+		data.tags.insert(x)
+	
+
+
+	def tags_all_song(self, d):
+		return data.tags.find({'song':d}, {'song':1, 'songid':1, '_id':0})
+
+	def fone_tags_albumid(self, albid):
+		return data.tags.find_one({'albumid':albid}, {'album':1, 'albumid': 1, 'artist':1, 'artistid':1, 'sthumbnail':1, '_id':0})
 
 	def fone_tags_albumartPath(self, albpath):
 		return data.tags.find_one({'albumartPath':albpath}, {'albumid':1, 'album':1, '_id':0})
 
-	def tags_insert(self, x):
-		data.tags.insert(x)
-		
-		
-	def fone_tags_albumid(self, albid):
-		return data.tags.find_one({'albumid':albid}, {'album':1, 'albumid': 1, 'artist':1, 'artistid':1, 'sthumbnail':1, '_id':0})
-		
-		
+	def fone_tags_artist(self, art):
+		return data.tags.find_one({'artist': art}, {'artistid': 1, '_id': 0})
+
+
+	def fone_tags_album(self, alb):
+		return data.tags.find_one({'album':alb}, {'albumid':1, '_id':0})
+
+
+
+	def tags_aggregate_artist(self, art):
+		return data.tags.aggregate([
+			{'$match': {'artist': art}},
+			{'$group': {'_id': 'album', 'albumz': {'$addToSet': '$album'}}},
+			{'$project': {'albumz' :1}}
+		])
+
+
+
 	def tags_aggregate_albumid(self, albid):
 		return data.tags.aggregate([
 			{'$match': {'albumid': albid}},
@@ -63,20 +86,23 @@ class Data:
 
 
 
-	def tags_all_song(self, d):
-		return data.tags.find({'song':d}, {'song':1, 'songid':1, '_id':0})
+
+
+
 
 
 
 		
 		
 	def viewsdb_albalpha_insert(self, v):
-		return data2.albalpha.insert(v)
-			
-		
+		data2.albalpha.insert(v)
+
 	def viewsdb_insert(self, av):
 		data2.albumView.insert(av)
 		
 		
 	def viewsdb_albumview_updata(self, albid):
-		return data2.albumView.update({'albumid': albid[0]}, {'$set': {'page': albid[1]}})
+		data2.albumView.update({'albumid': albid[0]}, {'$set': {'page': albid[1]}})
+		
+	def viewsdb_artistview_insert(self, z): 
+		data2.artistView.insert(z)
