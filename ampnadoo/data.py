@@ -63,8 +63,8 @@ class Data:
 
 
 
-
-
+	def tags_all_song(self, d):
+		return data.tags.find({'song':d}, {'song':1, 'songid':1, '_id':0})
 
 
 

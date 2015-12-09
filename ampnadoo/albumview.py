@@ -69,7 +69,21 @@ class AlbumView():
 		av['numsongs'] = len(doo)
 		new_song_list = []
 		for d in doo:
-			sids = [(s['song'], s['songid']) for s in db.tags.find({'song':d}, {'song':1, 'songid':1, '_id':0})]
+			
+			#voo = db.tags.find({'song':d}, {'song':1, 'songid':1, '_id':0})
+			voo = Data().tags_all_song(d)
+			sids = []
+			for s in voo:
+				x = (s['song'], s['songid'])
+				sids.append(x)
+			
+			
+			
+			
+			
+			
+			
+			
 			new_song_list.append(sids)
 		av['songs'] = new_song_list
 		
