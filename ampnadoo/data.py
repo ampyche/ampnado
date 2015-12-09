@@ -21,6 +21,7 @@
 from pymongo import MongoClient
 client = MongoClient()
 data = client.ampnadoDB
+data2 = client.ampviewsDB
 
 class Data:
 	
@@ -37,9 +38,41 @@ class Data:
 
 	def tags_distinct_albumartPath(self):
 		return data.tags.distinct('albumartPath')
+		
+	def tags_distinct_albumid(self):
+		return data.tags.distinct('albumid')
+		
 
 	def fone_tags_albumartPath(self, albpath):
 		return data.tags.find_one({'albumartPath':albpath}, {'albumid':1, 'album':1, '_id':0})
 
 	def tags_insert(self, x):
-		data.tags.insert(x)		
+		data.tags.insert(x)
+		
+		
+	def fone_tags_albumid(self, albid):
+		return data.tags.find_one({'albumid':albid}, {'album':1, 'albumid': 1, 'artist':1, 'artistid':1, 'sthumbnail':1, '_id':0})
+		
+		
+	def tags_aggregate_albumid(self, albid):
+		return data.tags.aggregate([
+			{'$match': {'albumid': albid}},
+			{'$group': {'_id': 'song', 'songz': {'$addToSet': '$song'}}},
+			{'$project': {'songz' :1}}
+		])
+
+
+
+
+
+
+
+
+		
+		
+		
+		
+	def viewsdb_insert(self, av):
+		data2.albumView.insert(av)
+		
+		

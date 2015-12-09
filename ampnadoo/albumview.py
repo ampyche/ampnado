@@ -20,6 +20,7 @@
 ###############################################################################
 import os, logging
 from multiprocessing import Pool
+from ampnadoo.data import Data
 import pymongo
 v = pymongo.version
 version = v.split('.')[0]
@@ -31,7 +32,10 @@ viewsdb = client.ampviewsDB
 
 class AlbumView():
 	def create_albumView_db(self, a):
-		info = db.tags.find_one({'albumid':a}, {'album':1, 'albumid': 1, 'artist':1, 'artistid':1, 'sthumbnail':1, '_id':0})
+		#info = db.tags.find_one({'albumid':a}, {'album':1, 'albumid': 1, 'artist':1, 'artistid':1, 'sthumbnail':1, '_id':0})
+		info = Data().fone_tags_albumid(a)
+		
+		
 		av = {}
 		av['albumid'] = info['albumid']
 		av['album'] = info['album']
@@ -39,20 +43,28 @@ class AlbumView():
 		av['artistid'] = info['artistid']
 		av['thumbnail'] = info['sthumbnail']
 		if version < 3:
-			boo = db.tags.aggregate([
-				{'$match': {'albumid': a}},
-				{'$group': {'_id': 'song', 'songz': {'$addToSet': '$song'}}},
-				{'$project': {'songz' :1}}
-			])
+			
+			boo = Data().tags_aggregate_albumid(a)
+#			boo = db.tags.aggregate([
+#				{'$match': {'albumid': a}},
+#				{'$group': {'_id': 'song', 'songz': {'$addToSet': '$song'}}},
+#				{'$project': {'songz' :1}}
+#			])
+			
+			
+			
+			
 			doo = boo['result'][0]['songz']
 		else:
-			boo = [
-				a['songz'] for a in db.tags.aggregate([
-					{'$match': {'albumid': a}},
-					{'$group': {'_id': 'song', 'songz': {'$addToSet': '$song'}}},
-					{'$project': {'songz' :1}}
-				])
-			]
+			boo = [a['songz'] for a in Data().tags_aggregate_albumid(a)]
+			
+#			boo = [
+#				a['songz'] for a in db.tags.aggregate([
+#					{'$match': {'albumid': a}},
+#					{'$group': {'_id': 'song', 'songz': {'$addToSet': '$song'}}},
+#					{'$project': {'songz' :1}}
+#				])
+#			]
 			doo = boo[0]
 		av['numsongs'] = len(doo)
 		new_song_list = []
@@ -60,11 +72,19 @@ class AlbumView():
 			sids = [(s['song'], s['songid']) for s in db.tags.find({'song':d}, {'song':1, 'songid':1, '_id':0})]
 			new_song_list.append(sids)
 		av['songs'] = new_song_list
-		viewsdb.albumView.insert(av)
+		
+		
+		#viewsdb.albumView.insert(av)
+		Data().viewsdb_insert(av)
+		
 		return av
 
 	def main(self, cores):
-		albid = db.tags.distinct('albumid')
+		
+		#albid = db.tags.distinct('albumid')
+		albid = Data().tags_distinct_albumid()
+		
+		
 		pool = Pool(processes=cores)
 		poogle = pool.map(self.create_albumView_db, albid)
 		cleaned = [x for x in poogle if x != None]
