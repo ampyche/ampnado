@@ -44,10 +44,34 @@ class Data:
 		
 	def tags_distinct_artist(self):		
 		return data.tags.distinct('artist')
+		
+	def tags_distinct_album(self):
+		return data.tags.distinct('album')
+		
+	def tags_distinct_song(self):
+		return data.tags.distinct('song')
+			
+	
+		
+		
 
 	def tags_insert(self, x):
 		data.tags.insert(x)
 	
+	
+	def tags_all_lthumb_size(self):
+		return data.tags.find({}, {'largethumb_size':1, '_id':0})
+		
+	def tags_all_sthumb_size(self):
+		return data.tags.find({}, {'smallthumb_size':1, '_id':0})
+	
+	def tags_all_filesize(self):
+		return data.tags.find({}, {'filesize':1, '_id':0})
+
+
+
+
+
 
 
 	def tags_all_song(self, d):
@@ -81,6 +105,20 @@ class Data:
 			{'$group': {'_id': 'song', 'songz': {'$addToSet': '$song'}}},
 			{'$project': {'songz' :1}}
 		])
+
+
+
+
+
+	def video_all_filesize(self):
+		return data.video.find({}, {'filesize':1, '_id':0})
+
+	def video_distinct_vid_name(self):
+		return data.video.distinct('vid_name')
+
+
+
+
 
 
 	def viewsdb_artalpha_insert(self, x):

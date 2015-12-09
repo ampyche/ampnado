@@ -19,6 +19,7 @@
 ###############################################################################
 ###############################################################################
 import os, random, time, hashlib, uuid, logging
+from ampnadoo.data import Data
 from pymongo import MongoClient, ASCENDING, DESCENDING
 client = MongoClient()
 db = client.ampnadoDB
@@ -42,21 +43,49 @@ class Functions:
 	
 	def gen_uuid(self): return str(uuid.uuid4().hex)
 
-	def _get_lthumb_bytes(self): return sum([int(s['largethumb_size']) for s in db.tags.find({}, {'largethumb_size':1, '_id':0})])
+	def _get_lthumb_bytes(self):
+		lthumblist = Data().tags_all_lthumb_size()
+		nltl = []
+		for s in lthumblist:
+			z = int(s['largethumb_size'])
+			nltl.append(z)
+		return sum(nltl)
 
-	def _get_sthumb_bytes(self): return sum([int(l['smallthumb_size']) for l in db.tags.find({}, {'smallthumb_size':1, '_id':0})])
+	def _get_sthumb_bytes(self):
+		sthumbsize = Data().tags_all_sthumb_size()
+		nsts = []
+		for l in sthumbsize:
+			sts = int(l['smallthumb_size'])
+			nsts.append(sts)
+		return sum(nsts)
 
-	def _get_mp3_bytes(self): return sum([int(t['filesize']) for t in db.tags.find({}, {'filesize':1, '_id':0})])
+	def _get_mp3_bytes(self):
+		fs = Data().tags_all_filesize()
+		nfs = []
+		for t in fs:
+			filesize = int(t['filesize'])
+			nfs.append(filesize)
+		return sum(nfs)
 
-	def _get_vid_bytes(self): return sum([int(v['filesize']) for v in db.video.find({}, {'filesize':1, '_id':0})])
+	def _get_vid_bytes(self):
+		vidfs = Data().video_all_filesize()
+		nvfs = []
+		for v in vidfs:
+			vfs = int(v['filesize'])
+			nvfs.append(vfs)
+		return sum(nvfs)
 
-	def _get_artist_count(self): return len(db.tags.distinct('artist'))
+	def _get_artist_count(self):
+		return len(Data().tags_distinct_artist())
 
-	def _get_album_count(self): return len(db.tags.distinct('album'))
+	def _get_album_count(self):
+		return len(Data().tags_distinct_album())
 
-	def _get_song_count(self): return len(db.tags.distinct('song'))
+	def _get_song_count(self):
+		return len(Data().tags_distinct_song())
 
-	def _get_video_count(self): return len(db.video.distinct('vid_name'))
+	def _get_video_count(self):
+		return len(Data().video_distinct_vid_name())
 	
 	def _get_mp3_count(self): return db.tags.find({'filetype': '.mp3'}).count()
 	

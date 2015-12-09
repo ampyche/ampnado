@@ -22,12 +22,24 @@ import os, uuid
 from multiprocessing import Pool
 
 class GetFileMeta():
+	
+	def size(self, x):
+		return os.stat(x).st_size
+		
+	def dirpath(self, x):
+		return os.path.dirname(x)
+		
+	def split_lower(self, x):
+		return os.path.splitext(x)[1].lower()
+		
+	def uuidd(self):
+		return str(uuid.uuid4().hex)
 
 	def get_file_meta(self, fn):
-		fn['filesize'] = os.stat(fn['filename']).st_size
-		fn['dirpath'] = os.path.dirname(fn['filename'])
-		fn['filetype'] = os.path.splitext(fn['filename'])[1].lower()
-		fn['songid'] = str(uuid.uuid4().hex)
+		fn['filesize'] = self.size(fn['filename'])
+		fn['dirpath'] = self.dirpath(fn['filename'])
+		fn['filetype'] = self.split_lower(fn['filename'])
+		fn['songid'] = self.uuidd()
 		return fn 
 		
 	def _file_meta_main(self, files, acores):		
