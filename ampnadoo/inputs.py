@@ -23,13 +23,13 @@ from urllib.parse import urlparse
 from ampnadoo.functions import Functions
 from ampnadoo.removeold import RemoveOld
 import ampnadoo.dbindexes as dDBi
-
+from ampnadoo.data import Data
 from pymongo import MongoClient
 client = MongoClient()
 db = client.ampnadoDB
 
 
-class GetInputs():
+class GetInputs:
 	def __init__(self):
 		DBI = dDBi.DropDBIndexes()
 		DB = dDBi.DropDBs()
@@ -123,7 +123,11 @@ class GetInputs():
 
 	def _check_if_uname_already_in_db(self, auname, apword):
 		try:
-			ace = db.user_creds.find_one({'username': auname, 'password': apword})
+			#ace = db.user_creds.find_one({'username': auname, 'password': apword})
+			ace = Data().fone_usercreds_user_pword(auname, apword)
+			
+			
+			
 			if ace['username'] != '': return True
 		except TypeError: return False
 
@@ -131,12 +135,22 @@ class GetInputs():
 		if self._check_if_uname_already_in_db(a_uname, a_pword):
 			print("The user %s with password %s already exist in the database" % (a_uname, txt_pword))
 		else:
-			db.user_creds.insert({'username': a_uname, 'password': a_pword, 'user_id': a_hash})
+			
+			#db.user_creds.insert({'username': a_uname, 'password': a_pword, 'user_id': a_hash})
+			Data().usercreds_insert_user_pword(a_uname, a_pword, a_hash)
+			
+			
 			print("The user   %s   with password   %s   has been created" % (a_uname, a_pword))
 
 	def _remove_user(self, a_uname, a_pword):
-		aid = db.user_creds.find_one({'username': a_uname, 'password': a_pword}, {'_id':1})
-		db.user_creds.remove(aid['_id'])
+		
+		#aid = db.user_creds.find_one({'username': a_uname, 'password': a_pword}, {'_id':1})
+		aid = Data().fone_usercreds_user_pword(a_uname, a_pword)
+		
+		
+		#db.user_creds.remove(aid['_id'])
+		Data().usercreds_remove_user_pword(aid['_id'])
+		
 		print("The user   %s   with password   %s   has been removed" % (a_uname, a_pword))
 
 	def run_get_install_inputs(self, args):
