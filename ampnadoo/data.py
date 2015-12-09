@@ -33,12 +33,13 @@ class Data:
 	def usercreds_remove_user_pword(self, anid):
 		data.user_creds.remove(anid)
 
+#######################################################################
 
 	def tags_distinct_albumartPath(self):
 		return data.tags.distinct('albumartPath')
 
-
 	def fone_tags_albumartPath(self, albpath):
 		return data.tags.find_one({'albumartPath':albpath}, {'albumid':1, 'album':1, '_id':0})
 
-
+	def tags_insert(self, x):
+		data.tags.insert(x)		

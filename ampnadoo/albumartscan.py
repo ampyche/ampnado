@@ -20,15 +20,11 @@
 ###############################################################################
 import os
 from multiprocessing import Pool
-from pymongo import MongoClient
-client = MongoClient()
-db = client.ampnadoDB
-viewsdb = client.ampviewsDB
-
+from ampnadoo.data import Data
 try: from mutagen import File
 except ImportError: from mutagenx import File
 
-class AlbumArtScan():
+class AlbumArtScan:
 
 	def _albumart_search(self, x):
 		ppath = '/'.join((os.path.dirname(x['filename']), "folder.jpg"))
@@ -47,7 +43,7 @@ class AlbumArtScan():
 				if not os.path.isfile(ppath):
 					x['NoTagArt'] = 0
 					x['albumartPath'] = '/'.join((os.path.dirname(x['filename']), "NOTAGART"))
-		db.tags.insert(x)			
+		Data().tags_insert(x)			
 		return x
 
 	def albumart_search_main(self, afile, acores):
