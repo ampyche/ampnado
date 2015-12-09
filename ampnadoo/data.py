@@ -70,9 +70,13 @@ class Data:
 
 		
 		
-		
+	def viewsdb_albalpha_insert(self, v):
+		return data2.albalpha.insert(v)
+			
 		
 	def viewsdb_insert(self, av):
 		data2.albumView.insert(av)
 		
 		
+	def viewsdb_albumview_updata(self, albid):
+		return data2.albumView.update({'albumid': albid[0]}, {'$set': {'page': albid[1]}})

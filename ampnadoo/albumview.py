@@ -31,11 +31,12 @@ db = client.ampnadoDB
 viewsdb = client.ampviewsDB
 
 class AlbumView():
+	def __init__(self):
+		albid = Data().tags_distinct_albumid()
+		self.albid = albid
+
 	def create_albumView_db(self, a):
-		#info = db.tags.find_one({'albumid':a}, {'album':1, 'albumid': 1, 'artist':1, 'artistid':1, 'sthumbnail':1, '_id':0})
 		info = Data().fone_tags_albumid(a)
-		
-		
 		av = {}
 		av['albumid'] = info['albumid']
 		av['album'] = info['album']
@@ -43,64 +44,27 @@ class AlbumView():
 		av['artistid'] = info['artistid']
 		av['thumbnail'] = info['sthumbnail']
 		if version < 3:
-			
 			boo = Data().tags_aggregate_albumid(a)
-#			boo = db.tags.aggregate([
-#				{'$match': {'albumid': a}},
-#				{'$group': {'_id': 'song', 'songz': {'$addToSet': '$song'}}},
-#				{'$project': {'songz' :1}}
-#			])
-			
-			
-			
-			
 			doo = boo['result'][0]['songz']
 		else:
 			boo = [a['songz'] for a in Data().tags_aggregate_albumid(a)]
-			
-#			boo = [
-#				a['songz'] for a in db.tags.aggregate([
-#					{'$match': {'albumid': a}},
-#					{'$group': {'_id': 'song', 'songz': {'$addToSet': '$song'}}},
-#					{'$project': {'songz' :1}}
-#				])
-#			]
 			doo = boo[0]
 		av['numsongs'] = len(doo)
 		new_song_list = []
 		for d in doo:
-			
-			#voo = db.tags.find({'song':d}, {'song':1, 'songid':1, '_id':0})
 			voo = Data().tags_all_song(d)
 			sids = []
 			for s in voo:
 				x = (s['song'], s['songid'])
 				sids.append(x)
-			
-			
-			
-			
-			
-			
-			
-			
 			new_song_list.append(sids)
 		av['songs'] = new_song_list
-		
-		
-		#viewsdb.albumView.insert(av)
 		Data().viewsdb_insert(av)
-		
 		return av
 
 	def main(self, cores):
-		
-		#albid = db.tags.distinct('albumid')
-		albid = Data().tags_distinct_albumid()
-		
-		
 		pool = Pool(processes=cores)
-		poogle = pool.map(self.create_albumView_db, albid)
+		poogle = pool.map(self.create_albumView_db, self.albid)
 		cleaned = [x for x in poogle if x != None]
 		pool.close()
 		pool.join()
@@ -122,11 +86,14 @@ class AlbumChunkIt():
 				albid_page = c['albumid'], str(count)
 				albidPlist.append(albid_page)
 			albalphaoffsetlist.append(str(count))
-		viewsdb.albalpha.insert(dict(albalpha=albalphaoffsetlist))
+		Data().viewsdb_albalpha_insert(dict(albalpha=albalphaoffsetlist))
+		#viewsdb.albalpha.insert(dict(albalpha=albalphaoffsetlist))
 		return albidPlist
 			
 	def _get_pages(self, c):
-		viewsdb.albumView.update({'albumid': c[0]}, {'$set': {'page': c[1]}})
+		#viewsdb.albumView.update({'albumid': c[0]}, {'$set': {'page': c[1]}})
+		Data().viewsdb_albumview_updata(c)
+		
 
 	def main(self, albv, OFC, cores):
 		chunks = self.chunks(albv, OFC)
