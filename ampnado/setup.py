@@ -18,19 +18,19 @@
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 ###############################################################################
-import amp.artistview as artv
-import amp.albumview as albvv
-import amp.songview as songv
-import amp.httpmusicpath as httpmp
-import amp.filemeta as fmeta
-import amp.gettags as gtag
-import amp.albumartscan as aas
-import amp.albumartlist as aal
-import amp.getalbumart as gaa
-import amp.setnoartpic as snap
-import amp.createviddic as cvd
-import amp.videoposter as vp
-import amp.functions as fun
+import ampnado.artistview as artv
+import ampnado.albumview as albvv
+import ampnado.songview as songv
+import ampnado.httpmusicpath as httpmp
+import ampnado.filemeta as fmeta
+import ampnado.gettags as gtag
+import ampnado.albumartscan as aas
+import ampnado.albumartlist as aal
+import ampnado.getalbumart as gaa
+import ampnado.setnoartpic as snap
+import ampnado.createviddic as cvd
+import ampnado.videoposter as vp
+import ampnado.functions as fun
 import logging, pymongo
 client = pymongo.MongoClient()
 db = client.ampnadoDB
@@ -156,7 +156,7 @@ class Setup():
 		print(FUN.gettime(a_time))
 		logging.info('Finding videos has started')
 		print('Finding Video')
-
+		print('VIDEO SHIT IS FUCKED UP FIX IT')
 		if filesfound_vid:
 			
 			Cvd = cvd.CreateVidDict()

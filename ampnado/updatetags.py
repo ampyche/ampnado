@@ -19,7 +19,7 @@
 ###############################################################################
 ###############################################################################
 from multiprocessing import Pool
-import amp.gettags as gt
+import ampnado.gettags as gt
 from pymongo import MongoClient
 client = MongoClient()
 db = client.ampnadoDB

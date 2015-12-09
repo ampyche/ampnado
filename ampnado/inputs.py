@@ -20,9 +20,9 @@
 ###############################################################################
 import os, re, sys, uuid, logging
 from urllib.parse import urlparse
-import amp.functions as fun
-import amp.remove_old as rmOld
-import amp.drop_db_indexes as dDBi
+from ampnado.functions import Functions
+from ampnado.removeold import RemoveOld
+import ampnado.dbindexes as dDBi
 
 from pymongo import MongoClient
 client = MongoClient()
@@ -31,12 +31,8 @@ db = client.ampnadoDB
 
 class GetInputs():
 	def __init__(self):
-		RM = rmOld.RemoveOld()
-		FUN = fun.Functions()
 		DBI = dDBi.DropDBIndexes()
 		DB = dDBi.DropDBs()
-		self.RM = RM
-		self.FUN = FUN
 		self.DBI = DBI
 		self.DB = DB
 
@@ -154,9 +150,9 @@ class GetInputs():
 		http1 = httpaddr.split('/', 3)
 		http = ''.join([http1[0], '//', http1[2]])
 		PATHS = self.create_paths_dict(progpath, http)		
-		RM_OLD = self.RM._remove_all_old(PATHS)
+		RM_OLD = RemoveOld().remove_all_old(PATHS)
 
-		h = self.FUN.gen_hash(args.username, args.password)
+		h = Functions().gen_hash(args.username, args.password)
 		if args.username and args.password:
 			users = self.insert_user(h[0], h[1], h[2], args.password)
 

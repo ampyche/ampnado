@@ -25,22 +25,22 @@ TEMPDIR = """REMOVEOLD: Temp dir has been removed"""
 MKDIRS = """REMOVEOLD: All needed dirs have been created"""
 ALLRM = """REMOVEOLD: All old files have been removed"""
 
-class RemoveOld():
+class RemoveOld:
 	
-	def _remove_symlinks(self, apath):
+	def remove_symlinks(self, apath):
 		try: shutil.rmtree(apath['musiccatPath'], ignore_errors=True)
 		except OSError: os.mkdir(apath['musiccatPath'])
 		logging.info(SYMLINKS)
 		print(SYMLINKS)
 
-	def _remove_temp(self, apath):
+	def remove_temp(self, apath):
 		static_TEMP = '/'.join((apath['tempPath']))
 		try: shutil.rmtree(apath['tempPath'], ignore_errors=True)
 		except OSError: os.mkdir(apath['tempPath'])
 		logging.info(TEMPDIR)
 		print(TEMPDIR)
 
-	def _make_needed_dirs(self, apath):
+	def make_needed_dirs(self, apath):
 		if not os.path.isdir(apath['musiccatPath']): os.mkdir(apath['musiccatPath'])
 		if not os.path.isdir(apath['tempPath']): os.mkdir(apath['tempPath'])
 		if not os.path.isdir(apath['isoPath']): os.mkdir(apath['isoPath'])
@@ -48,9 +48,9 @@ class RemoveOld():
 		logging.info(MKDIRS)
 		print(MKDIRS)
 
-	def _remove_all_old(self, path):
-		self._remove_symlinks(path)
-		self._remove_temp(path)
-		self._make_needed_dirs(path)
+	def remove_all_old(self, path):
+		self.remove_symlinks(path)
+		self.remove_temp(path)
+		self.make_needed_dirs(path)
 		logging.info(ALLRM)
 		print(ALLRM)	

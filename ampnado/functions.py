@@ -27,7 +27,7 @@ viewsdb = client.ampviewsDB
 try: from mutagen import File
 except ImportError: from mutagenx import File
 
-class Functions():
+class Functions:
 	def __init__(self):
 		mp3list = []
 		ogglist = []

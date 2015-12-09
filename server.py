@@ -31,10 +31,10 @@ client = pymongo.MongoClient()
 db = client.ampnadoDB
 viewsdb = client.ampviewsDB
 
-import amp.functions as Fun
+import ampnado.functions as Fun
 FUN = Fun.Functions()
 
-import amp.remove_old as Rm
+import ampnado.remove_old as Rm
 RM = Rm.RemoveOld()
 
 US_OP = db.options.find_one({})
