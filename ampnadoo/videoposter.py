@@ -20,12 +20,13 @@
 ###############################################################################
 import os, base64
 from multiprocessing import Pool
+from ampnadoo.data import Data
 from PIL import Image
-from pymongo import MongoClient
-client = MongoClient()
-db = client.ampnadoDB
+#from pymongo import MongoClient
+#client = MongoClient()
+#db = client.ampnadoDB
 
-class GetVideoPoster():
+class GetVideoPoster:
 	def _img_size_check_and_save(self, img, size, location):
 		im = Image.open(img)
 		sim = im.size

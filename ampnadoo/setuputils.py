@@ -33,7 +33,8 @@ from ampnadoo.albumartscan import AlbumArtScan
 
 
 
-import ampnadoo.albumartlist as aal
+
+from ampnadoo.albumartlist import GetAlbumArtLists
 
 
 
@@ -41,11 +42,22 @@ import ampnadoo.albumartlist as aal
 
 
 
-import ampnadoo.getalbumart as gaa
-import ampnadoo.setnoartpic as snap
-import ampnadoo.createviddic as cvd
-import ampnadoo.videoposter as vp
+from ampnadoo.getalbumart import GetAlbumArt
 
+
+
+
+
+from ampnadoo.setnoartpic import SetNoArtPic
+
+
+
+
+
+from ampnadoo.createviddic import CreateVidDict
+
+
+from ampnadoo.videoposter import GetVideoPoster
 
 
 from ampnadoo.functions import Functions
@@ -146,54 +158,43 @@ class SetupUtils:
 		print(Functions().gettime(a_time))
 		
 		print('start ALBUMARTLIST')
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		Aal = aal.GetAlbumArtLists()
-		ALBUMARTLIST = Aal.get_albumart_list_main(CORES)
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
+		ALBUMARTLIST = GetAlbumArtLists().get_albumart_list_main(CORES)
+
 		print('end ALBUMARTLIST')
-
 		print('start GETALBUMART')
-		Gaa = gaa.GetAlbumArt()
-		GETALBUMART = Gaa.get_albumart_main(ALBUMARTLIST, PATHS, CORES)
+
+		GETALBUMART = GetAlbumArt().get_albumart_main(ALBUMARTLIST, PATHS, CORES)
+		
 		print('end GETALBUMART')
-
 		print('start noartpic')
-		Snap = snap.SetNoArtPic()
-		SETNOARTPIC = Snap.set_no_art_pic_main(CORES)
+
+		SETNOARTPIC = SetNoArtPic().set_no_art_pic_main(CORES)
+
 		print('end noartpic')
-
-
 		print('this is   get_albumart     time')
 		print(Functions().gettime(a_time))
 		logging.info('Finding videos has started')
 		print('Finding Video')
 		print('VIDEO SHIT IS FUCKED UP FIX IT')
+		
+		
+		
+		
+		
 		if filesfound_vid:
 			
-			Cvd = cvd.CreateVidDict()
-			CREATEVIDDIC = Cvd.create_vid_dic_main(FM[2], OPT, CORES)
+			
+			CREATEVIDDIC = CreateVidDict().create_vid_dic_main(FM[2], OPT, CORES)
 
-			Vp = vp.GetVideoPoster()
-			GETVIDEOPOSTER = Vp.get_video_poster_main(CREATEVIDDIC, PATHS, CORES)
+			
+			GETVIDEOPOSTER = GetVideoPoster().get_video_poster_main(CREATEVIDDIC, PATHS, CORES)
+		
+		
+		
+		
+		
+		
 			
 		print('this is   find and insert vid info     time')
 		print(Functions().gettime(a_time))

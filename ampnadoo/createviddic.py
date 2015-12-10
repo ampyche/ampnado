@@ -21,11 +21,11 @@
 import os, uuid
 from multiprocessing import Pool
 from ampnadoo.data import Data
-from pymongo import MongoClient
-client = MongoClient()
-db = client.ampnadoDB
+#from pymongo import MongoClient
+#client = MongoClient()
+#db = client.ampnadoDB
 
-class CreateVidDict():
+class CreateVidDict:
 	def __init__(self):
 		crap = ('.2011', '.2012', '.2014', '.2015', '.720p', '.1080p', '.BluRay','.Bluray', '.Brrip', '.x264', '.X264', '.YIFY')
 		self.crap = crap
