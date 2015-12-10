@@ -28,7 +28,9 @@ import ampnadoo.httpmusicpath as httpmp
 from ampnadoo.filemeta import GetFileMeta
 
 
-import ampnadoo.gettags as gtag
+from ampnadoo.gettags import GetMP3Tags
+from ampnadoo.gettags import GetOGGTags
+
 import ampnadoo.albumartscan as aas
 import ampnadoo.albumartlist as aal
 import ampnadoo.getalbumart as gaa
@@ -83,45 +85,33 @@ class SetupUtils:
 
 			print('newmeta started')
 
-			#metaf = fmeta.GetFileMeta() 
 			FILEMETA = GetFileMeta().file_meta_main(files, CORES)
 			
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 			print('newmeta complete')
 			print('newtags started')
 
-			tagget = gtag.GetMP3Tags()
-			MP3TAGS = tagget._get_audio_tag_info_main(FILEMETA, CORES)
-						
+			MP3TAGS = GetMP3Tags().get_audio_tag_info_main(FILEMETA, CORES)
+			
 			print('newtags complete')
 			print('insert media started')
 			
+			
+			
+			
+			
+			
+			
+			
 			asm = aas.AlbumArtScan()
 			ALBUMARTSCAN = asm.albumart_search_main(MP3TAGS, CORES)
+			
+			
+			
+			
+			
+			
+			
+			
 			
 			print('insert media complete')
 		else: pass
@@ -137,15 +127,12 @@ class SetupUtils:
 				f['catname'] = OPT['catname']
 				f['programPath'] = PATHS['programPath']
 				ofiles.append(f)
-
-
-
-			#oggmetaf = fmeta.GetFileMeta() 
 			OGGFILEMETA = GetFileMeta().file_meta_main(ofiles, CORES)
-			
+			OGGTAGS = GetOGGTags().get_ogg_tag_info_main(OGGFILEMETA, CORES)
 
-			oggtagget = gtag.GetOGGTags()
-			OGGTAGS = oggtagget._get_ogg_tag_info_main(OGGFILEMETA, CORES)
+
+
+
 
 			oggasm = aas.AlbumArtScan()
 			OGGALBUMARTSCAN = oggasm.albumart_search_main(OGGTAGS, CORES)

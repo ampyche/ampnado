@@ -26,8 +26,7 @@ except ImportError: from mutagenx import File
 try: from mutagen.oggvorbis import OggVorbis
 except ImportError: from mutagenx.oggvorbis import OggVorbis
 
-class GetMP3Tags():
-
+class GetMP3Tags:
 	def get_audio_tag_info(self, fn):
 		audio = File(fn['filename'])
 		try: fn['track'] = audio['TRCK'].text[0]
@@ -52,7 +51,7 @@ class GetMP3Tags():
 			logging.info(''.join(("KeyError: No TIT2 tag... ", fn['filename'])))
 		return fn
 
-	def _get_audio_tag_info_main(self, files, acores):
+	def get_audio_tag_info_main(self, files, acores):
 		pool = Pool(processes=acores)
 		pm = pool.map(self.get_audio_tag_info, files)
 		cleaned = [x for x in pm if x != None]
@@ -60,8 +59,7 @@ class GetMP3Tags():
 		pool.join()
 		return cleaned
 		
-class GetOGGTags():
-
+class GetOGGTags:
 	def get_ogg_tag_info(self, fn):
 		audio = OggVorbis(fn['filename'])
 
@@ -87,7 +85,7 @@ class GetOGGTags():
 			logging.info(''.join(("KeyError: No TIT2 tag... ", fn['filename'])))
 		return fn
 
-	def _get_ogg_tag_info_main(self, files, acores):
+	def get_ogg_tag_info_main(self, files, acores):
 		pool = Pool(processes=acores)
 		pm = pool.map(self.get_ogg_tag_info, files)
 		cleaned = [x for x in pm if x != None]
