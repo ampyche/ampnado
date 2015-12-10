@@ -20,19 +20,9 @@
 ###############################################################################
 from ampnadoo.artistview import ArtistView
 from ampnadoo.artistview import ArtistChunkIt
-
-
-
-
 from ampnadoo.albumview import AlbumView
 from ampnadoo.albumview import AlbumChunkIt
-
-
-
 from ampnadoo.songview import SongView
-
-
-
 from ampnadoo.httpmusicpath import HttpMusicPath
 from ampnadoo.filemeta import GetFileMeta
 from ampnadoo.gettags import GetMP3Tags
@@ -43,8 +33,6 @@ from ampnadoo.getalbumart import GetAlbumArt
 from ampnadoo.setnoartpic import SetNoArtPic
 from ampnadoo.createviddic import CreateVidDict
 from ampnadoo.videoposter import GetVideoPoster
-
-
 from ampnadoo.functions import Functions
 from ampnadoo.functions import FindMedia
 from ampnadoo.functions import AddArtistId
@@ -52,9 +40,6 @@ from ampnadoo.functions import AddAlbumId
 from ampnadoo.functions import Indexes
 from ampnadoo.functions import RandomArtDb
 from ampnadoo.functions import DbStats
-
-
-
 import logging, pymongo
 client = pymongo.MongoClient()
 db = client.ampnadoDB
@@ -210,21 +195,8 @@ class SetupUtils:
 		print('this is   cradb     time')
 		print(Functions().gettime(a_time))
 		logging.info('Creating random art has completed')
-		
-		
-		
-		
-		
-		
+
 		stats = DbStats().db_stats()
 
-
-
-
-
-
-
-
-		
 		print('this is   db_stats     time')
 		print(Functions().gettime(a_time))

@@ -30,12 +30,6 @@ except ImportError: from mutagenx import File
 
 class FindMedia:
 	def __init__(self):
-#		mp3list = []
-#		ogglist = []
-#		vidlist = []
-#		self.mp3list = mp3list
-#		self.ogglist = ogglist
-#		self.vidlist = vidlist
 		self.mp3list = list()
 		self.ogglist = list()
 		self.vidlist = list()
@@ -56,8 +50,6 @@ class FindMedia:
 		logging.info('SETUP: Finding music complete')
 		return (self.mp3list, self.ogglist, self.vidlist)
 
-
-
 class AddArtistId:
 	
 	def gen_uuid(self): return str(uuid.uuid4().hex)
@@ -72,7 +64,6 @@ class AddArtistId:
 			artlist.append(x)
 		Data().tags_update_artistid(artlist)
 		logging.info('SETUP: add_artistids complete')
-
 
 class AddAlbumId:
 	
@@ -95,11 +86,6 @@ class Indexes:
 		db.tags.create_index([('artistid', DESCENDING), ('albumid', ASCENDING)])
 		db.tags.create_index([('album', DESCENDING), ('song', ASCENDING)])
 		db.tags.create_index([('album', DESCENDING), ('songid', ASCENDING)])
-
-#		db.tags.create_index([('album', DESCENDING), ('thumbnail', ASCENDING)])
-#		db.tags.create_index([('albumid', DESCENDING), ('thumbnail', ASCENDING)])
-
-
 		db.tags.create_index([('albumid', DESCENDING), ('song', ASCENDING)])
 		db.tags.create_index([('albumid', DESCENDING), ('songid', ASCENDING)])
 		db.video.create_index([('vid_id', DESCENDING), ('vid_name', ASCENDING)])
@@ -111,10 +97,6 @@ class Indexes:
 		viewsdb.artistView.create_index([('artist', 'text')])
 		viewsdb.albumView.create_index([('album', 'text')])
 		logging.info('SETUP: _creat_db_indexes is complete')
-
-
-
-
 
 class RandomArtDb:
 	#This takes a list and splits it up into a tup of chunks, n="number per list"	
@@ -142,7 +124,6 @@ class RandomArtDb:
 				print('something fucked up')
 		db.randthumb.insert(mc)		
 		logging.info('SETUP: _create_random_art_db is complete')
-
 
 class DbStats:
 	
@@ -219,10 +200,6 @@ class DbStats:
 			size = str('%.2fb' % abytes)
 		return size
 
-
-
-
-	
 	def db_stats(self):
 		picbytes = 	sum([self._get_lthumb_bytes(), self._get_sthumb_bytes()])
 		totdisk = sum([picbytes, self._get_mp3_bytes(), self._get_vid_bytes()])
@@ -238,14 +215,8 @@ class DbStats:
 		x['total_mp3'] = self._get_mp3_count()
 		x['total_ogg'] = self._get_ogg_count()
 		Data().stats_insert(x)
-		logging.info('SETUP: db stats complete')		
+		logging.info('SETUP: db stats complete')
 	
-	
-	
-	
-	
-		
-		
 class Functions:
 	
 	def _get_bytes(self):
@@ -253,15 +224,12 @@ class Functions:
 		logging.info('SETUP: _get_bytes is complete')
 
 	def _get_ids(self):
-		
-		
 		alltags = Data().tags_all_id()
 		allt = []
 		for at in alltags: 
 			tid = at['_id']
 			allt.append(tid)
 		return allt
-		
 		logging.info('SETUP: _get_ids is now complete')
 
 	def _insert_catalog_info(self, adict):
@@ -274,48 +242,6 @@ class Functions:
 		cdict['catTotal'] = self._convert_bytes(bytes['result'][0]['total']),
 		self._insert_catalog_info(cdict)
 		logging.info('SETUP: create_catalog_db is complete')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#	def add_albumids(self):
-#		album = Data().tags_distinct_album()
-#		alblist = []
-#		for a in album:
-#			z = {}
-#			z['album'] = a
-#			z['albumid'] = self.gen_uuid()
-#			alblist.append(z)
-#		Data().tags_update_albumid(alblist)
-#		logging.info('SETUP: add_albumids complete')
-
-					
-
-
 
 	def _hash_func(self, a_string):
 		return str(hashlib.sha512(a_string.encode('utf-8')).hexdigest())
@@ -333,9 +259,6 @@ class Functions:
 		h = self.gen_hash(a_uname, a_pword)
 		Data().usercreds_insert_user_pword(a_uname, h[1], h[2])
 		logging.info('SETUP: insert_user is complete')
-
-
-
 
 	def gettime(self, at):
 		b = time.time()

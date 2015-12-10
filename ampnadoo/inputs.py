@@ -49,7 +49,7 @@ class GetInputs:
 				if not os.path.exists(a):
 					logging.error("%s path does not exist" % a)
 					print("%s path does not exist" % a)
-					sys.exit()
+					#sys.exit()
 				else:
 					plist.append(a)
 		return plist
