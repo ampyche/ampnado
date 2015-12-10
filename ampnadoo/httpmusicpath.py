@@ -20,17 +20,12 @@
 ###############################################################################
 from multiprocessing import Pool
 from ampnadoo.data import Data
-from pymongo import MongoClient
-client = MongoClient()
-db = client.ampnadoDB
 
-class HttpMusicPath():
+class HttpMusicPath:
 		
 	def add_http_music_path_to_db(self, t):
 		fn2 = ''.join((t[2], t[0].split(t[1])[1]))
-		
 		Data().tags_update_httpmusicpath(t[0], fn2)
-		#db.tags.update({'filename':t[0]}, {'$set': {'httpmusicpath':fn2}})
 
 	def main(self, a_path, acores):
 		alltags = Data().tags_all()

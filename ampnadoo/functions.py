@@ -58,7 +58,45 @@ class FindMedia:
 
 
 
+class AddArtistId:
+	
+	def gen_uuid(self): return str(uuid.uuid4().hex)
 
+	def add_artistids(self):
+		artist = Data().tags_distinct_artist()
+		artlist = []
+		for a in artist:
+			x = {}
+			x['artist'] = a
+			x['artistid'] = self.gen_uuid()
+			artlist.append(x)
+		Data().tags_update_artistid(artlist)
+		logging.info('SETUP: add_artistids complete')
+
+
+class AddAlbumId:
+	
+	def gen_uuid(self): return str(uuid.uuid4().hex)
+
+	def add_albumids(self):
+		album = Data().tags_distinct_album()
+		alblist = []
+		for a in album:
+			z = {}
+			z['album'] = a
+			z['albumid'] = self.gen_uuid()
+			alblist.append(z)
+		Data().tags_update_albumid(alblist)
+		logging.info('SETUP: add_albumids complete')
+
+
+
+
+
+
+
+		
+		
 class Functions:
 	
 	def gen_size(self, f): return os.stat(f).st_size
@@ -163,16 +201,32 @@ class Functions:
 		self._insert_catalog_info(cdict)
 		logging.info('SETUP: create_catalog_db is complete')
 
-	def add_artistids(self):
-		artist = Data().tags_distinct_artist()
-		artlist = []
-		for a in artist:
-			x = {}
-			x['artist'] = a
-			x['artistid'] = self.gen_uuid()
-			artlist.append(x)
-		Data().tags_update_artistid(artlist)
-		logging.info('SETUP: add_artistids complete')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	def add_albumids(self):
 		album = Data().tags_distinct_album()

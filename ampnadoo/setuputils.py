@@ -21,29 +21,39 @@
 import ampnadoo.artistview as artv
 import ampnadoo.albumview as albvv
 import ampnadoo.songview as songv
-import ampnadoo.httpmusicpath as httpmp
 
 
 
+
+from ampnadoo.httpmusicpath import HttpMusicPath
 from ampnadoo.filemeta import GetFileMeta
-
-
 from ampnadoo.gettags import GetMP3Tags
 from ampnadoo.gettags import GetOGGTags
-
-import ampnadoo.albumartscan as aas
 from ampnadoo.albumartscan import AlbumArtScan
 
 
 
 import ampnadoo.albumartlist as aal
+
+
+
+
+
+
+
 import ampnadoo.getalbumart as gaa
 import ampnadoo.setnoartpic as snap
 import ampnadoo.createviddic as cvd
 import ampnadoo.videoposter as vp
-import ampnadoo.functions as fun
 
+
+
+from ampnadoo.functions import Functions
 from ampnadoo.functions import FindMedia
+from ampnadoo.functions import AddArtistId
+from ampnadoo.functions import AddAlbumId
+
+
 
 import logging, pymongo
 client = pymongo.MongoClient()
@@ -61,11 +71,11 @@ class SetupUtils:
 		logging.info('Finding music started')
 		print("Constants Setup Complete\nSetup Started\nFinding Music")
 		
-		FUN = fun.Functions()
+		
 		FM = FindMedia().find_music_video(PATHS['musiccatPath'])
 		
 		print('this is  _find_music_video    time')
-		print(FUN.gettime(a_time))
+		print(Functions().gettime(a_time))
 		
 		if len(FM[0]) >= 1: filesfound_mp3 = True
 		else: filesfound_mp3 = False
@@ -105,7 +115,7 @@ class SetupUtils:
 		else: pass
 		
 		print('this is _get_tags and Insert tags     time')
-		print(FUN.gettime(a_time))
+		print(Functions().gettime(a_time))
 		logging.info('Getting tag info complete')
 
 
@@ -120,33 +130,45 @@ class SetupUtils:
 			OGGALBUMARTSCAN = AlbumArtScan().albumart_search_main(OGGTAGS, CORES)
 		else: pass
 
-
-
-
-
-
-
-
-
-		httpm = httpmp.HttpMusicPath()
-		HTTPMP = httpm.main(PATHS, CORES)
+		HTTPMP = HttpMusicPath().main(PATHS, CORES)
 
 		print('this is   add_http_music_path_to_db     time')
-		print(FUN.gettime(a_time))
-		
-		addartistid = FUN.add_artistids()
-		
+		print(Functions().gettime(a_time))
+
+		addartistid = AddArtistId().add_artistids()
+
 		print('this is   addartistid     time')
-		print(FUN.gettime(a_time))
-		
-		addalbumid = FUN.add_albumids()
+		print(Functions().gettime(a_time))
+
+		addalbumid = AddAlbumId().add_albumids()
 		
 		print('this is   addalbumid     time')
-		print(FUN.gettime(a_time))
+		print(Functions().gettime(a_time))
 		
 		print('start ALBUMARTLIST')
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		Aal = aal.GetAlbumArtLists()
 		ALBUMARTLIST = Aal.get_albumart_list_main(CORES)
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		print('end ALBUMARTLIST')
 
 		print('start GETALBUMART')
@@ -161,7 +183,7 @@ class SetupUtils:
 
 
 		print('this is   get_albumart     time')
-		print(FUN.gettime(a_time))
+		print(Functions().gettime(a_time))
 		logging.info('Finding videos has started')
 		print('Finding Video')
 		print('VIDEO SHIT IS FUCKED UP FIX IT')
@@ -174,7 +196,7 @@ class SetupUtils:
 			GETVIDEOPOSTER = Vp.get_video_poster_main(CREATEVIDDIC, PATHS, CORES)
 			
 		print('this is   find and insert vid info     time')
-		print(FUN.gettime(a_time))
+		print(Functions().gettime(a_time))
 		logging.info('Finding video is complete')
 		logging.info('Creating artistview has started')
 		print('Creating artistView')
@@ -186,7 +208,7 @@ class SetupUtils:
 		ArtC.main(av, OPT['offset'], CORES)
 
 		print('this is   ArtistView     time')
-		print(FUN.gettime(a_time))
+		print(Functions().gettime(a_time))
 		logging.info('Creating albumview has completed')
 		print('Creating albumview')
 		
@@ -196,7 +218,7 @@ class SetupUtils:
 		chunk = albv2.main(albv, OPT['offset'], CORES)
 
 		print('this is   AlbumView     time')
-		print(FUN.gettime(a_time))
+		print(Functions().gettime(a_time))
 		logging.info('Creating songview has completed')
 		print('Creating songview')
 		
@@ -204,23 +226,23 @@ class SetupUtils:
 		SongV.create_songView_db(OPT['offset'])
 		
 		print('this is   SongView     time')
-		print(FUN.gettime(a_time))
+		print(Functions().gettime(a_time))
 		logging.info('Creating indexes has started')
 		
-		creat_indexes = FUN._creat_db_indexes()
+		creat_indexes = Functions()._creat_db_indexes()
 		
 		print('this is   creat_indexes     time')
-		print(FUN.gettime(a_time))
+		print(Functions().gettime(a_time))
 		logging.info('Creating indexes has completed')
 		logging.info('Creating random art has started')
 		
-		cradb = FUN._create_random_art_db()
+		cradb = Functions()._create_random_art_db()
 		
 		print('this is   cradb     time')
-		print(FUN.gettime(a_time))
+		print(Functions().gettime(a_time))
 		logging.info('Creating random art has completed')
 		
-		stats = FUN.db_stats()
+		stats = Functions().db_stats()
 		
 		print('this is   db_stats     time')
-		print(FUN.gettime(a_time))
+		print(Functions().gettime(a_time))
