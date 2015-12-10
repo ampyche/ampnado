@@ -22,7 +22,12 @@ import ampnadoo.artistview as artv
 import ampnadoo.albumview as albvv
 import ampnadoo.songview as songv
 import ampnadoo.httpmusicpath as httpmp
-import ampnadoo.filemeta as fmeta
+
+
+
+from ampnadoo.filemeta import GetFileMeta
+
+
 import ampnadoo.gettags as gtag
 import ampnadoo.albumartscan as aas
 import ampnadoo.albumartlist as aal
@@ -31,12 +36,15 @@ import ampnadoo.setnoartpic as snap
 import ampnadoo.createviddic as cvd
 import ampnadoo.videoposter as vp
 import ampnadoo.functions as fun
+
+from ampnadoo.functions import FindMedia
+
 import logging, pymongo
 client = pymongo.MongoClient()
 db = client.ampnadoDB
 viewsdb = client.ampviewsDB
 
-class Setup():
+class SetupUtils:
 
 	def run_setup(self, aopt, apath, a_time, CORES):
 		logging.info('Setup Started')
@@ -48,7 +56,7 @@ class Setup():
 		print("Constants Setup Complete\nSetup Started\nFinding Music")
 		
 		FUN = fun.Functions()
-		FM = FUN._find_music_video(PATHS['musiccatPath'])
+		FM = FindMedia().find_music_video(PATHS['musiccatPath'])
 		
 		print('this is  _find_music_video    time')
 		print(FUN.gettime(a_time))
@@ -75,9 +83,34 @@ class Setup():
 
 			print('newmeta started')
 
-			metaf = fmeta.GetFileMeta() 
-			FILEMETA = metaf._file_meta_main(files, CORES)
+			#metaf = fmeta.GetFileMeta() 
+			FILEMETA = GetFileMeta().file_meta_main(files, CORES)
 			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 			print('newmeta complete')
 			print('newtags started')
 
@@ -107,8 +140,8 @@ class Setup():
 
 
 
-			oggmetaf = fmeta.GetFileMeta() 
-			OGGFILEMETA = oggmetaf._file_meta_main(ofiles, CORES)
+			#oggmetaf = fmeta.GetFileMeta() 
+			OGGFILEMETA = GetFileMeta().file_meta_main(ofiles, CORES)
 			
 
 			oggtagget = gtag.GetOGGTags()

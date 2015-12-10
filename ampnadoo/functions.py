@@ -24,19 +24,43 @@ from pymongo import MongoClient, ASCENDING, DESCENDING
 client = MongoClient()
 db = client.ampnadoDB
 viewsdb = client.ampviewsDB
-
 try: from mutagen import File
 except ImportError: from mutagenx import File
 
-class Functions:
-	def __init__(self):
-		mp3list = []
-		ogglist = []
-		vidlist = []
-		self.mp3list = mp3list
-		self.ogglist = ogglist
-		self.vidlist = vidlist
 
+class FindMedia:
+	def __init__(self):
+#		mp3list = []
+#		ogglist = []
+#		vidlist = []
+#		self.mp3list = mp3list
+#		self.ogglist = ogglist
+#		self.vidlist = vidlist
+		self.mp3list = list()
+		self.ogglist = list()
+		self.vidlist = list()
+		
+	def find_music_video(self, path_to_music):
+		for (paths, dirs, files) in os.walk(path_to_music, followlinks=True):
+			for filename in files:
+				fn = os.path.join(paths, filename)
+				fnse = os.path.splitext(fn)
+				low = fnse[1].lower()
+				if low == '.mp3':
+					self.mp3list.append({'filename': fn})
+				elif low == '.ogg':
+					self.ogglist.append({'filename': fn})
+				elif low == '.m4v' or low == '.mp4': 
+					self.vidlist.append(fn)
+				else: pass
+		logging.info('SETUP: Finding music complete')
+		return (self.mp3list, self.ogglist, self.vidlist)
+
+
+
+
+class Functions:
+	
 	def gen_size(self, f): return os.stat(f).st_size
 		
 	def gen_dirname(self, f): return os.path.dirname(f)
@@ -110,21 +134,7 @@ class Functions:
 			size = str('%.2fb' % abytes)
 		return size
 
-	def _find_music_video(self, path_to_music):
-		for (paths, dirs, files) in os.walk(path_to_music, followlinks=True):
-			for filename in files:
-				fn = os.path.join(paths, filename)
-				fnse = os.path.splitext(fn)
-				low = fnse[1].lower()
-				if low == '.mp3':
-					self.mp3list.append({'filename': fn})
-				elif low == '.ogg':
-					self.ogglist.append({'filename': fn})
-				elif low == '.m4v' or low == '.mp4': 
-					self.vidlist.append(fn)
-				else: pass
-		logging.info('SETUP: Finding music complete')
-		return (self.mp3list, self.ogglist, self.vidlist)
+
 
 	def _get_bytes(self):
 		return Data().tags_aggregate_filesize()

@@ -71,7 +71,7 @@ class SetUp():
 	def __init__(self):
 		GI = gp.GetInputs()
 		FUN = fun.Functions()
-		SU = su.Setup()
+		SU = su.SetupUtils()
 		RM = rmOld.RemoveOld()
 		DBI = dDBi.DropDBIndexes()
 		DB = dDBi.DropDBs()

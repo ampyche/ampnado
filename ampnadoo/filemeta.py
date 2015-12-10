@@ -21,7 +21,7 @@
 import os, uuid
 from multiprocessing import Pool
 
-class GetFileMeta():
+class GetFileMeta:
 	
 	def size(self, x):
 		return os.stat(x).st_size
@@ -42,7 +42,7 @@ class GetFileMeta():
 		fn['songid'] = self.uuidd()
 		return fn 
 		
-	def _file_meta_main(self, files, acores):		
+	def file_meta_main(self, files, acores):		
 		pool = Pool(processes=acores)
 		pm = pool.map(self.get_file_meta, files)
 		cleaned = [x for x in pm if x != None]
