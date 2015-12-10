@@ -98,6 +98,10 @@ class Data:
 	def tags_all_song_songid_artist(self):
 		return data.tags.find({}, {'song':1, 'songid':1, 'artist':1, '_id':0})
 
+	def tags_all_filename_artist_album_song(self):
+		return data.tags.find({}, {'_id':1, 'filename':1, 'artist':1, 'album':1, 'song':1})
+		
+
 	def fone_tags_albumid(self, albid):
 		return data.tags.find_one({'albumid':albid}, {'album':1, 'albumid': 1, 'artist':1, 'artistid':1, 'sthumbnail':1, '_id':0})
 
@@ -130,18 +134,14 @@ class Data:
 		return data.tags.aggregate({'$group': {'_id': 'soup', 'total' : {'$sum': '$filesize'}}})
 
 
-
 	def tags_update_artistid(self, artlist):
 		[data.tags.update({'artist': n['artist']}, {'$set': {'artistid': n['artistid']}}, multi=True) for n in artlist] 
 
 	def tags_update_albumid(self, alblist):
 		[data.tags.update({'album': alb['album']}, {'$set': {'albumid': alb['albumid']}}, multi=True) for alb in alblist]
 
-
 	def tags_update_sthumb_lthumb_and_sizes(self, a):
 		data.tags.update({'albumartPath': a[0]}, {'$set': {'sthumbnail': a[1], 'smallthumb_size': a[2], 'lthumbnail' : a[3], 'largethumb_size': a[4]}}, multi=True)
-
-
 
 	def tags_update_thumbs_and_sizes2(self, nt):
 		data.tags.update({'_id':nt[0]}, {'$set': {'sthumbnail': nt[1], 'lthumbnail': nt[3], 'smallthumb_size': nt[2], 'largethumb_size': nt[4]}}) 
@@ -149,9 +149,11 @@ class Data:
 	def tags_update_httpmusicpath(self, x, z):
 		data.tags.update({'filename':x}, {'$set': {'httpmusicpath':z}})
 
-
+	def tags_update_new_tag_info(self, tags, ftags):
+		data.tags.update({'_id': tags['_id']}, {'$set', {'filename': ftags['filename'], 'artist': ftags['artist'], 'album': ftags['album'], 'song': ftags['song']}})
 
 ###############################################################################
+
 	def video_insert(self, x):
 		data.video.insert(x)
 
@@ -161,6 +163,11 @@ class Data:
 	def video_distinct_vid_name(self):
 		return data.video.distinct('vid_name')
 		
+	def video_update_video_posterstring_origposter(self, v):
+		data.video.update({'filename':v['filename']}, {'$set': {'vid_poster_string':v['vid_poster_string'], 'vid_orig_poster': v['vid_orig_poster']}})		
+
+	def video_update_noposter_string(self, v):
+		data.video.update({'filename':v['filename']}, {'$set': {'vid_poster_string':v['vid_poster_string']}})
 
 ###############################################################################
 
@@ -168,7 +175,6 @@ class Data:
 		data.ampnado_stats.insert(x)
 
 ###############################################################################
-
 
 	def viewsdb_artalpha_insert(self, x):
 		data2.artalpha.insert(x)
@@ -187,7 +193,6 @@ class Data:
 		
 	def viewsdb_artistview_update(self, c):
 		data2.artistView.update({'artist': c[0]}, {'$set': {'page': c[1]}})
-
 
 	def viewsdb_songalpha_insert(self, x):
 		data2.songalpha.insert(x)

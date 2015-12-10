@@ -45,9 +45,13 @@ class UpdateTagsDB():
 			pass
 		else:
 			db.tags.update({'_id': tags['_id']}, {'$set', {'filename': ftags['filename'], 'artist': ftags['artist'], 'album': ftags['album'], 'song': ftags['song']}})
+			Data().tags_update_new_tag_info(tags, ftags)
 
 	def update_tags_main(self, acores):
-		tags = [x for x in db.tags.find({}, {'_id':1, 'filename':1, 'artist':1, 'album':1, 'song':1})]
+		faas = Data().tags_all_filename_artist_album_song()
+		tags = []
+		for x in faas:
+			tags.append(x)
 		pool = Pool(processes=acores)
 		pm = pool.map(self.comp_tags, tags)
 		pool.close()

@@ -50,11 +50,21 @@ class GetVideoPoster():
 			vthumb = 100, 100
 			self._img_size_check_and_save(PP, vthumb, tpath)
 			v[0]['vid_poster_string'] = self._get_b64_image(tpath)
-			db.video.update({'filename':v[0]['filename']}, {'$set': {'vid_poster_string':v[0]['vid_poster_string'], 'vid_orig_poster': v[0]['vid_orig_poster']}})
+			
+			
+			#db.video.update({'filename':v[0]['filename']}, {'$set': {'vid_poster_string':v[0]['vid_poster_string'], 'vid_orig_poster': v[0]['vid_orig_poster']}})
+			Data().video_update_video_posterstring_origposter(v[0])
+		
 		else:
 			default = '/'.join((v[1], 'static', 'images', 'no_art_pic_100x100.png'))
 			v[0]['vid_poster_string'] = self._get_b64_image(default)
-			db.video.update({'filename':v[0]['filename']}, {'$set': {'vid_poster_string':v[0]['vid_poster_string']}})
+			
+			
+			
+			Data().video_update_noposter_string(v[0])
+			#db.video.update({'filename':v[0]['filename']}, {'$set': {'vid_poster_string':v[0]['vid_poster_string']}})
+
+
 
 	def get_video_poster_main(self, vinfo, PATH, acores):
 		vid = [(v, PATH['programPath']) for v in vinfo]
