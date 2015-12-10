@@ -89,15 +89,62 @@ class AddAlbumId:
 		Data().tags_update_albumid(alblist)
 		logging.info('SETUP: add_albumids complete')
 
+class Indexes:
+	def creat_db_indexes(self):
+		db.tags.create_index([('artist', DESCENDING), ('album', ASCENDING)])
+		db.tags.create_index([('artistid', DESCENDING), ('albumid', ASCENDING)])
+		db.tags.create_index([('album', DESCENDING), ('song', ASCENDING)])
+		db.tags.create_index([('album', DESCENDING), ('songid', ASCENDING)])
+
+#		db.tags.create_index([('album', DESCENDING), ('thumbnail', ASCENDING)])
+#		db.tags.create_index([('albumid', DESCENDING), ('thumbnail', ASCENDING)])
+
+
+		db.tags.create_index([('albumid', DESCENDING), ('song', ASCENDING)])
+		db.tags.create_index([('albumid', DESCENDING), ('songid', ASCENDING)])
+		db.video.create_index([('vid_id', DESCENDING), ('vid_name', ASCENDING)])
+		viewsdb.albumView.create_index([('artistid', DESCENDING), ('albumid', ASCENDING)])
+		viewsdb.albumView.create_index([('albumid', DESCENDING), ('songs', ASCENDING)])
+		import pymongo
+		pymongo.TEXT='text'
+		db.tags.create_index([('song', 'text')])
+		viewsdb.artistView.create_index([('artist', 'text')])
+		viewsdb.albumView.create_index([('album', 'text')])
+		logging.info('SETUP: _creat_db_indexes is complete')
 
 
 
 
 
+class RandomArtDb:
+	#This takes a list and splits it up into a tup of chunks, n="number per list"	
+	def chunks(self, l, n):
+		if n < 1:
+			n = 1
+		return [l[i:i + n] for i in range(0, len(l), n)]
 
-		
-		
-class Functions:
+	def create_random_art_db(self):
+		Data().randthumb_rm()
+		alist = Data().tags_distinct_albumid()
+		random.shuffle(alist)
+		bean = self.chunks(alist, 5)
+		mc = []
+		for b in bean:
+			x = {}
+			c = len(b)
+			if c == 5:
+				x['chunk'] = b 
+				x['displayed'] = 'NOTSHOWN'
+				mc.append(x)
+			elif c < 5:
+				print('chunk has less than 5 entries')
+			else:
+				print('something fucked up')
+		db.randthumb.insert(mc)		
+		logging.info('SETUP: _create_random_art_db is complete')
+
+
+class DbStats:
 	
 	def gen_size(self, f): return os.stat(f).st_size
 		
@@ -174,6 +221,33 @@ class Functions:
 
 
 
+
+	
+	def db_stats(self):
+		picbytes = 	sum([self._get_lthumb_bytes(), self._get_sthumb_bytes()])
+		totdisk = sum([picbytes, self._get_mp3_bytes(), self._get_vid_bytes()])
+		x = {}
+		x['total_pic_size'] = self._convert_bytes(picbytes)
+		x['total_music_size'] = self._convert_bytes(self._get_mp3_bytes())
+		x['total_video_size'] = self._convert_bytes(self._get_vid_bytes())
+		x['total_disk_size'] = self._convert_bytes(totdisk)
+		x['total_artists'] = self._get_artist_count()
+		x['total_albums'] = self._get_album_count()
+		x['total_songs'] = self._get_song_count()
+		x['total_videos'] = self._get_video_count()
+		x['total_mp3'] = self._get_mp3_count()
+		x['total_ogg'] = self._get_ogg_count()
+		Data().stats_insert(x)
+		logging.info('SETUP: db stats complete')		
+	
+	
+	
+	
+	
+		
+		
+class Functions:
+	
 	def _get_bytes(self):
 		return Data().tags_aggregate_filesize()
 		logging.info('SETUP: _get_bytes is complete')
@@ -228,39 +302,20 @@ class Functions:
 
 
 
-	def add_albumids(self):
-		album = Data().tags_distinct_album()
-		alblist = []
-		for a in album:
-			z = {}
-			z['album'] = a
-			z['albumid'] = self.gen_uuid()
-			alblist.append(z)
-		Data().tags_update_albumid(alblist)
-		logging.info('SETUP: add_albumids complete')
+#	def add_albumids(self):
+#		album = Data().tags_distinct_album()
+#		alblist = []
+#		for a in album:
+#			z = {}
+#			z['album'] = a
+#			z['albumid'] = self.gen_uuid()
+#			alblist.append(z)
+#		Data().tags_update_albumid(alblist)
+#		logging.info('SETUP: add_albumids complete')
 
-	def db_stats(self):
-		picbytes = 	sum([self._get_lthumb_bytes(), self._get_sthumb_bytes()])
-		totdisk = sum([picbytes, self._get_mp3_bytes(), self._get_vid_bytes()])
-		x = {}
-		x['total_pic_size'] = self._convert_bytes(picbytes)
-		x['total_music_size'] = self._convert_bytes(self._get_mp3_bytes())
-		x['total_video_size'] = self._convert_bytes(self._get_vid_bytes())
-		x['total_disk_size'] = self._convert_bytes(totdisk)
-		x['total_artists'] = self._get_artist_count()
-		x['total_albums'] = self._get_album_count()
-		x['total_songs'] = self._get_song_count()
-		x['total_videos'] = self._get_video_count()
-		x['total_mp3'] = self._get_mp3_count()
-		x['total_ogg'] = self._get_ogg_count()
-		Data().stats_insert(x)
-		logging.info('SETUP: db stats complete')							
+					
 
-	#This takes a list and splits it up into a tup of chunks, n="number per list"	
-	def chunks(self, l, n):
-		if n < 1:
-			n = 1
-		return [l[i:i + n] for i in range(0, len(l), n)]
+
 
 	def _hash_func(self, a_string):
 		return str(hashlib.sha512(a_string.encode('utf-8')).hexdigest())
@@ -279,44 +334,8 @@ class Functions:
 		Data().usercreds_insert_user_pword(a_uname, h[1], h[2])
 		logging.info('SETUP: insert_user is complete')
 
-	def _create_random_art_db(self):
-		Data().randthumb_rm()
-		alist = Data().tags_distinct_albumid()
-		random.shuffle(alist)
-		bean = self.chunks(alist, 5)
-		mc = []
-		for b in bean:
-			x = {}
-			c = len(b)
-			if c == 5:
-				x['chunk'] = b 
-				x['displayed'] = 'NOTSHOWN'
-				mc.append(x)
-			elif c < 5:
-				print('chunk has less than 5 entries')
-			else:
-				print('something fucked up')
-		db.randthumb.insert(mc)		
-		logging.info('SETUP: _create_random_art_db is complete')
 
-	def _creat_db_indexes(self):
-#		db.tags.create_index([('artist', DESCENDING), ('album', ASCENDING)])
-#		db.tags.create_index([('artistid', DESCENDING), ('albumid', ASCENDING)])
-#		db.tags.create_index([('album', DESCENDING), ('song', ASCENDING)])
-#		db.tags.create_index([('album', DESCENDING), ('songid', ASCENDING)])
-#		db.tags.create_index([('album', DESCENDING), ('thumbnail', ASCENDING)])
-#		db.tags.create_index([('albumid', DESCENDING), ('thumbnail', ASCENDING)])
-#		db.tags.create_index([('albumid', DESCENDING), ('song', ASCENDING)])
-#		db.tags.create_index([('albumid', DESCENDING), ('songid', ASCENDING)])
-#		db.video.create_index([('vid_id', DESCENDING), ('vid_name', ASCENDING)])
-#		viewsdb.albumView.create_index([('artistid', DESCENDING), ('albumid', ASCENDING)])
-#		viewsdb.albumView.create_index([('albumid', DESCENDING), ('songs', ASCENDING)])
-		import pymongo
-		pymongo.TEXT='text'
-		db.tags.create_index([('song', 'text')])
-		viewsdb.artistView.create_index([('artist', 'text')])
-		viewsdb.albumView.create_index([('album', 'text')])
-		logging.info('SETUP: _creat_db_indexes is complete')
+
 
 	def gettime(self, at):
 		b = time.time()

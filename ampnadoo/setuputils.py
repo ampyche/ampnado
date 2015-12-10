@@ -28,8 +28,8 @@ from ampnadoo.albumview import AlbumView
 from ampnadoo.albumview import AlbumChunkIt
 
 
-import ampnadoo.songview as songv
 
+from ampnadoo.songview import SongView
 
 
 
@@ -49,6 +49,9 @@ from ampnadoo.functions import Functions
 from ampnadoo.functions import FindMedia
 from ampnadoo.functions import AddArtistId
 from ampnadoo.functions import AddAlbumId
+from ampnadoo.functions import Indexes
+from ampnadoo.functions import RandomArtDb
+from ampnadoo.functions import DbStats
 
 
 
@@ -188,44 +191,40 @@ class SetupUtils:
 		print(Functions().gettime(a_time))
 		logging.info('Creating songview has completed')
 		print('Creating songview')
-		
 
-
-
-
-
-
-
-
-		SongV = songv.SongView()
-		SongV.create_songView_db(OPT['offset'])
-		
-
-
-
-
-
-
-
+		SongView().create_songView_db(OPT['offset'])
 
 		print('this is   SongView     time')
 		print(Functions().gettime(a_time))
 		logging.info('Creating indexes has started')
-		
-		creat_indexes = Functions()._creat_db_indexes()
+
+		creat_indexes = Indexes().creat_db_indexes()
 		
 		print('this is   creat_indexes     time')
 		print(Functions().gettime(a_time))
 		logging.info('Creating indexes has completed')
 		logging.info('Creating random art has started')
-		
-		cradb = Functions()._create_random_art_db()
-		
+
+		cradb = RandomArtDb().create_random_art_db()
+
 		print('this is   cradb     time')
 		print(Functions().gettime(a_time))
 		logging.info('Creating random art has completed')
 		
-		stats = Functions().db_stats()
+		
+		
+		
+		
+		
+		stats = DbStats().db_stats()
+
+
+
+
+
+
+
+
 		
 		print('this is   db_stats     time')
 		print(Functions().gettime(a_time))
