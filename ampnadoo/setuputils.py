@@ -32,6 +32,10 @@ from ampnadoo.gettags import GetMP3Tags
 from ampnadoo.gettags import GetOGGTags
 
 import ampnadoo.albumartscan as aas
+from ampnadoo.albumartscan import AlbumArtScan
+
+
+
 import ampnadoo.albumartlist as aal
 import ampnadoo.getalbumart as gaa
 import ampnadoo.setnoartpic as snap
@@ -95,23 +99,7 @@ class SetupUtils:
 			print('newtags complete')
 			print('insert media started')
 			
-			
-			
-			
-			
-			
-			
-			
-			asm = aas.AlbumArtScan()
-			ALBUMARTSCAN = asm.albumart_search_main(MP3TAGS, CORES)
-			
-			
-			
-			
-			
-			
-			
-			
+			ALBUMARTSCAN = AlbumArtScan().albumart_search_main(MP3TAGS, CORES)
 			
 			print('insert media complete')
 		else: pass
@@ -129,14 +117,7 @@ class SetupUtils:
 				ofiles.append(f)
 			OGGFILEMETA = GetFileMeta().file_meta_main(ofiles, CORES)
 			OGGTAGS = GetOGGTags().get_ogg_tag_info_main(OGGFILEMETA, CORES)
-
-
-
-
-
-			oggasm = aas.AlbumArtScan()
-			OGGALBUMARTSCAN = oggasm.albumart_search_main(OGGTAGS, CORES)
-			
+			OGGALBUMARTSCAN = AlbumArtScan().albumart_search_main(OGGTAGS, CORES)
 		else: pass
 
 
