@@ -1,14 +1,27 @@
 #!/usr/bin/python3
-
-import os, unittest, shutil
+###############################################################################
+###############################################################################
+	# LICENSE: GNU General Public License, version 2 (GPLv2)
+	# Copyright 2015, Charlie J. Smotherman
+	#
+	# This program is free software; you can redistribute it and/or
+	# modify it under the terms of the GNU General Public License v2
+	# as published by the Free Software Foundation.
+	#
+	# This program is distributed in the hope that it will be useful,
+ 	# but WITHOUT ANY WARRANTY; without even the implied warranty of
+	# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	# GNU General Public License for more details.
+	#
+	# You should have received a copy of the GNU General Public License
+	# along with this program; if not, write to the Free Software
+	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+###############################################################################
+###############################################################################
+import os, unittest
 import ampnadoo.inputs as inputs
-#import functions as FUN
-#import pymongo
-#from pymongo import MongoClient
-#
-#from pprint import pprint
 
-class TestUserInputTestCase(unittest.TestCase):
+class TestInputsTestCase(unittest.TestCase):
 	def setUp(self):	
 		self.gi = inputs.GetInputs()
 	
@@ -31,41 +44,21 @@ class TestUserInputTestCase(unittest.TestCase):
 
 	def test_cat_name(self):
 		self.assertEqual(self.gi._check_cat_name('ampnadocat'), 'ampnadocat')
-		
 
 	def test_user_name_one(self):
 		self.assertEqual(self.gi._check_uname('ampnado'), 'ampnado')
 
-
-
 	def test_pass_word_one(self):
 		self.assertEqual(self.gi._check_pword('ampnado'), 'ampnado')
 
-
-
 	def test_check_server_addr(self):
 		self.assertEqual(self.gi._check_server_addr('http://MySite/ampnado'), 'http://MySite/ampnado')
-		
-
 
 	def test_get_port_one(self):
 		self.assertEqual(self.gi._get_port('http://MySite:8080/ampnado'), 8080)
 
 	def test_get_port_two(self):
 		self.assertNotEqual(self.gi._get_port('http://MySite/ampnado'), 8080)
-
-#	def test_create_catalog_dict(self):
-#		mpath = '/home/myfiles/ampnado'
-#		cname = 'CATA'
-#		cid   = '123123'
-#		ppath = '/usr/share/ampnado'
-#		cat_dict1 = {}
-#		cat_dict1['musicpath'] = mpath
-#		cat_dict1['catname']   = cname
-#		cat_dict1['catid']     = cid
-#		cat_dict1['catpath']   = '/'.join((ppath, 'static', 'MUSIC', cname))
-#		cat_dict2 = self.gi.create_catalog_dict(mpath, cname, cid, ppath)
-#		self.assertEqual(cat_dict1, cat_dict2)
 
 	def test_create_paths_dict(self):
 		aprogpath = '/usr/share/ampnado'
@@ -83,24 +76,14 @@ class TestUserInputTestCase(unittest.TestCase):
 		self.assertEqual(p1, p2)
 
 	def suite(self):
-		TestUserInputTestSuite = unittest.TestSuite()
-		TestUserInputTestSuite.addTest(TestUserInputTestCase('test_music_path'))
-		TestUserInputTestSuite.addTest(TestUserInputTestCase('test_get_uuid'))
-		TestUserInputTestSuite.addTest(TestUserInputTestCase('test_get_regex'))
-		TestUserInputTestSuite.addTest(TestUserInputTestCase('test_cat_name'))
-		TestUserInputTestSuite.addTest(TestUserInputTestCase('test_user_name_one'))
-		TestUserInputTestSuite.addTest(TestUserInputTestCase('test_pass_word_one'))
-		TestUserInputTestSuite.addTest(TestUserInputTestCase('test_get_port_one'))
-		TestUserInputTestSuite.addTest(TestUserInputTestCase('test_get_port_two'))
-		#TestUserInputTestSuite.addTest(TestUserInputTestCase('test_create_catalog_dict'))
-		TestUserInputTestSuite.addTest(TestUserInputTestCase('test_create_paths_dict'))
-		return TestUserInputTestSuite
-
-
-
-
+		TestInputsTestSuite = unittest.TestSuite()
+		TestInputsTestSuite.addTest(TestInputsTestCase('test_music_path', 
+			'test_get_uuid', 'test_get_regex', 'test_cat_name', 'test_user_name_one',
+			'test_pass_word_one', 'test_get_port_one', 'test_get_port_two', 'test_create_paths_dict',
+		))
+		return TestInputsTestSuite
 	
-user_input_testsuite    = unittest.TestLoader().loadTestsFromTestCase(TestUserInputTestCase)		
+user_input_testsuite    = unittest.TestLoader().loadTestsFromTestCase(TestInputsTestCase)		
 
 if __name__ == '__main__':
 	unittest.main()	
