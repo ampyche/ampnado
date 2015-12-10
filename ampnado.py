@@ -19,7 +19,7 @@
 ###############################################################################
 ###############################################################################
 import os, time, argparse, uuid, logging
-import ampnadoo.setup as su
+import ampnadoo.setuputils as su
 import ampnadoo.inputs as gp
 import ampnadoo.functions as fun
 import ampnadoo.removeold as rmOld
