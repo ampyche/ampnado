@@ -18,8 +18,16 @@
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 ###############################################################################
-import ampnadoo.artistview as artv
-import ampnadoo.albumview as albvv
+from ampnadoo.artistview import ArtistView
+from ampnadoo.artistview import ArtistChunkIt
+
+
+
+
+from ampnadoo.albumview import AlbumView
+from ampnadoo.albumview import AlbumChunkIt
+
+
 import ampnadoo.songview as songv
 
 
@@ -30,33 +38,10 @@ from ampnadoo.filemeta import GetFileMeta
 from ampnadoo.gettags import GetMP3Tags
 from ampnadoo.gettags import GetOGGTags
 from ampnadoo.albumartscan import AlbumArtScan
-
-
-
-
 from ampnadoo.albumartlist import GetAlbumArtLists
-
-
-
-
-
-
-
 from ampnadoo.getalbumart import GetAlbumArt
-
-
-
-
-
 from ampnadoo.setnoartpic import SetNoArtPic
-
-
-
-
-
 from ampnadoo.createviddic import CreateVidDict
-
-
 from ampnadoo.videoposter import GetVideoPoster
 
 
@@ -177,55 +162,52 @@ class SetupUtils:
 		logging.info('Finding videos has started')
 		print('Finding Video')
 		print('VIDEO SHIT IS FUCKED UP FIX IT')
-		
-		
-		
-		
-		
-		if filesfound_vid:
-			
-			
-			CREATEVIDDIC = CreateVidDict().create_vid_dic_main(FM[2], OPT, CORES)
 
-			
+		if filesfound_vid:
+			CREATEVIDDIC = CreateVidDict().create_vid_dic_main(FM[2], OPT, CORES)
 			GETVIDEOPOSTER = GetVideoPoster().get_video_poster_main(CREATEVIDDIC, PATHS, CORES)
 		
-		
-		
-		
-		
-		
-			
 		print('this is   find and insert vid info     time')
 		print(Functions().gettime(a_time))
 		logging.info('Finding video is complete')
 		logging.info('Creating artistview has started')
 		print('Creating artistView')
 		
-		ArtV = artv.ArtistView()
-		av = ArtV.main(CORES)
-		
-		ArtC = artv.ArtistChunkIt()		
-		ArtC.main(av, OPT['offset'], CORES)
+		AV = ArtistView().main(CORES)	
+		ArtistChunkIt().main(AV, OPT['offset'], CORES)
 
 		print('this is   ArtistView     time')
 		print(Functions().gettime(a_time))
 		logging.info('Creating albumview has completed')
 		print('Creating albumview')
 		
-		AlbV = albvv.AlbumView()		
-		albv = AlbV.main(CORES)
-		albv2 = albvv.AlbumChunkIt()
-		chunk = albv2.main(albv, OPT['offset'], CORES)
+		ALBV = AlbumView().main(CORES)
+		CHUNK = AlbumChunkIt().main(ALBV, OPT['offset'], CORES)
 
 		print('this is   AlbumView     time')
 		print(Functions().gettime(a_time))
 		logging.info('Creating songview has completed')
 		print('Creating songview')
 		
+
+
+
+
+
+
+
+
 		SongV = songv.SongView()
 		SongV.create_songView_db(OPT['offset'])
 		
+
+
+
+
+
+
+
+
 		print('this is   SongView     time')
 		print(Functions().gettime(a_time))
 		logging.info('Creating indexes has started')

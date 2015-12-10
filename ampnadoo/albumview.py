@@ -26,7 +26,7 @@ v = pymongo.version
 version = v.split('.')[0]
 version = int(version)
 
-class AlbumView():
+class AlbumView:
 	def __init__(self):
 		albid = Data().tags_distinct_albumid()
 		self.albid = albid
@@ -66,7 +66,7 @@ class AlbumView():
 		pool.join()
 		return cleaned
 
-class AlbumChunkIt():
+class AlbumChunkIt:
 	def chunks(self, l, n):
 		if n < 1:
 			n = 1

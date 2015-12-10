@@ -25,7 +25,7 @@ v = pymongo.version
 version = v.split('.')[0]
 version = int(version)
 
-class ArtistView():
+class ArtistView:
 	def __init__(self):
 		art = Data().tags_distinct_artist()
 		self.art = art
@@ -58,7 +58,7 @@ class ArtistView():
 		pool.join()
 		return cleaned
 	
-class ArtistChunkIt():
+class ArtistChunkIt:
 	def chunks(self, l, n):
 		if n < 1:
 			n = 1
