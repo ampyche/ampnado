@@ -22,8 +22,8 @@ import os, unittest
 import unittest.mock as mock 
 import ampnadoo.inputs as inputs
 import ampnadoo.filemeta as filemeta
-
 from ampnadoo.httpmusicpath import HttpMusicPath
+from ampnadoo.songview import SongView
 
 class TestInputsTestCase(unittest.TestCase):
 	def setUp(self):	
@@ -153,7 +153,12 @@ class TestHttpMusicPathTestCase(unittest.TestCase):
 		]
 
 	def tearDown(self):
-		self.fm = None
+		self.HttpMusicPath = None
+		self.a = None
+		self.b = None
+		self.a_path = None
+		self.acores = None
+		self.a_result = None
 
 	@mock.patch('__main__.HttpMusicPath.alltags', side_effect=mock_alltags)
 	def test_add_path(self, insert_function):
@@ -171,11 +176,65 @@ class TestHttpMusicPathTestCase(unittest.TestCase):
 		TestHttpMusicPathTestSuite.addTest(TestHttpMusicPathTestCase('test_add_path', 'test_add_http_music_path_to_db'))
 
 
+def mock_gettags():
+	return [
+		{
+			'song' : 'Test Song One',
+			'songid' : '123456',
+			'artist' : 'Test On A Stick',
+		},{
+			'song' : 'Test Song Two',
+			'songid' : '789123',
+			'artist' : 'Test On A Stick',
+		}
+	]
+
+
+class TestSongViewTestCase(unittest.TestCase):
+	
+	def setUp(self):
+		self.songview = SongView()
+		self.art_so_soid = [
+			{
+				'song' : 'Test Song One',
+				'songid' : '123456',
+				'artist' : 'Test On A Stick',
+			},{
+				'song' : 'Test Song Two',
+				'songid' : '789123',
+				'artist' : 'Test On A Stick',
+			}
+		]
+		self.svresult = [
+			{'page': 1, 'artist': 'Test On A Stick', 'song': 'Test Song One', 'songid': '123456'},
+			{'page': 1, 'artist': 'Test On A Stick', 'song': 'Test Song Two', 'songid': '789123'},
+		]
+
+	def tearDown(self):
+		self.songview = None
+		self.art_so_soid = None
+		self.svresult = None
+	
+	@mock.patch('__main__.SongView.get_tags', side_effect=mock_gettags)
+	@mock.patch('__main__.SongView.insert_songalpha', return_value='inserted')
+	@mock.patch('__main__.SongView.insert_songview', return_value='inserted')
+	def test_create_songView_db(self, gettags_function, sa_function, sv_function):
+		hoo = self.songview.create_songView_db(self.art_so_soid)
+		self.assertEqual(hoo, self.svresult)
+
+	def suite(self):
+		TestSongViewTestSuite = unittest.TestSuite()
+		TestSongViewTestSuite.addTest(TestSongViewTestCase('test_create_songView_db'))
+
+
 
 
 input_ts    = unittest.TestLoader().loadTestsFromTestCase(TestInputsTestCase)		
 filemeta_ts = unittest.TestLoader().loadTestsFromTestCase(TestFileMetaTestCase)		
 httpmusicpath_ts = unittest.TestLoader().loadTestsFromTestCase(TestHttpMusicPathTestCase)		
+songview_ts = unittest.TestLoader().loadTestsFromTestCase(TestSongViewTestCase)
+
+
 
 if __name__ == '__main__':
 	unittest.main()	

@@ -22,12 +22,27 @@ import logging
 from ampnadoo.data import Data
 
 class SongView:
+	
+	def get_tags(self):
+		return Data().tags_all_song_songid_artist()
+	
+	def rm_dups_songalpha(self, x):
+		return list(set(x))
+	
+	def insert_songalpha(self, z):
+		Data().viewsdb_songalpha_insert(dict(songalpha=z))
+	
+	def insert_songview(self, w):
+		Data().viewsdb_songview_insert(w)
+		
 	def create_songView_db(self, OFC):
 		count = 0
 		page = 1	
 		songalphaoffsetlist = []
 		songviewlist = []
-		soho = Data().tags_all_song_songid_artist()
+		
+		soho = self.get_tags()
+		
 		for s in soho:
 			x = {}
 			count += 1
@@ -40,7 +55,10 @@ class SongView:
 			x['songid'] = s['songid']
 			x['artist'] = s['artist']
 			songviewlist.append(x)
-		songalphaoffsetlist = list(set(songalphaoffsetlist))
-		Data().viewsdb_songalpha_insert(dict(songalpha=songalphaoffsetlist))
-		Data().viewsdb_songview_insert(songviewlist)
+			
+			
+		songalphaoffsetlist1 = self.rm_dups_songalpha(songalphaoffsetlist)
+		insertsongalpha = self.insert_songalpha(songalphaoffsetlist1)
+		insertsongview = self.insert_songview(songviewlist)       
 		logging.info('get_song_offset is complete')
+		return songviewlist

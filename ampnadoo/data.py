@@ -198,7 +198,7 @@ class Data:
 		data2.songalpha.insert(x)
 		
 	def viewsdb_songview_insert(self, svl):
-		data2.songView.insert(svl)
+		data2.songView.insert_many(svl)
 		
 ###############################################################################
 		
