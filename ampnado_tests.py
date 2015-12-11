@@ -19,14 +19,18 @@
 ###############################################################################
 ###############################################################################
 import os, unittest
+import unittest.mock as mock 
 import ampnadoo.inputs as inputs
+import ampnadoo.filemeta as filemeta
+
+from ampnadoo.httpmusicpath import HttpMusicPath
 
 class TestInputsTestCase(unittest.TestCase):
 	def setUp(self):	
 		self.gi = inputs.GetInputs()
 	
 	def tearDown(self):
-		self.amps = None
+		self.gi = None
 
 	def test_get_uuid(self):
 		uuid1 = self.gi._get_uuid()
@@ -78,12 +82,100 @@ class TestInputsTestCase(unittest.TestCase):
 	def suite(self):
 		TestInputsTestSuite = unittest.TestSuite()
 		TestInputsTestSuite.addTest(TestInputsTestCase('test_music_path', 
-			'test_get_uuid', 'test_get_regex', 'test_cat_name', 'test_user_name_one',
-			'test_pass_word_one', 'test_get_port_one', 'test_get_port_two', 'test_create_paths_dict',
+			'test_get_uuid', 'test_get_regex', 'test_cat_name',
+			'test_user_name_one', 'test_pass_word_one', 'test_get_port_one',
+			'test_get_port_two', 'test_create_paths_dict',
 		))
 		return TestInputsTestSuite
+		
+class TestFileMetaTestCase(unittest.TestCase):
+	def setUp(self):	
+		self.fm = filemeta.GetFileMeta()
+		self.bogus = '/bogus/path/to/file/boo.ogg'
+		self.bogus1 = {'filename': self.bogus}
+		self.bogus_dir = '/bogus/path/to/file'
 	
-user_input_testsuite    = unittest.TestLoader().loadTestsFromTestCase(TestInputsTestCase)		
+	def tearDown(self):
+		self.fm = None
+		self.bogus = None
+		self.bogus1 = None
+		self.bogus_dir = None
+
+	def test_size(self):
+		self.assertEqual(self.fm.size(self.bogus), '001')
+
+	def test_dirpath(self):
+		self.assertEqual(self.fm.dirpath(self.bogus), self.bogus_dir)
+
+	def test_split_lower(self):
+		self.assertEqual(self.fm.split_lower(self.bogus), '.ogg')
+
+	def test_uuidd(self):
+		uuid1 = self.fm.uuidd()
+		uuid2 = self.fm.uuidd()
+		self.assertNotEqual(uuid1, uuid2)
+
+	def test_get_file_meta(self):
+		boo = self.fm.get_file_meta(self.bogus1)
+		self.assertEqual(boo['filesize'], '001')
+		self.assertEqual(boo['dirpath'], self.bogus_dir)
+		self.assertEqual(boo['filetype'], '.ogg')
+		self.assertNotEqual(boo['songid'], '456456')
+
+	def suite(self):
+		TestFileMetaTestSuite = unittest.TestSuite()
+		TestFileMetaTestSuite.addTest(TestFileMetaTestCase('test_size', 'test_dirpath',
+			'test_split_lower', 'test_uuidd', 'test_get_file_meta',
+		))		
+
+def mock_alltags():
+	return [
+		{'filename': '/home/bogus/b/bogus.ogg'},
+		{'filename': '/home/bogus2/b2/bogus2.ogg'},
+		{'filename': '/home/bogus3/b3/bogus3.ogg'},
+	]
+
+def mock_insert(x, y):
+	g = 'mock httpmusicpath db insert complete'
+	return g
+
+class TestHttpMusicPathTestCase(unittest.TestCase):
+	def setUp(self):
+		self.HttpMusicPath = HttpMusicPath()
+		self.a = '/usr/share/ampnado/cat/music/goo.ogg'
+		self.b = '/usr/share/ampnado/catb/music/goob.ogg'
+		self.a_path = {'musiccatPath': self.a, 'httpmusicPath': self.b}
+		self.acores = 2
+		self.a_result = [
+			('/home/bogus/b/bogus.ogg', '/usr/share/ampnado/cat/music/goo.ogg', '/usr/share/ampnado/catb/music/goob.ogg'),
+			('/home/bogus2/b2/bogus2.ogg', '/usr/share/ampnado/cat/music/goo.ogg', '/usr/share/ampnado/catb/music/goob.ogg'),
+			('/home/bogus3/b3/bogus3.ogg', '/usr/share/ampnado/cat/music/goo.ogg', '/usr/share/ampnado/catb/music/goob.ogg'),
+		]
+
+	def tearDown(self):
+		self.fm = None
+
+	@mock.patch('__main__.HttpMusicPath.alltags', side_effect=mock_alltags)
+	def test_add_path(self, insert_function):
+		koo = self.HttpMusicPath.alltags()
+		kokoo = self.HttpMusicPath.add_paths(self.a_path, koo)
+		self.assertEqual(kokoo, self.a_result)
+
+	@mock.patch('__main__.HttpMusicPath.insert', side_effect=mock_insert)
+	def test_add_http_music_path_to_db(self, insert_function):
+		moo = self.HttpMusicPath.add_http_music_path_to_db(self.a_result[0])
+		self.assertEqual(moo, 'add_http_music_path_to_db complete')
+
+	def suite(self):
+		TestHttpMusicPathTestSuite = unittest.TestSuite()
+		TestHttpMusicPathTestSuite.addTest(TestHttpMusicPathTestCase('test_add_path', 'test_add_http_music_path_to_db'))
+
+
+
+
+input_ts    = unittest.TestLoader().loadTestsFromTestCase(TestInputsTestCase)		
+filemeta_ts = unittest.TestLoader().loadTestsFromTestCase(TestFileMetaTestCase)		
+httpmusicpath_ts = unittest.TestLoader().loadTestsFromTestCase(TestHttpMusicPathTestCase)		
 
 if __name__ == '__main__':
 	unittest.main()	

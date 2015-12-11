@@ -24,7 +24,11 @@ from multiprocessing import Pool
 class GetFileMeta:
 	
 	def size(self, x):
-		return os.stat(x).st_size
+		try:
+			a = os.path.getsize(x)
+		except OSError:
+			a = "001"
+		return a 
 		
 	def dirpath(self, x):
 		return os.path.dirname(x)

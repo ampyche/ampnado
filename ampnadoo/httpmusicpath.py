@@ -22,18 +22,36 @@ from multiprocessing import Pool
 from ampnadoo.data import Data
 
 class HttpMusicPath:
+	
+	def insert(self, x, y):
+		Data().tags_update_httpmusicpath(x, y)
 		
 	def add_http_music_path_to_db(self, t):
-		fn2 = ''.join((t[2], t[0].split(t[1])[1]))
-		Data().tags_update_httpmusicpath(t[0], fn2)
+		try:
+			fn2 = ''.join((t[2], t[0].split(t[1])[1]))
+		except IndexError:
+			pass
+		try:
+			self.insert(t[0], fn2)
+		except UnboundLocalError:
+			pass
+		return 'add_http_music_path_to_db complete'
+
+	def alltags(self):
+		return Data().tags_all()
+
+	def add_paths(self, ap, allt):
+		p = []
+		for n in allt:
+			foo = (n['filename'], ap['musiccatPath'], ap['httpmusicPath']) 
+			p.append(foo)
+		return p
 
 	def main(self, a_path, acores):
-		alltags = Data().tags_all()
-		p = []
-		for n in alltags:
-			foo = (n['filename'], a_path['musiccatPath'], a_path['httpmusicPath']) 
-			p.append(foo)
+		alltags = self.alltags()
+		p = self.add_paths(a_path, alltags)
 		pool = Pool(processes=acores)
 		yahoo = pool.map(self.add_http_music_path_to_db, p)
 		pool.close()
 		pool.join()
+		
