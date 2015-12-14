@@ -23,17 +23,23 @@ from ampnadoo.data import Data
 
 class GetAlbumArtLists:
 	
+	def distinct_albumartpath(self):
+		return Data().tags_distinct_albumartPath()
+		
+	def fone_tags_albumartpath(self, x):
+		return Data().fone_tags_albumartPath(x)
+	
 	def get_albumart_lists(self, a):
 		asp = a.split('/')
 		if asp[-1:][0] == 'NOTAGART':
 			pass
 		else:
-			albinfo = Data().fone_tags_albumartPath(a)
+			albinfo = self.fone_tags_albumartpath(a)
 			ainfo = a, albinfo['albumid'], albinfo['album']
 			return ainfo
 
 	def get_albumart_list_main(self, acores):
-		albumartPaths = Data().tags_distinct_albumartPath()
+		albumartPaths = self.distinct_albumartpath()
 		pool = Pool(processes=acores)
 		google = pool.map(self.get_albumart_lists, albumartPaths)
 		cleaned = [x for x in google if x != None]

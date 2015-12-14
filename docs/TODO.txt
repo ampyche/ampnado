@@ -1,0 +1,24 @@
+Fix transcoding on playlist page
+
+Finish unit tests
+	test_albumartlist = complete
+	test_albumartscan = complete
+	test_albumview = complete
+	test_albumchunkit = complete
+	test_createviddic = None
+	test_data = None
+	test_dbindexes = None
+	test_filemeta = complete
+	test_functions = None
+	test_getalbumart = None
+	test_gettags = None
+	test_removeold = None
+	test_setnoartpic = None
+	test_setuputils = None
+	test_tagsfromfilename = None
+	test_updatetags = None
+	test_videoposter = None
+	test_httpmusicpath = complete
+	test_inputs = complete
+	test_songview = complete
+	

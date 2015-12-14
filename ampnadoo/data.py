@@ -122,7 +122,11 @@ class Data:
 			{'$group': {'_id': 'album', 'albumz': {'$addToSet': '$album'}}},
 			{'$project': {'albumz' :1}}
 		])
-		
+
+
+
+
+	
 	def tags_aggregate_albumid(self, albid):
 		return data.tags.aggregate([
 			{'$match': {'albumid': albid}},
@@ -185,7 +189,7 @@ class Data:
 	def viewsdb_insert(self, av):
 		data2.albumView.insert(av)
 
-	def viewsdb_albumview_updata(self, albid):
+	def viewsdb_albumview_update(self, albid):
 		data2.albumView.update({'albumid': albid[0]}, {'$set': {'page': albid[1]}})
 		
 	def viewsdb_artistview_insert(self, z): 

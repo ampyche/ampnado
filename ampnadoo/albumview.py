@@ -27,12 +27,23 @@ version = v.split('.')[0]
 version = int(version)
 
 class AlbumView:
-	def __init__(self):
-		albid = Data().tags_distinct_albumid()
-		self.albid = albid
+	def distinct_albumview(self):
+		return Data().tags_distinct_albumid()
+		
+	def fone_tags_albumid(self, x):
+		return Data().fone_tags_albumid(x)
+	
+	def aggregate_albumid(self, z):
+		return Data().tags_aggregate_albumid(z)
+	
+	def tags_all_song(self, w):
+		return Data().tags_all_song(w)
+	
+	def viewsdb_insert(self, u):
+		return Data().viewsdb_insert(u)
 
 	def create_albumView_db(self, a):
-		info = Data().fone_tags_albumid(a)
+		info = self.fone_tags_albumid(a)
 		av = {}
 		av['albumid'] = info['albumid']
 		av['album'] = info['album']
@@ -40,27 +51,28 @@ class AlbumView:
 		av['artistid'] = info['artistid']
 		av['thumbnail'] = info['sthumbnail']
 		if version < 3:
-			boo = Data().tags_aggregate_albumid(a)
+			boo = self.aggregate_albumid(a)
 			doo = boo['result'][0]['songz']
 		else:
-			boo = [a['songz'] for a in Data().tags_aggregate_albumid(a)]
+			boo = [b['songz'] for b in self.aggregate_albumid(a)]
 			doo = boo[0]
 		av['numsongs'] = len(doo)
 		new_song_list = []
 		for d in doo:
-			voo = Data().tags_all_song(d)
+			voo = self.tags_all_song(d)
 			sids = []
 			for s in voo:
 				x = (s['song'], s['songid'])
 				sids.append(x)
 			new_song_list.append(sids)
 		av['songs'] = new_song_list
-		Data().viewsdb_insert(av)
+		self.viewsdb_insert(av)
 		return av
 
 	def main(self, cores):
+		albid = self.distinct_albumview()
 		pool = Pool(processes=cores)
-		poogle = pool.map(self.create_albumView_db, self.albid)
+		poogle = pool.map(self.create_albumView_db, albid)
 		cleaned = [x for x in poogle if x != None]
 		pool.close()
 		pool.join()
@@ -72,6 +84,9 @@ class AlbumChunkIt:
 			n = 1
 		return [l[i:i + n] for i in range(0, len(l), n)]		
 
+	def insert_albalpha(self, a):
+		Data().viewsdb_albalpha_insert(dict(a))
+
 	def _get_alphaoffset(self, chunks):		
 		count = 0
 		albidPlist = []
@@ -82,11 +97,11 @@ class AlbumChunkIt:
 				albid_page = c['albumid'], str(count)
 				albidPlist.append(albid_page)
 			albalphaoffsetlist.append(str(count))
-		Data().viewsdb_albalpha_insert(dict(albalpha=albalphaoffsetlist))
+		self.insert_albalpha(dict(albalpha=albalphaoffsetlist))
 		return albidPlist
 			
 	def _get_pages(self, c):
-		Data().viewsdb_albumview_updata(c)
+		Data().viewsdb_albumview_update(c)
 
 	def main(self, albv, OFC, cores):
 		chunks = self.chunks(albv, OFC)

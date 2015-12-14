@@ -25,8 +25,15 @@ Install the Python3 versions of the following software packages:
 	mutagen or mutagenx
 	tornado
 	
+You will need these additional packages for db support and transcoding.  FFmpeg
+is optional if transcoding is not needed.
+
 	mongodb
 	FFmpeg
+
+To run unittests do the following:
+	cd /usr/share/ampnado
+	python3 -m unittest
 	
 To enable text search in versions of mongodb where textsearch is not enabled by default do:
 

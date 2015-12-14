@@ -25,6 +25,9 @@ try: from mutagen import File
 except ImportError: from mutagenx import File
 
 class AlbumArtScan:
+	
+	def insert(self, a):
+		Data().tags_insert(a)
 
 	def _albumart_search(self, x):
 		ppath = '/'.join((os.path.dirname(x['filename']), "folder.jpg"))
@@ -36,14 +39,14 @@ class AlbumArtScan:
 				audio = File(x['filename'])
 				artwork = audio.tags[u'APIC:'].data
 				with open(ppath, 'wb') as img: img.write(artwork)
-			except (KeyError, TypeError):
+			except (KeyError, TypeError, AttributeError):
 				x['NoTagArt'] = 0
 				x['albumartPath'] = '/'.join((os.path.dirname(x['filename']), "NOTAGART"))
 			else:
 				if not os.path.isfile(ppath):
 					x['NoTagArt'] = 0
 					x['albumartPath'] = '/'.join((os.path.dirname(x['filename']), "NOTAGART"))
-		Data().tags_insert(x)			
+		self.insert(x)		
 		return x
 
 	def albumart_search_main(self, afile, acores):
