@@ -27,14 +27,21 @@ from ampnadoo.data import Data
 
 class CreateVidDict:
 	def __init__(self):
-		crap = ('.2011', '.2012', '.2014', '.2015', '.720p', '.1080p', '.BluRay','.Bluray', '.Brrip', '.x264', '.X264', '.YIFY')
+		crap = ('.2011', '.2012', '.2014', '.2015', '.720p', '.1080p', '.BluRay','.Bluray',
+			'.Brrip', '.x264', '.X264', '.YIFY')
 		self.crap = crap
-	
+		
+	def insert(self, x):
+		Data().video_insert(x)
+
+	def uuidd(self):
+		return str(uuid.uuid4().hex)
+
 	def _create_vid_dict(self, avid):
 		vid = {}
 		vid['catname'] = avid[1]	
 		vid['filename'] = avid[0]
-		vid['filesize'] = os.stat(avid[0]).st_size
+		vid['filesize'] = os.path.getsize(avid[0])
 		vid['dirpath'] = os.path.dirname(avid[0])
 		cat_name = avid[1]
 		split_fn = os.path.splitext(avid[0])
@@ -54,12 +61,23 @@ class CreateVidDict:
 		vid_name2 = viddy.split(' ')
 		vid_name3 = [v.capitalize() for v in vid_name2]
 		vid['vid_name'] = ' '.join(vid_name3)
-		vid['vid_id'] = str(uuid.uuid4().hex)
-		Data().video_insert(vid)
+		vid['vid_id'] = self.uuidd()
+		self.insert(vid)
 		return vid
 
+
+	def add_catname(self, avlist, opt):
+		new_avidlist = []
+		for av in avlist:
+			z = (av, opt['catname'])
+			new_avidlist.append(z)
+		return new_avidlist
+
+
+
 	def create_vid_dic_main(self, avidlist, opt, acores):
-		avid = [(avid, opt['catname']) for avid in avidlist]
+		#avid = [(avid, opt['catname']) for avid in avidlist]
+		avid = self.add_catname(avidlist, opt)
 		pool = Pool(processes=acores)
 		booty = pool.map(self._create_vid_dict, avid)
 		cleaned = [x for x in booty if x != None]
