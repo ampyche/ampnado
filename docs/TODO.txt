@@ -5,7 +5,7 @@ Finish unit tests
 	test_albumartscan = complete
 	test_albumview = complete
 	test_albumchunkit = complete
-	test_createviddic = None
+	test_createviddic = complete
 	test_data = None
 	test_dbindexes = None
 	test_filemeta = complete

@@ -18,10 +18,21 @@
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 ###############################################################################
-from pymongo import MongoClient
-client = MongoClient()
-data = client.ampnadoDB
-data2 = client.ampviewsDB
+import pymongo
+import bson.son
+
+v = pymongo.version
+version = v.split('.')[0]
+version = int(version)
+
+
+
+data = pymongo.MongoClient().ampnadoDB
+data2 = pymongo.MongoClient().ampviewsDB
+
+
+
+
 
 class Data:
 	"""
@@ -29,14 +40,22 @@ class Data:
 	This will assist with unit testing
 	"""
 	
+	def usercreds_insert_user_pword(self, a_uname, a_pword, a_hash):
+		if version < 3:
+			data.user_creds.insert({'username': a_uname, 'password': a_pword, 'user_id': a_hash})
+		else:
+			data.user_creds.insert_one({'username': a_uname, 'password': a_pword, 'user_id': a_hash})
+
+	def usercreds_remove_user_pword(self, anid):
+		if version < 3:
+			data.user_creds.remove(anid)
+		else:
+			data.user_creds.delete_many(anid)
+
 	def fone_usercreds_user_pword(self, auname, apword):
 		return data.user_creds.find_one({'username': auname, 'password': apword})
 
-	def usercreds_insert_user_pword(self, a_uname, a_pword, a_hash):
-		data.user_creds.insert({'username': a_uname, 'password': a_pword, 'user_id': a_hash})
-
-	def usercreds_remove_user_pword(self, anid):
-		data.user_creds.remove(anid)
+	
 		
 ###############################################################################		
 		
@@ -51,41 +70,44 @@ class Data:
 ###############################################################################
 
 	def tags_insert(self, x):
-		data.tags.insert(x)
-		
+		if version < 3:
+			data.tags.insert(x)
+		else:
+			data.tags.insert_one(x)
+
 	def tags_distinct_albumartPath(self):
 		return data.tags.distinct('albumartPath')
-		
+
 	def tags_distinct_albumid(self):
 		return data.tags.distinct('albumid')
-		
+
 	def tags_distinct_artist(self):		
 		return data.tags.distinct('artist')
-		
+
 	def tags_distinct_album(self):
 		return data.tags.distinct('album')
-		
+	
 	def tags_distinct_song(self):
 		return data.tags.distinct('song')
-		
+
 	def tags_all(self):
 		return data.tags.find({})
-			
+	
 	def tags_all_id(self):
 		return data.tags.find({}, {'_id':1})
-	
+
 	def tags_all_lthumb_size(self):
 		return data.tags.find({}, {'largethumb_size':1, '_id':0})
-		
+
 	def tags_all_sthumb_size(self):
 		return data.tags.find({}, {'smallthumb_size':1, '_id':0})
-	
+
 	def tags_all_filesize(self):
 		return data.tags.find({}, {'filesize':1, '_id':0})
 
 	def tags_all_filetype_mp3(self):
 		return data.tags.find({'filetype': '.mp3'}).count()
-		
+
 	def tags_all_filetype_ogg(self):
 		return data.tags.find({'filetype': '.ogg'}).count()
 
@@ -100,7 +122,6 @@ class Data:
 
 	def tags_all_filename_artist_album_song(self):
 		return data.tags.find({}, {'_id':1, 'filename':1, 'artist':1, 'album':1, 'song':1})
-		
 
 	def fone_tags_albumid(self, albid):
 		return data.tags.find_one({'albumid':albid}, {'album':1, 'albumid': 1, 'artist':1, 'artistid':1, 'sthumbnail':1, '_id':0})
@@ -114,8 +135,6 @@ class Data:
 	def fone_tags_album(self, alb):
 		return data.tags.find_one({'album':alb}, {'albumid':1, '_id':0})
 
-
-
 	def tags_aggregate_artist(self, art):
 		return data.tags.aggregate([
 			{'$match': {'artist': art}},
@@ -123,26 +142,54 @@ class Data:
 			{'$project': {'albumz' :1}}
 		])
 
-
-
-
-	
 	def tags_aggregate_albumid(self, albid):
 		return data.tags.aggregate([
 			{'$match': {'albumid': albid}},
 			{'$group': {'_id': 'song', 'songz': {'$addToSet': '$song'}}},
 			{'$project': {'songz' :1}}
-		])	
-		
-	def tags_aggregate_filesize(self):
-		return data.tags.aggregate({'$group': {'_id': 'soup', 'total' : {'$sum': '$filesize'}}})
+		])
+#	
+#	def tags_aggregate_filesize(self):
+#		return data.tags.aggregate({'$group': {'_id': 'soup', 'total' : {'$sum': '$filesize'}}})
+#
 
+	def tags_aggregate_filesize(self):
+		foo = [int(s['filesize']) for s in data.tags.find({}, {'filesize':1, '_id':0})]
+		return sum(foo)
 
 	def tags_update_artistid(self, artlist):
-		[data.tags.update({'artist': n['artist']}, {'$set': {'artistid': n['artistid']}}, multi=True) for n in artlist] 
+		if version < 3:
+			return [data.tags.update({'artist': n['artist']}, {'$set': {'artistid': n['artistid']}}, multi=True) for n in artlist] 
+
+		else:
+			return [data.tags.update_many({'artist': n['artist']}, {'$set': {'artistid': n['artistid']}}) for n in artlist] 
+
+
+
+
+
+
+
+
+
 
 	def tags_update_albumid(self, alblist):
 		[data.tags.update({'album': alb['album']}, {'$set': {'albumid': alb['albumid']}}, multi=True) for alb in alblist]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	def tags_update_sthumb_lthumb_and_sizes(self, a):
 		data.tags.update({'albumartPath': a[0]}, {'$set': {'sthumbnail': a[1], 'smallthumb_size': a[2], 'lthumbnail' : a[3], 'largethumb_size': a[4]}}, multi=True)

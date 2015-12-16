@@ -19,6 +19,7 @@
 ###############################################################################
 ###############################################################################
 import os
+import bson.son
 from multiprocessing import Pool
 from ampnadoo.data import Data
 try: from mutagen import File
@@ -46,7 +47,7 @@ class AlbumArtScan:
 				if not os.path.isfile(ppath):
 					x['NoTagArt'] = 0
 					x['albumartPath'] = '/'.join((os.path.dirname(x['filename']), "NOTAGART"))
-		self.insert(x)		
+		self.insert(dict(x))		
 		return x
 
 	def albumart_search_main(self, afile, acores):
