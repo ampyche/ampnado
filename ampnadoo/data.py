@@ -25,14 +25,8 @@ v = pymongo.version
 version = v.split('.')[0]
 version = int(version)
 
-
-
 data = pymongo.MongoClient().ampnadoDB
 data2 = pymongo.MongoClient().ampviewsDB
-
-
-
-
 
 class Data:
 	"""
@@ -55,8 +49,6 @@ class Data:
 	def fone_usercreds_user_pword(self, auname, apword):
 		return data.user_creds.find_one({'username': auname, 'password': apword})
 
-	
-		
 ###############################################################################		
 		
 	def fone_prog_paths(self):
@@ -159,102 +151,150 @@ class Data:
 
 	def tags_update_artistid(self, artlist):
 		if version < 3:
-			return [data.tags.update({'artist': n['artist']}, {'$set': {'artistid': n['artistid']}}, multi=True) for n in artlist] 
-
+			[data.tags.update({'artist': n['artist']}, {'$set': {'artistid': n['artistid']}}, multi=True) for n in artlist] 
 		else:
-			return [data.tags.update_many({'artist': n['artist']}, {'$set': {'artistid': n['artistid']}}) for n in artlist] 
-
-
-
-
-
-
-
-
-
+			[data.tags.update_many({'artist': n['artist']}, {'$set': {'artistid': n['artistid']}}) for n in artlist] 
 
 	def tags_update_albumid(self, alblist):
-		[data.tags.update({'album': alb['album']}, {'$set': {'albumid': alb['albumid']}}, multi=True) for alb in alblist]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		if version < 3:
+			[data.tags.update({'album': alb['album']}, {'$set': {'albumid': alb['albumid']}}, multi=True) for alb in alblist]
+		else:
+			[data.tags.update_many({'album': alb['album']}, {'$set': {'albumid': alb['albumid']}}) for alb in alblist]
 
 	def tags_update_sthumb_lthumb_and_sizes(self, a):
-		data.tags.update({'albumartPath': a[0]}, {'$set': {'sthumbnail': a[1], 'smallthumb_size': a[2], 'lthumbnail' : a[3], 'largethumb_size': a[4]}}, multi=True)
+		if version < 3:
+			data.tags.update({'albumartPath': a[0]}, {'$set': {'sthumbnail': a[1], 'smallthumb_size': a[2], 'lthumbnail' : a[3], 'largethumb_size': a[4]}}, multi=True)
+		else:
+			data.tags.update_many({'albumartPath': a[0]}, {'$set': {'sthumbnail': a[1], 'smallthumb_size': a[2], 'lthumbnail' : a[3], 'largethumb_size': a[4]}})
 
 	def tags_update_thumbs_and_sizes2(self, nt):
-		data.tags.update({'_id':nt[0]}, {'$set': {'sthumbnail': nt[1], 'lthumbnail': nt[3], 'smallthumb_size': nt[2], 'largethumb_size': nt[4]}}) 
+		if version < 3:
+			data.tags.update({'_id':nt[0]}, {'$set': {'sthumbnail': nt[1], 'lthumbnail': nt[3], 'smallthumb_size': nt[2], 'largethumb_size': nt[4]}}) 
+		else:
+			data.tags.update_one({'_id':nt[0]}, {'$set': {'sthumbnail': nt[1], 'lthumbnail': nt[3], 'smallthumb_size': nt[2], 'largethumb_size': nt[4]}}) 
 
 	def tags_update_httpmusicpath(self, x, z):
-		data.tags.update({'filename':x}, {'$set': {'httpmusicpath':z}})
+		if version < 3:
+			data.tags.update({'filename':x}, {'$set': {'httpmusicpath':z}})
+		else:
+			data.tags.update_one({'filename':x}, {'$set': {'httpmusicpath':z}})
 
-	def tags_update_new_tag_info(self, tags, ftags):
-		data.tags.update({'_id': tags['_id']}, {'$set', {'filename': ftags['filename'], 'artist': ftags['artist'], 'album': ftags['album'], 'song': ftags['song']}})
+#
+#
+#	def tags_update_new_tag_info(self, tags, ftags):
+#		print(type(tags))
+#		print(type(ftags))
+#		if version < 3:
+#			data.tags.update({'_id': tags['_id']}, {'$set', {'filename': ftags['filename'], 'artist': ftags['artist'], 'album': ftags['album'], 'song': ftags['song']}})
+#		else:
+#			data.tags.update_one({'_id': tags['_id']}, {'$set', {'filename': ftags['filename'], 'artist': ftags['artist'], 'album': ftags['album'], 'song': ftags['song']}})
+#
+#
+
+
+
+
+
+
+
+
+
+
 
 ###############################################################################
 
 	def video_insert(self, x):
-		data.video.insert(x)
+		if version < 3:
+			data.video.insert(x)
+		else:
+			data.video.insert_one(x)
 
 	def video_all_filesize(self):
 		return data.video.find({}, {'filesize':1, '_id':0})
 
 	def video_distinct_vid_name(self):
 		return data.video.distinct('vid_name')
-		
+
 	def video_update_video_posterstring_origposter(self, v):
-		data.video.update({'filename':v['filename']}, {'$set': {'vid_poster_string':v['vid_poster_string'], 'vid_orig_poster': v['vid_orig_poster']}})		
+		if version < 3:
+			data.video.update({'filename':v['filename']}, {'$set': {'vid_poster_string':v['vid_poster_string'], 'vid_orig_poster': v['vid_orig_poster']}})		
+		else:
+			data.video.update_one({'filename':v['filename']}, {'$set': {'vid_poster_string':v['vid_poster_string'], 'vid_orig_poster': v['vid_orig_poster']}})		
 
 	def video_update_noposter_string(self, v):
-		data.video.update({'filename':v['filename']}, {'$set': {'vid_poster_string':v['vid_poster_string']}})
+		if version < 3:
+			data.video.update({'filename':v['filename']}, {'$set': {'vid_poster_string':v['vid_poster_string']}})
+		else:
+			data.video.update_one({'filename':v['filename']}, {'$set': {'vid_poster_string':v['vid_poster_string']}})
 
 ###############################################################################
 
 	def stats_insert(self, x):
-		data.ampnado_stats.insert(x)
+		if version < 3:
+			data.ampnado_stats.insert(x)
+		else:
+			data.ampnado_stats.insert_one(x)
 
 ###############################################################################
 
 	def viewsdb_artalpha_insert(self, x):
-		data2.artalpha.insert(x)
+		if version < 3:
+			data2.artalpha.insert(x)
+		else:
+			data2.artalpha.insert_one(x)
 
 	def viewsdb_albalpha_insert(self, v):
-		data2.albalpha.insert(v)
+		if version < 3:
+			data2.albalpha.insert(v)
+		else:
+			data2.albalpha.insert_one(v)
 
 	def viewsdb_insert(self, av):
-		data2.albumView.insert(av)
+		if version < 3:
+			data2.albumView.insert(av)
+		else:
+			data2.albumView.insert_one(av)
 
 	def viewsdb_albumview_update(self, albid):
-		data2.albumView.update({'albumid': albid[0]}, {'$set': {'page': albid[1]}})
-		
-	def viewsdb_artistview_insert(self, z): 
-		data2.artistView.insert(z)
-		
+		if version < 3:
+			data2.albumView.update({'albumid': albid[0]}, {'$set': {'page': albid[1]}})
+		else:
+			data2.albumView.update_one({'albumid': albid[0]}, {'$set': {'page': albid[1]}})
+
+	def viewsdb_artistview_insert(self, z):
+		if version < 3:
+			data2.artistView.insert(z)
+		else:
+			data2.artistView.insert_one(z)
+
 	def viewsdb_artistview_update(self, c):
-		data2.artistView.update({'artist': c[0]}, {'$set': {'page': c[1]}})
+		if version < 3:
+			data2.artistView.update({'artist': c[0]}, {'$set': {'page': c[1]}})
+		else:
+			data2.artistView.update_one({'artist': c[0]}, {'$set': {'page': c[1]}})
 
 	def viewsdb_songalpha_insert(self, x):
-		data2.songalpha.insert(x)
-		
+		if version < 3:
+			data2.songalpha.insert(x)
+		else:
+			data2.songalpha.insert_one(x)
+	
 	def viewsdb_songview_insert(self, svl):
-		data2.songView.insert_many(svl)
+		if version < 3:
+			data2.songView.insert(svl)
+		else:
+			data2.songView.insert_many(svl)
 		
 ###############################################################################
-		
-	def randthumb_rm(self):
-		data.randthumb.remove({})
-		
+
 	def randthumb_insert(self, x):
-		db.randthumb.insert(x)		
+		if version < 3:
+			data.randthumb.insert(x)
+		else:
+			data.randthumb.insert_one(x)
+
+	def randthumb_rm(self):
+		if version < 3:
+			data.randthumb.remove({})
+		else:
+			data.randthumb.delete_many({})

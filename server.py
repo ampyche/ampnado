@@ -33,6 +33,7 @@ viewsdb = client.ampviewsDB
 
 import ampnadoo.functions as Fun
 FUN = Fun.Functions()
+RAND = Fun.RandomArtDb()
 
 import ampnadoo.removeold as Rm
 RM = Rm.RemoveOld()
@@ -735,22 +736,6 @@ class RamdomAlbumPicPlaySongHandler(BaseHandler):
 			if foo['filetype'] == '.ogg':
 				print(foo)
 				self.write(dict(soho=foo))
-		
-		
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 class RandomPicsHandler(BaseHandler):
 	@tornado.gen.coroutine
@@ -768,7 +753,7 @@ class RandomPicsHandler(BaseHandler):
 
 	@tornado.gen.coroutine
 	def _reset_displayed(self):
-		FUN._create_random_art_db()
+		RAND.create_random_art_db()
 		print('creating random art DB')
 		
 	@tornado.gen.coroutine
@@ -797,24 +782,6 @@ class RandomPicsHandler(BaseHandler):
 			x['songs'] = [(song['song'], song['songid']) for song in db.tags.find({'albumid':r}, {'song':1, 'songid':1, '_id':0})]
 			art.append(x)
 		self.write(dict(rsamp=art))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 class ClearTempHandler(BaseHandler):
 	@tornado.gen.coroutine
