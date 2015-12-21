@@ -19,12 +19,12 @@
 ###############################################################################
 ###############################################################################
 import os, time, argparse, uuid, logging
-import ampnadoo.setuputils as su
-import ampnadoo.inputs as gp
-import ampnadoo.functions as fun
-import ampnadoo.removeold as rmOld
-import ampnadoo.dbindexes as dDBi
-import ampnadoo.updatetags as ut
+import src.setuputils as su
+import src.inputs as gp
+import src.functions as fun
+import src.removeold as rmOld
+import src.dbindexes as dDBi
+import src.updatetags as ut
 
 from pymongo import MongoClient
 client = MongoClient()

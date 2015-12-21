@@ -31,11 +31,11 @@ client = pymongo.MongoClient()
 db = client.ampnadoDB
 viewsdb = client.ampviewsDB
 
-import ampnadoo.functions as Fun
+import src.functions as Fun
 FUN = Fun.Functions()
 RAND = Fun.RandomArtDb()
 
-import ampnadoo.removeold as Rm
+import src.removeold as Rm
 RM = Rm.RemoveOld()
 
 US_OP = db.options.find_one({})

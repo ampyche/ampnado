@@ -20,11 +20,11 @@
 ###############################################################################
 import unittest
 import unittest.mock as mock
-import ampnadoo.createviddic
+import src.createviddic
 
 class TestCreateVidDictTestCase(unittest.TestCase):
 	def setUp(self):
-		self.CreateVidDict = ampnadoo.createviddic.CreateVidDict()
+		self.CreateVidDict = src.createviddic.CreateVidDict()
 		self.opt = {'catname':'cat1'}
 		self.avlist5 = [
 			"/usr/share/ampnado/static/MUSIC/cat1/0994c6c991284a99a9d26e28d85d8057/Video/Avengers.Grimm.mp4",
@@ -63,9 +63,9 @@ class TestCreateVidDictTestCase(unittest.TestCase):
 		z = self.CreateVidDict.add_catname(self.avlist5, self.opt)
 		self.assertEqual(z, self.avlist6)
 
-	@mock.patch('ampnadoo.createviddic.CreateVidDict.insert', return_value='inserted')
+	@mock.patch('src.createviddic.CreateVidDict.insert', return_value='inserted')
 	@mock.patch('os.path.getsize', return_value=1328562128)
-	@mock.patch('ampnadoo.createviddic.CreateVidDict.uuidd', return_value='140508252572584')
+	@mock.patch('src.createviddic.CreateVidDict.uuidd', return_value='140508252572584')
 	def test_create_vid_dict(self, ins_function, osgs_function, uuid_function):
 		ccvd = self.CreateVidDict._create_vid_dict(self.avlist6[0])
 		self.assertEqual(ccvd, self.cvvd)

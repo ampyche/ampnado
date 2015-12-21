@@ -20,7 +20,7 @@
 ###############################################################################
 import unittest
 import unittest.mock as mock
-import ampnadoo.httpmusicpath
+import src.httpmusicpath
 
 def mock_alltags():
 	return [
@@ -39,7 +39,7 @@ def mock_gettags():
 
 class TestHttpMusicPathTestCase(unittest.TestCase):
 	def setUp(self):
-		self.HttpMusicPath = ampnadoo.httpmusicpath.HttpMusicPath()
+		self.HttpMusicPath = src.httpmusicpath.HttpMusicPath()
 		self.a = '/usr/share/ampnado/cat/music/goo.ogg'
 		self.b = '/usr/share/ampnado/catb/music/goob.ogg'
 		self.a_path = {'musiccatPath': self.a, 'httpmusicPath': self.b}
@@ -57,13 +57,13 @@ class TestHttpMusicPathTestCase(unittest.TestCase):
 		self.acores = None
 		self.a_result = None
 
-	@mock.patch('ampnadoo.httpmusicpath.HttpMusicPath.alltags', side_effect=mock_alltags)
+	@mock.patch('src.httpmusicpath.HttpMusicPath.alltags', side_effect=mock_alltags)
 	def test_add_path(self, insert_function):
 		koo = self.HttpMusicPath.alltags()
 		kokoo = self.HttpMusicPath.add_paths(self.a_path, koo)
 		self.assertEqual(kokoo, self.a_result)
 
-	@mock.patch('ampnadoo.httpmusicpath.HttpMusicPath.insert', side_effect=mock_insert)
+	@mock.patch('src.httpmusicpath.HttpMusicPath.insert', side_effect=mock_insert)
 	def test_add_http_music_path_to_db(self, insert_function):
 		moo = self.HttpMusicPath.add_http_music_path_to_db(self.a_result[0])
 		self.assertEqual(moo, 'add_http_music_path_to_db complete')

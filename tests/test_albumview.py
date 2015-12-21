@@ -20,7 +20,7 @@
 ###############################################################################
 import unittest
 import unittest.mock as mock
-import ampnadoo.albumview
+import src.albumview
 
 def mock_distinct_albumview():
 	return ['456456456456']
@@ -41,18 +41,18 @@ def mock_tags_all_song(c):
 class TestAlbumViewTestCase(unittest.TestCase):
 	
 	def setUp(self):
-		self.AlbumView = ampnadoo.albumview.AlbumView()
+		self.AlbumView = src.albumview.AlbumView()
 		self.distinct_albumid = ['456456456456']
 
 	def tearDown(self):
 		self.AlbumView = None
 		self.distinct_albumid = None
 
-	@mock.patch('ampnadoo.albumview.AlbumView.distinct_albumview', side_effect=mock_distinct_albumview)
-	@mock.patch('ampnadoo.albumview.AlbumView.fone_tags_albumid', side_effect=mock_fone_tags_albumid)
-	@mock.patch('ampnadoo.albumview.AlbumView.aggregate_albumid', side_effect=mock_aggregate_albumid)
-	@mock.patch('ampnadoo.albumview.AlbumView.tags_all_song', side_effect=mock_tags_all_song)
-	@mock.patch('ampnadoo.albumview.AlbumView.viewsdb_insert', return_value='inserted')
+	@mock.patch('src.albumview.AlbumView.distinct_albumview', side_effect=mock_distinct_albumview)
+	@mock.patch('src.albumview.AlbumView.fone_tags_albumid', side_effect=mock_fone_tags_albumid)
+	@mock.patch('src.albumview.AlbumView.aggregate_albumid', side_effect=mock_aggregate_albumid)
+	@mock.patch('src.albumview.AlbumView.tags_all_song', side_effect=mock_tags_all_song)
+	@mock.patch('src.albumview.AlbumView.viewsdb_insert', return_value='inserted')
 	def test_create_albumView_db(self, dist_function, fone_function, agg_function, tagsall_function, insert_function):
 		albumview = self.AlbumView.create_albumView_db(self.distinct_albumid)
 

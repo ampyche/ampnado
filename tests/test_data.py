@@ -20,13 +20,13 @@
 ###############################################################################
 import unittest, pymongo
 import unittest.mock as mock
-import ampnadoo.data
+import src.data
 import tests.data_setuputils
 
 class TestDataTestCase(unittest.TestCase):
 	def setUp(self):
 		#clean out the db		
-		self.Data = ampnadoo.data.Data()
+		self.Data = src.data.Data()
 		self.db = pymongo.MongoClient().ampnadoDB
 		self.viewsdb = pymongo.MongoClient().ampviewsDB
 		self.db.user_creds.drop()

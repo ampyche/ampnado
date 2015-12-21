@@ -20,11 +20,11 @@
 ###############################################################################
 import unittest
 import unittest.mock as mock
-import ampnadoo.filemeta
+import src.filemeta
 
 class TestFileMetaTestCase(unittest.TestCase):
 	def setUp(self):	
-		self.fm = ampnadoo.filemeta.GetFileMeta()
+		self.fm = src.filemeta.GetFileMeta()
 		self.bogus = '/bogus/path/to/file/boo.ogg'
 		self.bogus1 = {'filename': self.bogus}
 		self.bogus_dir = '/bogus/path/to/file'

@@ -20,7 +20,7 @@
 ###############################################################################
 import os, unittest
 import unittest.mock as mock
-import ampnadoo.inputs as inputs
+import src.inputs as inputs
 
 class TestInputsTestCase(unittest.TestCase):
 	def setUp(self):	
