@@ -18,75 +18,87 @@
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 ###############################################################################
-import os, random, hashlib, re, time, uuid, shutil, subprocess
+####To background this script invoke it with this command
+####nohup python3 server.py &>/dev/null &
+
+import os, random, hashlib, re, time, uuid, shutil
 from urllib.parse import urlparse, parse_qs
 import tornado.auth
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 from tornado.options import define, options, parse_command_line
-
 import pymongo
+import src.functions as Fun
+
 client = pymongo.MongoClient()
 db = client.ampnadoDB
 viewsdb = client.ampviewsDB
-
-import src.functions as Fun
+pdb = client.picdb
 FUN = Fun.Functions()
 RAND = Fun.RandomArtDb()
 
-import src.removeold as Rm
-RM = Rm.RemoveOld()
 
-US_OP = db.options.find_one({})
-define('port', default=US_OP['port'], help='run on the given port', type=int)
-off_set = US_OP['offset']
+define('server_port',
+	default= os.environ["AMP_SERVER_PORT"],
+	help='run on the given port',
+	type=int,
+)
+
+off_set = int(os.environ["AMP_OFFSET_SIZE"])
+# US_OP = db.options.find_one({})
+# define('server_port',
+# 	default=US_OP['server_port'],
+# 	help='run on the given port',
+# 	type=int,
+# )
+# off_set = int(US_OP['offset_size'])
+
+
 
 class Application(tornado.web.Application):
 	def __init__(self):
-		mpath = db.user_options.find_one({}, {'musicpath': 1, '_id': 0})
-		progpath = db.prog_paths.find_one({}, {'programPath':1, '_id':0})
-		progpath2 = '/'.join([progpath['programPath'], 'static', 'MUSIC'])
-		progpath3 = '/'.join([progpath['programPath'], 'static', 'TEMP'])
+#		mpath = db.options.find_one({}, {'media_path': 1, '_id': 0})
+		#mpath = "/home/pi/Music/"
+		#mpath = "/home/teresa/Music"
+		#progpath = db.prog_paths.find_one({}, {'programPath':1, '_id':0})
+		mpath = os.environ["AMP_MEDIA_PATH"]
 		handlers = [
-			(r"/Music/(.*)", tornado.web.StaticFileHandler, {'path': progpath2}),
-			(r"/Temp/(.*)", tornado.web.StaticFileHandler, {'path': progpath3}),
-			
+			(r"/Music/(.*)", tornado.web.StaticFileHandler, {'path': mpath}),
 			(r"/ampnado", MainHandler),
 			(r"/login", LoginHandler),
 			(r"/logout", LogoutHandler),
 			(r"/RandomPics", RandomPicsHandler),
-			(r"/GetArtistAlpha", GetArtistAlphaHandler),
-			(r"/GetInitialArtistInfo", GetInitialArtistInfoHandler),
-			(r"/GetArtistInfo", GetArtistInfoHandler),
-			(r"/GetAlbumAlpha", GetAlbumAlphaHandler),
-			(r"/GetInitialAlbumInfo", GetInitialAlbumInfoHandler),
-			(r"/GetAlbumInfo", GetAlbumInfoHandler),
-			(r"/GetSongAlpha", GetSongAlphaHandler),
-			(r"/GetInitialSongInfo", GetInitialSongInfoHandler),
-			(r"/GetSongInfo", GetSongInfoHandler),
-			(r"/GetImageSongsForAlbum", GetImageSongsForAlbumHandler),
-			(r"/GetPathArt", GetPathArtHandler),
-			(r"/GetAllPlaylists", GetAllPlaylistsHandler),
-			(r"/GetAllPlaylistSongsFromDB", GetAllPlaylistSongsFromDBHandler),
-			(r"/GetStats", GetStatsHandler),
+			(r"/ArtistAlpha", ArtistAlphaHandler),
+			(r"/InitialArtistInfo", InitialArtistInfoHandler),
+			(r"/ArtistInfo", ArtistInfoHandler),
+			(r"/AlbumAlpha", AlbumAlphaHandler),
+			(r"/InitialAlbumInfo", InitialAlbumInfoHandler),
+			(r"/AlbumInfo", AlbumInfoHandler),
+			(r"/SongAlpha", SongAlphaHandler),
+			(r"/InitialSongInfo", InitialSongInfoHandler),
+			(r"/SongInfo", SongInfoHandler),
+			(r"/ImageSongsForAlbum", ImageSongsForAlbumHandler),
+			(r"/PathArt", PathArtHandler),
+			(r"/AllPlaylists", AllPlaylistsHandler),
+			(r"/AllPlaylistSongsFromDB", AllPlaylistSongsFromDBHandler),
+			(r"/Stats", StatsHandler),
 			(r"/AddRandomPlaylist", AddRandomPlaylistHandler),
 			(r"/AddPlayListNameToDB", AddPlayListNameToDBHandler),
 			(r"/AddSongsToPlistDB", AddSongsToPlistDBHandler),
 			(r"/CreatePlayerPlaylist", CreatePlayerPlaylistHandler),
+			(r"/RandomAlbumPicPlaySong", RamdomAlbumPicPlaySongHandler),
 			(r"/DeletePlaylistFromDB", DeletePlaylistFromDBHandler),
 			(r"/DeleteSongFromPlaylist", DeleteSongFromPlaylistHandler),
 			(r"/ArtistSearch", ArtistSearchHandler),
 			(r"/AlbumSearch", AlbumSearchHandler),
 			(r"/SongSearch", SongSearchHandler),
-			(r"/Download", DownloadPlaylistHandler),
-			(r"/GetAllVideo", GetAllVideoHandler),
-			(r"/RamdomAlbumPicPlaySong", RamdomAlbumPicPlaySongHandler),
-			(r"/ClearTemp", ClearTempHandler),
 		]
 		settings = dict(
-			static_path = os.path.join(os.path.dirname(__file__), "static"),
-			template_path = os.path.join(os.path.dirname(__file__), "templates"),
+#			static_path = os.path.join(os.path.dirname(__file__), "static"),
+			static_path = os.environ["AMP_PROGRAM_PATH"] + "/static",
+#			template_path = os.path.join(os.path.dirname(__file__), "templates"),
+			template_path = os.environ["AMP_PROGRAM_PATH"] + "/templates",
 			login_url = "/login",
 			cookie_secret = hashlib.sha512(str(random.randrange(100)).encode('utf-8')).hexdigest(),
 			xsrf_cookies = True,
@@ -130,7 +142,7 @@ class LogoutHandler(BaseHandler):
 		self.clear_cookie("ampnado")
 		self.redirect(self.get_argument('next', 'login'))
 
-class GetAllPlaylistsHandler(BaseHandler):
+class AllPlaylistsHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def getpls(self):
 		try: return [(d['playlistname'], d['playlistid']) for d in db.playlists.find({}).sort([('playlistname', pymongo.ASCENDING)])]
@@ -144,7 +156,7 @@ class GetAllPlaylistsHandler(BaseHandler):
 		if plname != []: self.write(dict(plnames=plname))
 		else: self.write(dict(plnames=plnamez))
 
-class GetArtistAlphaHandler(BaseHandler):
+class ArtistAlphaHandler(BaseHandler):
 	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
@@ -152,18 +164,18 @@ class GetArtistAlphaHandler(BaseHandler):
 		artal = artal['artalpha']
 		self.write(dict(artal=artal))
 
-class GetInitialArtistInfoHandler(BaseHandler):
+class InitialArtistInfoHandler(BaseHandler):
 	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
-		ia = [artist for artist in viewsdb.artistView.find({}, {'_id':0}).sort([('artist', pymongo.ASCENDING)]).limit(off_set)]
+		ia = [artist for artist in viewsdb.artistView.find({}, {'_id':0}).sort([('Artist', pymongo.ASCENDING)]).limit(off_set)]
 		self.write(dict(ia=ia))	
 		
-class GetArtistInfoHandler(BaseHandler):
+class ArtistInfoHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def _get_art_info(self, sel):
 		sel = str(sel)
-		artinfo = [art for art in viewsdb.artistView.find({'page': sel}, {'_id':0}).sort([('artist', pymongo.ASCENDING)]).limit(off_set)]
+		artinfo = [art for art in viewsdb.artistView.find({'Page': sel}, {'_id':0}).sort([('Artist', pymongo.ASCENDING)]).limit(off_set)]
 		return artinfo
 
 	@tornado.web.authenticated
@@ -173,7 +185,7 @@ class GetArtistInfoHandler(BaseHandler):
 		arts = yield self._get_art_info(int(p['selected'][0]))
 		self.write(dict(arts=arts))
 
-class GetAlbumAlphaHandler(BaseHandler):
+class AlbumAlphaHandler(BaseHandler):
 	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
@@ -181,7 +193,7 @@ class GetAlbumAlphaHandler(BaseHandler):
 		albal = albal['albalpha']
 		self.write(dict(albal=albal))
 
-class GetInitialAlbumInfoHandler(BaseHandler):
+class InitialAlbumInfoHandler(BaseHandler):
 	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
@@ -189,10 +201,10 @@ class GetInitialAlbumInfoHandler(BaseHandler):
 		random.shuffle(ial)
 		self.write(dict(ial=ial))
 
-class GetAlbumInfoHandler(BaseHandler):
+class AlbumInfoHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def _get_alb_info(self, sel):
-		albinfo = [alb for alb in viewsdb.albumView.find({'page': sel}, {'_id':0})]
+		albinfo = [alb for alb in viewsdb.albumView.find({'Page': sel}, {'_id':0})]
 		return albinfo
 
 	@tornado.web.authenticated
@@ -202,7 +214,7 @@ class GetAlbumInfoHandler(BaseHandler):
 		albs = yield self._get_alb_info(p['selected'][0])
 		self.write(dict(albs=albs))
 
-class GetSongAlphaHandler(BaseHandler):
+class SongAlphaHandler(BaseHandler):
 	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
@@ -210,7 +222,7 @@ class GetSongAlphaHandler(BaseHandler):
 		songal = songal['songalpha']
 		self.write(dict(songal=songal))
 
-class GetInitialSongInfoHandler(BaseHandler):
+class InitialSongInfoHandler(BaseHandler):
 	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
@@ -218,10 +230,10 @@ class GetInitialSongInfoHandler(BaseHandler):
 		random.shuffle(ias)
 		self.write(dict(ias=ias))
 
-class GetSongInfoHandler(BaseHandler):
+class SongInfoHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def _get_song_info(self, sel):
-		songinfo = [song for song in viewsdb.songView.find({'page': sel}, {'_id':0})]
+		songinfo = [song for song in viewsdb.songView.find({'Page': sel}, {'_id':0})]
 		return songinfo
 
 	@tornado.web.authenticated
@@ -231,14 +243,18 @@ class GetSongInfoHandler(BaseHandler):
 		song = yield self._get_song_info(int(p['selected'][0]))
 		self.write(dict(song=song))
 
-class GetImageSongsForAlbumHandler(BaseHandler):
+class ImageSongsForAlbumHandler(BaseHandler):
+	@tornado.gen.coroutine
+	def get_pic(self, aquery):
+		picid = db.main.find_one({'AlbumId':aquery}, {"_id":0, "PicId":1})
+		poo = pdb.pics.find_one({"PicId":picid["PicId"]}, {"_id":0, "AlbumArtHttpPath":1})
+		return poo["AlbumArtHttpPath"]
+		
 	@tornado.gen.coroutine
 	def getsongsongid(self, a_query):
 		foo = {}
-		tn = db.tags.find_one({'albumid':a_query}, {'sthumbnail':1, '_id':0})
-		foo['thumbnail'] = tn['sthumbnail']
-		songs = [(t['song'], t['songid']) for t in db.tags.find({'albumid':a_query}, {'song':1, 'songid':1, '_id':0})]			
-		foo['songs'] = songs
+		foo['thumbnail'] = yield self.get_pic(a_query)
+		foo['songs'] = [(t['Song'], t['SongId']) for t in db.main.find({'AlbumId':a_query}, {'Song':1, 'SongId':1, '_id':0})]			
 		return foo
 
 	@tornado.web.authenticated
@@ -248,118 +264,31 @@ class GetImageSongsForAlbumHandler(BaseHandler):
 		songs = yield self.getsongsongid(p['selected'][0])
 		self.write(dict(getimgsonalb=songs))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class GetPathArtHandler(BaseHandler):
+class PathArtHandler(BaseHandler):
 	@tornado.gen.coroutine
-	def _get_file_info(self, asongid):
-		return db.tags.find_one({'songid': asongid}, {'_id':0})
+	def get_file_info(self, asongid):
+		return db.main.find_one({'SongId': asongid}, {'_id':0})
 	
 	@tornado.gen.coroutine
-	def _get_prog_path(self):
-		return db.prog_paths.find_one({})
-
-	@tornado.gen.coroutine
-	def _transcode_mp3_to_ogg(self, afile, pa):
-		temp_path = pa['musicPath']	
-		temp_filename = str(uuid.uuid4().hex)
-		ext = '.ogg'
-		tempfilePath = temp_path + '/' + temp_filename + ext
-		temphttpPath = pa['httppath'] + '/Temp/MUSIC/' + temp_filename + ext
-		os.chdir(temp_path)
-		cmd = "ffmpeg -i %s -vsync 2 %s" % (afile['filename'], tempfilePath)
-		try:
-			transcode = subprocess.call(cmd, shell=True)
-		except OSError: print('subprocess OSError')
-		afile['tempfilePath'] = tempfilePath
-		afile['httpmusicpath'] = temphttpPath
-		os.chdir(pa['programPath'])
-		return afile
-	
-	@tornado.gen.coroutine
-	def _transcode_ogg_to_mp3(self, afile, pa):
-		temp_path = pa['musicPath']	
-		temp_filename = str(uuid.uuid4().hex)
-		ext = '.mp3'
-		tempfilePath = temp_path + '/' + temp_filename + ext
-		temphttpPath = pa['httppath'] + '/Temp/MUSIC/' + temp_filename + ext
-		os.chdir(temp_path)	
-		cmd = "ffmpeg -i %s -vsync 2 %s" % (afile['filename'], tempfilePath)
-		try:
-			transcode = subprocess.call(cmd, shell=True)
-		except OSError: print('subprocess OSError')
-		afile['tempfilePath'] = tempfilePath
-		afile['httpmusicpath'] = temphttpPath
-		os.chdir(pa['programPath'])
-		return afile
-
-	@tornado.gen.coroutine
-	def get_song_songid_path_art(self, a_query):		
-		return db.tags.find_one({'songid':a_query}, {'_id':0})
+	def get_pic_info(self, a_picid):		
+		return pdb.pics.find_one({'PicId':a_picid}, {'_id':0, 'AlbumArtHttpPath':1})
 
 	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
 		selected = p['selected'][0]
-		transcode = p['transcode'][0]
-		paths = yield self._get_prog_path()
-		fileinfo = yield self._get_file_info(selected)
-		if transcode == 'mp3':
-			if fileinfo['filetype'] == '.ogg':
-				getpathart = yield self._transcode_ogg_to_mp3(fileinfo, paths)
-				self.write(getpathart)
-			elif fileinfo['filetype'] == '.mp3':
-				self.write(fileinfo)
-			else: print('not mp3 transcode')
-		if transcode == 'ogg':
-			if fileinfo['filetype'] == '.mp3':
-				getpathart = yield self._transcode_mp3_to_ogg(fileinfo, paths)
-				self.write(getpathart)
-			elif fileinfo['filetype'] == '.ogg':
-				self.write(fileinfo)
-			else: print('not ogg transcode')
+		fileinfo = yield self.get_file_info(selected)
+		picinfo = yield self.get_pic_info(fileinfo["PicId"])
+		fileinfo['AlbumArtHttpPath'] = picinfo['AlbumArtHttpPath']
+		self.write(fileinfo)
 
-
-		
-
-		
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class GetAllPlaylistSongsFromDBHandler(BaseHandler):
+class AllPlaylistSongsFromDBHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def _get_songs_for_playlist(self, aplid):
 		try:
 			for playlist in db.playlists.find({'playlistid': aplid}):
-			 return [[pl['song'], pl['songid']] for pl in playlist['songs']]
+			 return [[pl['Song'], pl['SongId']] for pl in playlist['songs']]
 		except KeyError: return []
 		except TypeError: return []
 
@@ -370,7 +299,7 @@ class GetAllPlaylistSongsFromDBHandler(BaseHandler):
 		taz = yield self._get_songs_for_playlist(p['playlistid'][0])
 		self.write(dict(taz=taz))
 
-class GetStatsHandler(BaseHandler):
+class StatsHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def _get_stats(self):
 		return db.ampnado_stats.find_one({}, {'_id': 0})
@@ -393,16 +322,14 @@ class AddPlayListNameToDBHandler(BaseHandler):
 	@tornado.gen.coroutine		
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
-		print('this is p')
-		print(p)
-		insert_it = yield self._insert_plname(p['playlistname'][0])
+		yield self._insert_plname(p['playlistname'][0])
 		pls = yield self._get_playlists()
 		self.write(dict(pnames=pls))
 
 class AddSongsToPlistDBHandler(BaseHandler):
 	@tornado.gen.coroutine	
 	def insert_song_into_playlist(self, a_song_name, a_songid, a_plid):
-		song = db.tags.find_one({'songid': a_songid})
+		song = db.main.find_one({'SongId': a_songid})
 		playlist = db.playlists.find_one({'playlistid': a_plid})
 		try:
 			playlist['songs'].append(song)
@@ -417,7 +344,7 @@ class AddSongsToPlistDBHandler(BaseHandler):
 	@tornado.gen.coroutine	
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
-		isipl = yield self.insert_song_into_playlist(p['songname'][0], p['songid'][0], p['playlistid'][0])
+		yield self.insert_song_into_playlist(p['songname'][0], p['songid'][0], p['playlistid'][0])
 		self.write("Insertion complete")
 
 class AddRandomPlaylistHandler(BaseHandler):
@@ -425,12 +352,12 @@ class AddRandomPlaylistHandler(BaseHandler):
 	def create_random_playlist(self, aplname, aplcount):
 		pl = {}
 		aplcount = int(aplcount)
-		ids = db.tags.distinct('_id')
+		ids = db.main.distinct('_id')
 		random.shuffle(ids)
 		random_ids = random.sample(ids, aplcount)
 		new_song_list = []
 		for r in random_ids:
-			songs = db.tags.find_one({'_id': r}, {'_id':0})
+			songs = db.main.find_one({'_id': r}, {'_id':0})
 			new_song_list.append(songs)
 		random.shuffle(new_song_list)
 		pl['songs'] = new_song_list
@@ -453,15 +380,16 @@ class CreatePlayerPlaylistHandler(BaseHandler):
 		fart = []
 		try:
 			for pl in playlist['songs']:
-				plp = pl['httpmusicpath'].split('/', 4)
-				plp = '/' + os.path.splitext(plp[4])[0]
+				plp = pl['HttpMusicPath'].split('/', 1)
+				plp = '/' + os.path.splitext(plp[1])[0]
+				picinfo = [p for p in pdb.pics.find({"PicId": pl["PicId"]}, {"_id":0})]
 				z = {
-					'name': pl['song'], 
-					#'file': pl['playlistpath'],
+					'name': pl['Song'],
 					'file': plp,
-					'thumbnail': pl['lthumbnail'], 
-					'album': pl['album'],
-				}		
+					'thumbnail': picinfo[0]['AlbumArtHttpPath'],
+					'album': pl['Album'],
+					'artist': pl['Artist'],
+				}
 				fart.append(z)
 			return fart
 		except KeyError: return []
@@ -487,9 +415,7 @@ class DeletePlaylistFromDBHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
-		print('this is playlistid')
-		print(p['playlistid'][0])
-		deleted = yield self._delete_playlist(p['playlistid'][0])
+		yield self._delete_playlist(p['playlistid'][0])
 		npl = yield self.get_pl_list(p['playlistid'][0])
 		self.write(dict(npl=npl))
 
@@ -518,7 +444,7 @@ class DeleteSongFromPlaylistHandler(BaseHandler):
 		p = parse_qs(urlparse(self.request.full_url()).query)
 		rec_id = yield self._get_rec_id(p['delsongid'][0])
 		plist = yield self._get_playlist_info(p['playlistname'][0])
-		delsong = yield self._delete_song(plist, rec_id)
+		yield self._delete_song(plist, rec_id)
 		result = yield self._get_new_playlist(plist['playlistname'])
 		self.write(dict(result=result))
 
@@ -539,21 +465,20 @@ class AlbumSearchHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def get_search(self, albsv):
 		search = viewsdb.command('text', 'albumView', search=albsv)
-		return [{'artist': sea['obj']['artist'], 'album': sea['obj']['album'], 'albumid': sea['obj']['albumid'], 'thumbnail': sea['obj']['thumbnail'], 'songs': sea['obj']['songs'], 'numsongs': sea['obj']['numsongs']} for sea in search['results']]
+		return [{'artist': sea['obj']['artist'], 'album': sea['obj']['album'], 'albumid': sea['obj']['albumid'], 'thumbnail': sea['obj']['albumartHttpPath'], 'songs': sea['obj']['songs'], 'numsongs': sea['obj']['numsongs']} for sea in search['results']]
 
 	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
 		ysearch = yield self.get_search(p['albsearchval'][0])
-		print(ysearch)
 		self.write(dict(ysearch=ysearch))
 
 class SongSearchHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def get_search(self, sv):
-		search = db.command('text', 'tags', search=sv)
-		return [{'artist': sea['obj']['artist'], 'song': sea['obj']['song'], 'songid': sea['obj']['songid']} for sea in search['results']]
+		search = db.command('text', 'main', search=sv)
+		return [{'artist': sea['obj']['Artist'], 'song': sea['obj']['Song'], 'songid': sea['obj']['SongId']} for sea in search['results']]
 
 	@tornado.web.authenticated
 	@tornado.gen.coroutine
@@ -562,251 +487,79 @@ class SongSearchHandler(BaseHandler):
 		xsearch = yield self.get_search(p['searchval'][0])
 		self.write(dict(xsearch=xsearch))
 
-class DownloadPlaylistHandler(BaseHandler):
-	@tornado.gen.coroutine
-	def _get_iso_paths(self):
-		return db.prog_paths.find_one({})
-
-	@tornado.gen.coroutine
-	def _clean_temp(self, apath):
-		RM._remove_temp(apath)
-
-	@tornado.gen.coroutine
-	def _make_temp_dirs(self, apath):
-		RM._make_needed_dirs(apath)
-
-	@tornado.gen.coroutine
-	def _clean_dirs(self):
-		paths = yield self._get_iso_paths()
-		clean = yield self._clean_temp(paths)
-		creat_new_dirs = yield self._make_temp_dirs(paths)
-		return paths
-		
-	@tornado.gen.coroutine	
-	def _get_playlist(self, aplid):
-		return db.playlists.find_one({'playlistid':bplid}, {'_id':0, 'songs.filename':1, 'songs.filesize':1})
-
-	@tornado.gen.coroutine
-	def _get_filename(self, afn):
-		fnsplit = afn['filename'].split('/')
-		fncount = len(fnsplit) - 1
-		return fnsplit[fncount]
-
-	@tornado.gen.coroutine
-	def _get_save_loc(self, aapath, fnn):
-		return '/'.join((aapath['musicPath'], fnn))
-
-	@tornado.gen.coroutine
-	def _copy_files(self, plid, apath):
-		pl = yield self._get_playlist(plid)
-		fsize = []
-		for p in pl['songs']:
-			fn = yield self._get_filename(p)
-			saveloc = yield self._get_save_loc(apath, fn)	
-			try: shutil.copyfile(p['filename'], saveloc)
-			except IOError:
-				print('This is an IOError')
-				print(p['filename'])
-				print(saveloc)
-
-	@tornado.gen.coroutine
-	def _gen_iso_image_paths(self, apaths, aplid):
-		outfile =  ''.join((aplid, ".iso"))
-		isopf = ''.join((apaths['isoPath'], '/', outfile))
-		indir = apaths['musicPath']
-		return outfile, isopf, indir
-		
-	@tornado.gen.coroutine
-	def _gen_iso_image_(self, aapaths, aisopaths):
-		os.chdir(aapaths['isoPath'])
-		cmd = 'genisoimage -o %s %s' % (aisopaths[0], aisopaths[2])
-		retcode = subprocess.call(cmd, shell=True)
-		os.chdir(aapaths['programPath'])
-
-	@tornado.gen.coroutine
-	def _create_iso_image(self, apaths, plid):
-		isopaths = yield self._gen_iso_image_paths(apaths, plid)
-		gii = yield self._gen_iso_image_(apaths, isopaths)
-		isopf_split = isopaths[1].split(apaths['programPath'])
-		return isopf_split[1]
-
-	@tornado.web.authenticated
-	@tornado.gen.coroutine
-	def get(self):
-		p = parse_qs(urlparse(self.request.full_url()).query)
-		npaths = yield self._clean_dirs()
-		cfl = yield self._copy_files(p['selectedplid'][0], npaths)
-		iso_image = yield self._create_iso_image(npaths, p['selectedplid'][0])
-		#self.set_header('Content-Type', 'application/force-download')
-		self.set_header('Content-Type', 'application/x-iso9660-image')
-		fnn = "attachement; filename='%s'" % iso_image
-		self.set_header('Content-Disposition', fnn)
-		self.write(dict(zfile=iso_image))
-
-class GetAllVideoHandler(BaseHandler):
-	@tornado.web.authenticated
-	@tornado.gen.coroutine
-	def get(self):
-		vlist = [vid for vid in db.video.find({}, {'vid_playpath': 1, 'vid_id': 1, 'vid_name':1, 'vid_poster_string': 1, '_id':0}).sort([('vid_name', pymongo.ASCENDING)])]
-		self.write(dict(vlist=vlist))
-
-
-
-
-
-
-
-
-
-
-
-
 class RamdomAlbumPicPlaySongHandler(BaseHandler):
 	@tornado.gen.coroutine
-	def _get_song_info(self, apid):
-		return db.tags.find_one({'songid':apid}, {'httpmusicpath':1, 'filename':1, 'filetype':1, 'lthumbnail':1, 'song':1, 'album':1, '_id':0})
-		#mp = db.tags.find_one({'songid':apid}, {'httpmusicpath':1, 'filetype':1, 'lthumbnail':1, 'song':1, 'album':1, '_id':0})
-		#return mp['httpmusicpath'], mp['lthumbnail'], mp['song'], mp['album']
-	
+	def get_song_info(self, apid):
+		return db.main.find_one({'SongId':apid}, {'HttpMusicPath':1, 'Filename':1, 'PicId':1, 'Song':1, 'Album':1, 'Artist':1, '_id':0})
+
 	@tornado.gen.coroutine
-	def _get_prog_path(self):
-		return db.prog_paths.find_one({})	
-	
-	@tornado.gen.coroutine
-	def _transcode_mp3_to_ogg(self, afile, pa):
-		temp_path = pa['musicPath']	
-		temp_filename = str(uuid.uuid4().hex)
-		ext = '.ogg'
-		tempfilePath = temp_path + '/' + temp_filename + ext
-		temphttpPath = pa['httppath'] + '/Temp/MUSIC/' + temp_filename + ext
-		os.chdir(temp_path)
-		cmd = "ffmpeg -i %s -vsync 2 %s" % (afile['filename'], tempfilePath)
-		try:
-			transcode = subprocess.call(cmd, shell=True)
-		except OSError: print('subprocess OSError')
-		afile['tempfilePath'] = tempfilePath
-		afile['httpmusicpath'] = temphttpPath
-		os.chdir(pa['programPath'])
-		return afile
-	
-	@tornado.gen.coroutine
-	def _transcode_ogg_to_mp3(self, afile, pa):
-		temp_path = pa['musicPath']	
-		temp_filename = str(uuid.uuid4().hex)
-		ext = '.mp3'
-		tempfilePath = temp_path + '/' + temp_filename + ext
-		temphttpPath = pa['httppath'] + '/Temp/MUSIC/' + temp_filename + ext
-		os.chdir(temp_path)	
-		cmd = "ffmpeg -i %s -vsync 2 %s" % (afile['filename'], tempfilePath)
-		try:
-			transcode = subprocess.call(cmd, shell=True)
-		except OSError: print('subprocess OSError')
-		afile['tempfilePath'] = tempfilePath
-		afile['httpmusicpath'] = temphttpPath
-		os.chdir(pa['programPath'])
-		return afile	
-		
+	def get_pic_info(self, pid):
+		return pdb.pics.find_one({"PicId": pid['PicId']}, {"_id":0, "AlbumArtHttpPath":1})
+
 	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
 		songid = p['sid'][0]
-		transcode = p['transcode'][0]
-		foo = yield self._get_song_info(songid)
-		ppath = yield self._get_prog_path()
-		
-		print('this is mytup')
-		print(songid, transcode, foo['filetype'])
-		
-		if transcode == 'mp3':
-			if foo['filetype'] == '.mp3':
-				print(foo)
-				self.write(dict(soho=foo))
-				
-			if foo['filetype'] == '.ogg':
-				hoho = yield self._transcode_ogg_to_mp3(foo, ppath)
-				print(hoho)
-				self.write(dict(soho=hoho))
-				
-		if transcode == 'ogg':
-			if foo['filetype'] == '.mp3':
-				hoho = yield self._transcode_mp3_to_ogg(foo, ppath)
-				print(hoho)
-				self.write(dict(soho=hoho))
-			if foo['filetype'] == '.ogg':
-				print(foo)
-				self.write(dict(soho=foo))
+		foo = yield self.get_song_info(songid)
+		boo = yield self.get_pic_info(foo)
+		foo['AlbumArtHttpPath'] = boo['AlbumArtHttpPath']
+		self.write(dict(soho=foo))
 
 class RandomPicsHandler(BaseHandler):
 	@tornado.gen.coroutine
-	def _get_count(self):
-		return len([d['_id'] for d in db.randthumb.find({'displayed':'NOTSHOWN'})])
+	def get_count(self):
+		return len([d['chunkid'] for d in db.randthumb.find({'displayed':'NOTSHOWN'})])
 
 	@tornado.gen.coroutine
-	def _get_chunk(self):
+	def get_chunk(self):
 		t5 = db.randthumb.find_one({'displayed': 'NOTSHOWN'})
-		return t5['_id'], t5['chunk'], t5['displayed']
+		return t5['chunkid'], t5['chunk'], t5['displayed']
 
 	@tornado.gen.coroutine
-	def _update_db(self, aid):
-		db.randthumb.update({'_id': aid}, {'$set': {'displayed':'SHOWN'}})
+	def update_db(self, aid):
+		db.randthumb.update({'chunkid': aid}, {'$set': {'displayed':'SHOWN'}})
 
 	@tornado.gen.coroutine
-	def _reset_displayed(self):
+	def reset_displayed(self):
 		RAND.create_random_art_db()
-		print('creating random art DB')
 		
 	@tornado.gen.coroutine
-	def _get_rand_alb_list(self):
-		count = yield self._get_count()
+	def get_rand_alb_list(self):
+		count = yield self.get_count()
 		if count < 2:
-			rset = yield self._reset_displayed()
-			tid = yield self._get_chunk()
-			updb = yield self._update_db(tid[0])
+			yield self.reset_displayed()
+			tid = yield self.get_chunk()
+			yield self.update_db(tid[0])
 			return tid[1]
 		else:
-			tid = yield self._get_chunk()
-			updb = yield self._update_db(tid[0])
+			tid = yield self.get_chunk()
+			yield self.update_db(tid[0])
 			return tid[1]
 
 	@tornado.web.authenticated
 	@tornado.gen.coroutine
 	def get(self):
-		print('getting random pics')
-		rs = yield self._get_rand_alb_list()
+		rs = yield self.get_rand_alb_list()
 		art = []
 		for r in rs:
 			x = {}
-			ace = db.tags.find_one({'albumid':r}, {'lthumbnail':1, '_id':0})
-			x['thumbnail'] = ace['lthumbnail']
-			x['songs'] = [(song['song'], song['songid']) for song in db.tags.find({'albumid':r}, {'song':1, 'songid':1, '_id':0})]
+			pid = db.main.find_one({'AlbumId': r}, {'_id':0, 'PicId':1})
+			ace = pdb.pics.find_one({'PicId':pid['PicId']}, {'AlbumArtHttpPath':1, '_id':0})
+			try:	
+				x['thumbnail'] = ace['AlbumArtHttpPath']
+			except TypeError:
+				print(r)
+				#x["thumbnail"] = "./static/images/noartpic.jpg"
+			x['songs'] = [(song['Song'], song['SongId']) for song in db.main.find({'AlbumId':r}, {'Song':1, 'SongId':1, '_id':0})]
 			art.append(x)
 		self.write(dict(rsamp=art))
-
-class ClearTempHandler(BaseHandler):
-	@tornado.gen.coroutine
-	def delete_temp_songs(self, sl):
-		paths = db.prog_paths.find_one({})
-		bar = sl.split('MUSIC')
-		try:
-			foo = paths['musicPath'] + bar[1]
-			if os.path.isfile(foo):
-				os.remove(foo)
-		except IndexError: pass
-
-	@tornado.web.authenticated
-	@tornado.gen.coroutine
-	def get(self):
-		p = parse_qs(urlparse(self.request.full_url()).query)
-		song = p['filetodelete'][0]
-		d = yield self.delete_temp_songs(song)
-		self.write(dict(cleared='Deleted'))
-
+	
 def main():
 	tornado.options.parse_command_line()
 	http_server = tornado.httpserver.HTTPServer(Application())
-	http_server.listen(options.port)
+	http_server.listen(options.server_port)
 	tornado.ioloop.IOLoop.instance().start()
-
+	
 if __name__ == "__main__":
 	main()
