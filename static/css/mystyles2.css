@@ -20,6 +20,21 @@
 ###############################################################################
 */
 
+#PlayBtn, #StopBtn {
+	background-color: black;
+	color: white;	
+}
+
+.footerSong {
+	font-size: 18px;
+	margin-left: .125em;
+}
+.footerArtist {
+	font-size: 18px;
+	margin-right: .125em;
+	float: right;
+}
+
 td, th {
 	padding: .5em;
 }
@@ -84,12 +99,13 @@ img.PicGrid {
 	padding-bottom: .5em;
 	width: 7em;
 }
-.controlGrid {
+/*.controlGrid {
 	margin-left: auto;
 	margin-right: auto;
-	width: 14.5em;
+
+	width: 18em;
 		
-}
+}*/
 .artistplayericons, .albumplayericons, .songplayericons {
 	display: block;
 	margin-left: auto;
@@ -138,12 +154,12 @@ img#playlistalbart {
 		width: 5em;	
 	} 
 	
-	.controlGrid {
+/*	.controlGrid {
 		margin-left: auto;
 		margin-right: auto;
 		width: 14.5em;
 		
-	}
+	}*/
 	.artistplayericons, .albumplayericons, .songplayericons {
 		display: block;
 		margin-left: auto;
@@ -184,12 +200,12 @@ img#playlistalbart {
 		width: 4em;	
 	} 
 	
-	.controlGrid {
+/*	.controlGrid {
 		margin-left: auto;
 		margin-right: auto;
 		width: 14.5em;
 		
-	}
+	}*/
 	
 }
 
@@ -236,12 +252,12 @@ img#playlistalbart {
 		width: 5.5em;	
 	}
 
-	.controlGrid {
+/*	.controlGrid {
 		margin-left: auto;
 		margin-right: auto;
 		width: 14.5em;
 		
-	}
+	}*/
 
 
 

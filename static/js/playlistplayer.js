@@ -17,6 +17,8 @@
 	# along with this program; if not, write to the Free Software
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
+######################59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+###############################################################################
 ###############################################################################
 */
 
@@ -36,6 +38,8 @@ jQuery(function ($) {
 					index = 0,
 					playing = false;
 					mediaPath = '/Music',
+					//mediaPath = '/static',
+					//mediaPath = '/home/teresa/Music',
 					extension = '',
 					trackCount = tracks.length,
 					audio = $('#audio1').bind('play', function () {
@@ -85,8 +89,11 @@ jQuery(function ($) {
 						$('.fraz').attr('src', art);
 						$('#pictext').text(tracks[id].name);
 						$('#pictext2').text(tracks[id].album);
+						$('.footerSong').text(tracks[id].name);
+						$('.footerArtist').text(tracks[id].artist);
 						index = id;
-						audio.src = mediaPath + tracks[id].file + extension;
+						//audio.src = mediaPath + tracks[id].file + extension;
+						audio.src = tracks[id].file + extension;
 					},
 					playTrack = function (id) {
 						loadTrack(id);

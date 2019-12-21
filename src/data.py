@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+ #!/usr/bin/python3
 ###############################################################################
 ###############################################################################
 	# LICENSE: GNU General Public License, version 2 (GPLv2)
@@ -25,211 +25,135 @@ v = pymongo.version
 version = v.split('.')[0]
 version = int(version)
 
-data = pymongo.MongoClient().ampnadoDB
-data2 = pymongo.MongoClient().ampviewsDB
-
 class Data:
 	"""
 	This creates a data layer essentially all the programs data base calls.
 	This will assist with unit testing
 	"""
-	
 	def usercreds_insert_user_pword(self, a_uname, a_pword, a_hash):
+		data = pymongo.MongoClient().ampnadoDB
 		if version < 3:
 			data.user_creds.insert({'username': a_uname, 'password': a_pword, 'user_id': a_hash})
 		else:
 			data.user_creds.insert_one({'username': a_uname, 'password': a_pword, 'user_id': a_hash})
 
 	def usercreds_remove_user_pword(self, anid):
+		data = pymongo.MongoClient().ampnadoDB
 		if version < 3:
 			data.user_creds.remove(anid)
 		else:
 			data.user_creds.delete_many(anid)
 
 	def fone_usercreds_user_pword(self, auname, apword):
+		data = pymongo.MongoClient().ampnadoDB
 		return data.user_creds.find_one({'username': auname, 'password': apword})
 
 ###############################################################################		
 		
 	def fone_prog_paths(self):
+		data = pymongo.MongoClient().ampnadoDB
 		return data.prog_paths.find_one({})	
 
 ###############################################################################
 
-	def catalogs_insert(self, x):
-		return data.catalogs.insert(x)
-
-###############################################################################
-
-	def tags_insert(self, x):
-		if version < 3:
-			data.tags.insert(x)
-		else:
-			data.tags.insert_one(x)
-
-	def tags_distinct_albumartPath(self):
-		return data.tags.distinct('albumartPath')
-
 	def tags_distinct_albumid(self):
-		return data.tags.distinct('albumid')
+		data = pymongo.MongoClient().ampnadoDB
+		return data.main.distinct('AlbumId')
 
-	def tags_distinct_artist(self):		
-		return data.tags.distinct('artist')
+	def tags_distinct_artist(self):
+		data = pymongo.MongoClient().ampnadoDB	
+		return data.main.distinct('Artist')
 
 	def tags_distinct_album(self):
-		return data.tags.distinct('album')
-	
-	def tags_distinct_song(self):
-		return data.tags.distinct('song')
+		data = pymongo.MongoClient().ampnadoDB
+		return data.main.distinct('Album')
 
-	def tags_all(self):
-		return data.tags.find({})
-	
-	def tags_all_id(self):
-		return data.tags.find({}, {'_id':1})
-
-	def tags_all_lthumb_size(self):
-		return data.tags.find({}, {'largethumb_size':1, '_id':0})
-
-	def tags_all_sthumb_size(self):
-		return data.tags.find({}, {'smallthumb_size':1, '_id':0})
+	def tags_all_thumb_size(self):
+		data = pymongo.MongoClient().picdb
+		return data.pics.find({}, {'AlbumArtSize':1, '_id':0})
 
 	def tags_all_filesize(self):
-		return data.tags.find({}, {'filesize':1, '_id':0})
+		data = pymongo.MongoClient().ampnadoDB
+		return data.main.find({}, {'Size':1, '_id':0})
 
 	def tags_all_filetype_mp3(self):
-		return data.tags.find({'filetype': '.mp3'}).count()
-
-	def tags_all_filetype_ogg(self):
-		return data.tags.find({'filetype': '.ogg'}).count()
+		data = pymongo.MongoClient().ampnadoDB
+		return data.main.find({'Extension': '.mp3'}).count()
 
 	def tags_all_song(self, d):
-		return data.tags.find({'song':d}, {'song':1, 'songid':1, '_id':0})
-
-	def tags_all_notagart(self):
-		return data.tags.find({'NoTagArt': 0}, {'_id':1})
+		data = pymongo.MongoClient().ampnadoDB
+		return data.main.find({'Song':d}, {'Song':1, 'SongId':1, '_id':0})
 
 	def tags_all_song_songid_artist(self):
-		return data.tags.find({}, {'song':1, 'songid':1, 'artist':1, '_id':0})
-
-	def tags_all_filename_artist_album_song(self):
-		return data.tags.find({}, {'_id':1, 'filename':1, 'artist':1, 'album':1, 'song':1})
+		data = pymongo.MongoClient().ampnadoDB
+		return data.main.find({}, {'Song':1, 'SongId':1, 'Artist':1, '_id':0})
 
 	def fone_tags_albumid(self, albid):
-		return data.tags.find_one({'albumid':albid}, {'album':1, 'albumid': 1, 'artist':1, 'artistid':1, 'sthumbnail':1, '_id':0})
+		data = pymongo.MongoClient().ampnadoDB
+		return data.main.find_one({'AlbumId':albid}, {'Album':1, 'AlbumId': 1, 'Artist':1, 'ArtistId':1, '_id':0})
 
 	def fone_tags_albumartPath(self, albpath):
-		return data.tags.find_one({'albumartPath':albpath}, {'albumid':1, 'album':1, '_id':0})
+		data = pymongo.MongoClient().ampnadoDB
+		return data.main.find_one({'albumartPath':albpath}, {'albumid':1, 'album':1, '_id':0})
 
 	def fone_tags_artist(self, art):
-		return data.tags.find_one({'artist': art}, {'artistid': 1, '_id': 0})
+		data = pymongo.MongoClient().ampnadoDB
+		return data.main.find_one({'Artist': art}, {'ArtistId': 1, '_id': 0})
 
 	def fone_tags_album(self, alb):
-		return data.tags.find_one({'album':alb}, {'albumid':1, '_id':0})
+		data = pymongo.MongoClient().ampnadoDB
+		return data.main.find_one({'Album':alb}, {'AlbumId':1, '_id':0})
 
 	def tags_aggregate_artist(self, art):
-		return data.tags.aggregate([
-			{'$match': {'artist': art}},
-			{'$group': {'_id': 'album', 'albumz': {'$addToSet': '$album'}}},
+		data = pymongo.MongoClient().ampnadoDB
+		return data.main.aggregate([
+			{'$match': {'Artist': art}},
+			{'$group': {'_id': 'Album', 'albumz': {'$addToSet': '$Album'}}},
 			{'$project': {'albumz' :1}}
 		])
 
-	def tags_aggregate_albumid(self, albid):
-		return data.tags.aggregate([
-			{'$match': {'albumid': albid}},
-			{'$group': {'_id': 'song', 'songz': {'$addToSet': '$song'}}},
-			{'$project': {'songz' :1}}
-		])
-#	
-#	def tags_aggregate_filesize(self):
-#		return data.tags.aggregate({'$group': {'_id': 'soup', 'total' : {'$sum': '$filesize'}}})
-#
+	def tags_aggregate_albumid(self, alb):
+		data = pymongo.MongoClient().ampnadoDB
+		zoo = data.main.find({'AlbumId': alb['AlbumId']}, {'_id':0, 'Song':1, 'SongId':1})
+		return [(z['Song'], z['SongId']) for z in zoo]
 
 	def tags_aggregate_filesize(self):
+		data = pymongo.MongoClient().ampnadoDB
 		foo = [int(s['filesize']) for s in data.tags.find({}, {'filesize':1, '_id':0})]
 		return sum(foo)
 
 	def tags_update_artistid(self, artlist):
+		data = pymongo.MongoClient().ampnadoDB
 		if version < 3:
-			[data.tags.update({'artist': n['artist']}, {'$set': {'artistid': n['artistid']}}, multi=True) for n in artlist] 
+			[data.main.update({'Artist': n['artist']}, {'$set': {'ArtistId': n['artistid']}}, multi=True) for n in artlist] 
 		else:
-			[data.tags.update_many({'artist': n['artist']}, {'$set': {'artistid': n['artistid']}}) for n in artlist] 
+			[data.main.update_many({'Artist': n['Artist']}, {'$set': {'ArtistId': n['ArtistId']}}) for n in artlist] 
 
 	def tags_update_albumid(self, alblist):
+		data = pymongo.MongoClient().ampnadoDB
 		if version < 3:
-			[data.tags.update({'album': alb['album']}, {'$set': {'albumid': alb['albumid']}}, multi=True) for alb in alblist]
+			[data.main.update({'Album': alb['Album']}, {'$set': {'AlbumId': alb['AlbumId']}}, multi=True) for alb in alblist]
 		else:
-			[data.tags.update_many({'album': alb['album']}, {'$set': {'albumid': alb['albumid']}}) for alb in alblist]
+			[data.main.update_many({'Album': alb['Album']}, {'$set': {'AlbumId': alb['AlbumId']}}) for alb in alblist]
 
-	def tags_update_sthumb_lthumb_and_sizes(self, a):
+	def tags_update_artID(self, alist):
+		data = pymongo.MongoClient().ampnadoDB
 		if version < 3:
-			data.tags.update({'albumartPath': a[0]}, {'$set': {'sthumbnail': a[1], 'smallthumb_size': a[2], 'lthumbnail' : a[3], 'largethumb_size': a[4]}}, multi=True)
+			[data.main.update({'DirPath': a['DirPath']}, {'$set': {'PicId': a['PicId']}}, multi=True) for a in alist]
 		else:
-			data.tags.update_many({'albumartPath': a[0]}, {'$set': {'sthumbnail': a[1], 'smallthumb_size': a[2], 'lthumbnail' : a[3], 'largethumb_size': a[4]}})
-
-	def tags_update_thumbs_and_sizes2(self, nt):
-		if version < 3:
-			data.tags.update({'_id':nt[0]}, {'$set': {'sthumbnail': nt[1], 'lthumbnail': nt[3], 'smallthumb_size': nt[2], 'largethumb_size': nt[4]}}) 
-		else:
-			data.tags.update_one({'_id':nt[0]}, {'$set': {'sthumbnail': nt[1], 'lthumbnail': nt[3], 'smallthumb_size': nt[2], 'largethumb_size': nt[4]}}) 
+			[data.main.update_many({'DirPath': a['DirPath']}, {'$set': {'PicId': a['PicId']}}) for a in alist]		
 
 	def tags_update_httpmusicpath(self, x, z):
+		data = pymongo.MongoClient().ampnadoDB
 		if version < 3:
 			data.tags.update({'filename':x}, {'$set': {'httpmusicpath':z}})
 		else:
 			data.tags.update_one({'filename':x}, {'$set': {'httpmusicpath':z}})
 
-#
-#
-#	def tags_update_new_tag_info(self, tags, ftags):
-#		print(type(tags))
-#		print(type(ftags))
-#		if version < 3:
-#			data.tags.update({'_id': tags['_id']}, {'$set', {'filename': ftags['filename'], 'artist': ftags['artist'], 'album': ftags['album'], 'song': ftags['song']}})
-#		else:
-#			data.tags.update_one({'_id': tags['_id']}, {'$set', {'filename': ftags['filename'], 'artist': ftags['artist'], 'album': ftags['album'], 'song': ftags['song']}})
-#
-#
-
-
-
-
-
-
-
-
-
-
-
-###############################################################################
-
-	def video_insert(self, x):
-		if version < 3:
-			data.video.insert(x)
-		else:
-			data.video.insert_one(x)
-
-	def video_all_filesize(self):
-		return data.video.find({}, {'filesize':1, '_id':0})
-
-	def video_distinct_vid_name(self):
-		return data.video.distinct('vid_name')
-
-	def video_update_video_posterstring_origposter(self, v):
-		if version < 3:
-			data.video.update({'filename':v['filename']}, {'$set': {'vid_poster_string':v['vid_poster_string'], 'vid_orig_poster': v['vid_orig_poster']}})		
-		else:
-			data.video.update_one({'filename':v['filename']}, {'$set': {'vid_poster_string':v['vid_poster_string'], 'vid_orig_poster': v['vid_orig_poster']}})		
-
-	def video_update_noposter_string(self, v):
-		if version < 3:
-			data.video.update({'filename':v['filename']}, {'$set': {'vid_poster_string':v['vid_poster_string']}})
-		else:
-			data.video.update_one({'filename':v['filename']}, {'$set': {'vid_poster_string':v['vid_poster_string']}})
-
 ###############################################################################
 
 	def stats_insert(self, x):
+		data = pymongo.MongoClient().ampnadoDB
 		if version < 3:
 			data.ampnado_stats.insert(x)
 		else:
@@ -238,48 +162,56 @@ class Data:
 ###############################################################################
 
 	def viewsdb_artalpha_insert(self, x):
+		data2 = pymongo.MongoClient().ampviewsDB
 		if version < 3:
 			data2.artalpha.insert(x)
 		else:
 			data2.artalpha.insert_one(x)
 
 	def viewsdb_albalpha_insert(self, v):
+		data2 = pymongo.MongoClient().ampviewsDB
 		if version < 3:
 			data2.albalpha.insert(v)
 		else:
 			data2.albalpha.insert_one(v)
 
 	def viewsdb_insert(self, av):
+		data2 = pymongo.MongoClient().ampviewsDB
 		if version < 3:
 			data2.albumView.insert(av)
 		else:
 			data2.albumView.insert_one(av)
 
 	def viewsdb_albumview_update(self, albid):
+		data2 = pymongo.MongoClient().ampviewsDB
 		if version < 3:
-			data2.albumView.update({'albumid': albid[0]}, {'$set': {'page': albid[1]}})
+			data2.albumView.update({'AlbumId': albid[0]}, {'$set': {'Page': albid[1]}})
 		else:
-			data2.albumView.update_one({'albumid': albid[0]}, {'$set': {'page': albid[1]}})
+			data2.albumView.update_one({'AlbumId': albid[0]}, {'$set': {'Page': albid[1]}})
 
 	def viewsdb_artistview_insert(self, z):
+		data2 = pymongo.MongoClient().ampviewsDB
 		if version < 3:
 			data2.artistView.insert(z)
 		else:
 			data2.artistView.insert_one(z)
 
 	def viewsdb_artistview_update(self, c):
+		data2 = pymongo.MongoClient().ampviewsDB
 		if version < 3:
-			data2.artistView.update({'artist': c[0]}, {'$set': {'page': c[1]}})
+			data2.artistView.update({'Artist': c[0]}, {'$set': {'Page': c[1]}})
 		else:
-			data2.artistView.update_one({'artist': c[0]}, {'$set': {'page': c[1]}})
+			data2.artistView.update_one({'Artist': c[0]}, {'$set': {'Page': c[1]}})
 
 	def viewsdb_songalpha_insert(self, x):
+		data2 = pymongo.MongoClient().ampviewsDB
 		if version < 3:
 			data2.songalpha.insert(x)
 		else:
 			data2.songalpha.insert_one(x)
 	
 	def viewsdb_songview_insert(self, svl):
+		data2 = pymongo.MongoClient().ampviewsDB
 		if version < 3:
 			data2.songView.insert(svl)
 		else:
@@ -288,13 +220,31 @@ class Data:
 ###############################################################################
 
 	def randthumb_insert(self, x):
+		data = pymongo.MongoClient().ampnadoDB
 		if version < 3:
 			data.randthumb.insert(x)
 		else:
-			data.randthumb.insert_one(x)
+			data.randthumb.insert_many(x)
 
 	def randthumb_rm(self):
+		data = pymongo.MongoClient().ampnadoDB
 		if version < 3:
-			data.randthumb.remove({})
+			data.randthumb.drop()
 		else:
-			data.randthumb.delete_many({})
+			data.randthumb.drop()
+			
+###############################################################################		
+
+	def get_picid(self, x):
+		data = pymongo.MongoClient().ampnadoDB
+		pdata = pymongo.MongoClient().picdb
+		if version < 3:
+			pid = [d for d in data.main.find({"AlbumId":x}, {"PicId":1, "_id":0})]
+			phttp = pdata.pics.find_one({"PicId":pid[0]["PicId"]}, {"_id":0, "AlbumArtHttpPath":1})
+			return phttp["AlbumArtHttpPath"]
+		else:
+			pid = [d for d in data.main.find({"AlbumId":x}, {"PicId":1, "_id":0})]
+			phttp = pdata.pics.find_one({"PicId":pid[0]["PicId"]}, {"_id":0, "AlbumArtHttpPath":1})
+			return phttp["AlbumArtHttpPath"]
+			
+			

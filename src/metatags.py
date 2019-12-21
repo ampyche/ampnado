@@ -18,42 +18,60 @@
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 ###############################################################################
-import os
-import bson.son
-from multiprocessing import Pool
-from src.data import Data
+
+import os, uuid
+import mutagen
 try: from mutagen import File
 except ImportError: from mutagenx import File
 
-class AlbumArtScan:
+try: from mutagen.oggvorbis import OggVorbis
+except ImportError: from mutagenx.oggvorbis import OggVorbis
+
+class FileMeta:
+	SongId = None
+	DirPath = None
+	Size = None
 	
-	def insert(self, a):
-		Data().tags_insert(a)
+	def __init__(self, fn):
+		type(self).SongId = str(uuid.uuid4().hex)
+		type(self).DirPath = os.path.dirname(fn)
+		type(self).Size = os.path.getsize(fn)
 
-	def _albumart_search(self, x):
-		ppath = '/'.join((os.path.dirname(x['filename']), "folder.jpg"))
-		if os.path.isfile(ppath):
-			x['albumartPath'] = ppath
-			x['NoTagArt'] = 1
-		else:
-			try:
-				audio = File(x['filename'])
-				artwork = audio.tags[u'APIC:'].data
-				with open(ppath, 'wb') as img: img.write(artwork)
-			except (KeyError, TypeError, AttributeError):
-				x['NoTagArt'] = 0
-				x['albumartPath'] = '/'.join((os.path.dirname(x['filename']), "NOTAGART"))
-			else:
-				if not os.path.isfile(ppath):
-					x['NoTagArt'] = 0
-					x['albumartPath'] = '/'.join((os.path.dirname(x['filename']), "NOTAGART"))
-		self.insert(dict(x))		
-		return x
 
-	def albumart_search_main(self, afile, acores):
-		pool = Pool(processes=acores)
-		pm = pool.map(self._albumart_search, afile)
-		cleaned = [x for x in pm if x != None]
-		pool.close()
-		pool.join()
-		return cleaned
+class MP3Tags:
+	Track = None
+	Artist = None
+	Album = None
+	Song = None
+	
+	def __init__(self, fn):
+		self.fn = fn
+
+		try:
+			self.audio = File(self.fn)
+		except KeyError:
+			print(self.fn)
+			pass
+
+		try:
+			type(self).Track = self.audio['TRCK'].text[0]
+		except KeyError:
+			type(self).Track = '50'
+	
+		try:
+			type(self).Artist = self.audio["TPE1"].text[0]
+		except KeyError: 
+			type(self).Artist = 'Fuck Artist'
+			print(''.join(("KeyError: No TPE1 tag... ", self.fn)))
+	
+		try:
+			type(self).Album = self.audio["TALB"].text[0]
+		except KeyError: 
+			type(self).Album = 'Fuck Album'
+			print(''.join(("KeyError No TALB tag ... ", self.fn)))
+			
+		try:
+			type(self).Song = self.audio['TIT2'].text[0]
+		except KeyError: 
+			type(self).Song = 'Fuck Song'
+			print(''.join(("KeyError: No TIT2 tag... ", self.fn)))

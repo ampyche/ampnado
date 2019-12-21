@@ -34,25 +34,25 @@ function iArtist1P1Fun2(d1) {
 	return art
 };
 function iArtist1P1Fun3(d2) {
-	var artA = "<div class='artistPageDiv' data-role='collapsible'><h4>" + d2.artist + "</h4><div>";
-	var artB = artA + "<form id='" + d2.artistid + "' class='artistForm'><div class='ui-field-contain'>";
-	var artc = artB + "<select name='" + d2.artist + "' id='" + d2.artistid + "' class='artistselect'>";
+	var artA = "<div class='artistPageDiv' data-role='collapsible'><h4>" + d2.Artist + "</h4><div>";
+	var artB = artA + "<form id='" + d2.ArtistId + "' class='artistForm'><div class='ui-field-contain'>";
+	var artc = artB + "<select name='" + d2.Artist + "' id='" + d2.ArtistId + "' class='artistselect'>";
 	return artc	
 };
 function intitArtist1P1() {
-	$.get('GetInitialArtistInfo', function (data) {
-		$.each(data.ia, function ( key, val ) {
-			if ( val.albums.length === 1 ) {
-				var abc = "<div class='artistPageDivS' data-role='collapsible'><h4>" + val.artist + "</h4>";
-				var selected = val.albums[0][1];
-				$.get('GetImageSongsForAlbum',
+	$.get('InitialArtistInfo', (data)=> {
+		$.each(data.ia, ( key, val )=> {
+			if ( val.Albums.length === 1 ) {
+				var abc = "<div class='artistPageDivS' data-role='collapsible'><h4>" + val.Artist + "</h4>";
+				var selected = val.Albums[0][1];
+				$.get('ImageSongsForAlbum',
 					{
 						'selected' : selected //this is albumid	
 					},
-					function (data) {
+					(data)=> {
 						var art3 = iArtist1P1Fun1(data);
 						var liString = '';
-						$.each(data.getimgsonalb.songs, function (kk, vv) {
+						$.each(data.getimgsonalb.songs, (kk, vv)=> {
 							liString = liString + iArtist1P1Fun2(vv);
 							return liString;
 						})
@@ -64,7 +64,7 @@ function intitArtist1P1() {
 				var a2 = '';
 				var a3 = '';
 				var aa1 = "<option class='artop0' value='Choose Album'>Choose Album</option>";
-				$.each(val.albums, function (k, v) {
+				$.each(val.Albums, (k, v)=> {
 					var a1 = "<option class='artop1' value='" + v[1] + "'>" + v[0] + "</option>";
 					a2 = a2 + a1;
 					a3 = aa1 + a2;
@@ -83,12 +83,12 @@ function intitArtist1P1() {
 ///////////////////////////////////////////////////////////////////////////////
 function initAlbum1P1Fun1(c0) {
 	var alb1 = "<div class='albumDIV'><ul class='albumUL' data-role='listview' data-inset='true'>";
-	var alb2 = alb1 + "<li class='albumLI'><a href='#' class='albumA1' data-artist='" + c0.artist + "' ";
-	var alb3 = alb2 + "data-artistid='" + c0.artistid + "' data-album='" + c0.album + "' ";
-	var alb4 = alb3 + "data-albumid='" + c0.albumid + "'><img id='" + c0.albumid + "' ";
-	var alb5 = alb4 + "src='" + c0.thumbnail + "'><h3 id='albH3'>" + c0.album + "</h3>";
-	var alb6 = alb5 + "<p>" + c0.artist + "</p><span class='ui-li-count'>" + c0.numsongs + "</span>";
-	var alb7 = alb6 + "</a></li></ul></div><div class='albsongList'><ul id='albsongUL" + c0.albumid + "' ";
+	var alb2 = alb1 + "<li class='albumLI'><a href='#' class='albumA1' data-artist='" + c0.Artist + "' ";
+	var alb3 = alb2 + "data-artistid='" + c0.ArtistId + "' data-album='" + c0.Album + "' ";
+	var alb4 = alb3 + "data-albumid='" + c0.AlbumId + "'><img id='" + c0.AlbumId + "' ";
+	var alb5 = alb4 + "src='" + c0.AlbumArtHttpPath + "'><h3 id='albH3'>" + c0.Album + "</h3>";
+	var alb6 = alb5 + "<p>" + c0.Artist + "</p><span class='ui-li-count'>" + c0.NumSongs + "</span>";
+	var alb7 = alb6 + "</a></li></ul></div><div class='albsongList'><ul id='albsongUL" + c0.AlbumId + "' ";
 	var alb = alb7 + "class='albsongUL' data-role='listview' data-inset='true' data-split-icon='gear'>";
 	return alb
 };
@@ -100,20 +100,18 @@ function initAlbum1P1Fun2(c1) {
 	return albab33
 };
 function initAlbum1P1() {
-	$.get('GetInitialAlbumInfo', function (data) {
-		$.each(data.ial, function (key, val) {	
+	$.get('InitialAlbumInfo', (data)=> {
+		$.each(data.ial, (key, val)=> {
 			var alb8 = initAlbum1P1Fun1(val)
 			var alba3 = '';
-			$.each(val.songs, function (k, v) {
-				$.each(v, function (ke, va) {
-					var albab3 = initAlbum1P1Fun2(va);
-					alba3 = alba3 + albab3;
-					return alba3
-				});
+			$.each(val.Songs, (k, v)=> {
+				var albab3 = initAlbum1P1Fun2(v);
+				alba3 = alba3 + albab3;
+				return alba3
 			});
 			var result = alb8 + alba3 + "</ul></div>";
 			$('#alblist').append(result);
-			$('#albsongUL' + val.albumid).hide();
+			$('#albsongUL' + val.AlbumId).hide();
 		});
 	});
 };
@@ -121,15 +119,15 @@ function initAlbum1P1() {
 
 ///////////////////////////////////////////////////////////////////////////////
 function initSong1P1Fun1(e1) {
-	var s1 = "<li class='songs_li'><a class='songname' href='#' data-songid='" + e1.songid + "'>";
-	var s2 = s1 + "<h2>" + e1.song + "</h2><h6>" + e1.artist + "</h6></a><a href='#selectplpage' ";
-	var s3 = s2 + "data-pageid='songs' data-song='" + e1.song + "' data-songid='" + e1.songid + "' ";
+	var s1 = "<li class='songs_li'><a class='songname' href='#' data-songid='" + e1.SongId + "'>";
+	var s2 = s1 + "<h2>" + e1.Song + "</h2><h6>" + e1.Artist + "</h6></a><a href='#selectplpage' ";
+	var s3 = s2 + "data-pageid='songs' data-song='" + e1.Song + "' data-songid='" + e1.SongId + "' ";
 	var s = s3 + "class='addtoplaylist' data-transition='slidefade'></a></li>";
 	return s
 };
 function initSong1P1() {
-	$.get('GetInitialSongInfo', function (data) {
-		$.each(data.ias, function ( key, val) {
+	$.get('InitialSongInfo', (data)=> {
+		$.each(data.ias, ( key, val)=> {
 			var s4 = initSong1P1Fun1(val);
 			$("#songs_view").append(s4);
 		});
@@ -167,16 +165,16 @@ function initGetAllPlaylistsFun5(f4) {
 	return artspl33
 };
 function initGetAllPlaylists() {
-	$.get('GetAllPlaylists', function (data) {
+	$.get('AllPlaylists', (data)=> {
 		localStorage.setItem('playlists', JSON.stringify(data));
 		var plone = '';
 		var spl = '';
 		var albspl='';
 		var artspl='';
 		$('#playPlaylistUL').empty();
-		$.each(data, function (key, val) {
+		$.each(data, (key, val)=> {
 			if (val != "Please create a playlist") {
-				$.each(val, function (k, v) {
+				$.each(val, (k, v)=> {
 					var pl2 = initGetAllPlaylistsFun1(v);
 					plone = plone + pl2;
 					return plone;
@@ -187,7 +185,7 @@ function initGetAllPlaylists() {
 				return plone;
 			}
 		})
-		$.each(data, function (k, v) {
+		$.each(data, (k, v)=> {
 			var spl3 = initGetAllPlaylistsFun3(v);
 			var albspl3 = initGetAllPlaylistsFun4(v);
 			var artspl3 = initGetAllPlaylistsFun5(v);
@@ -216,8 +214,8 @@ function initGetArtistAlphaFun2(g2, g3) {
 	return w33
 };
 function initGetArtistAlpha() {
-	$.get('GetArtistAlpha', function (data) {
-		$.each( data.artal, function (key, val) {
+	$.get('ArtistAlpha', (data)=> {
+		$.each( data.artal, (key, val)=> {
 			var k = initAddOne(val);
 			var w3 = initGetArtistAlphaFun2(k, val);
 			$('#artistOFwrap').append(w3);
@@ -234,8 +232,8 @@ function initGetAlbumAlphaFun1(kk, cc) {
 	return ww
 };
 function initGetAlbumAlpha() {
-	$.get('GetAlbumAlpha', function (data) {
-		$.each(data.albal, function (ke, va) {
+	$.get('AlbumAlpha', (data)=> {
+		$.each(data.albal, (ke, va)=> {
 			var kk = initAddOne(ke);
 			var ww3 = initGetAlbumAlphaFun1(kk, va);
 			$('#albumOFwrap').append(ww3);
@@ -252,8 +250,8 @@ function initGetSongAlphaFun1(b) {
 	return www333
 };
 function initGetSongAlpha() {
-	$.get('GetSongAlpha', function (data) {
-		$.each(data.songal, function (k2, vk) {
+	$.get('SongAlpha', (data)=> {
+		$.each(data.songal, (k2, vk)=> {
 			var www3 = initGetSongAlphaFun1(vk);
 			$('#songOFwrap').append(www3);
 		});
@@ -262,27 +260,29 @@ function initGetSongAlpha() {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-function initGetAllVideoFun1(a) {
+/*function initGetAllVideoFun1(a) {
 	var v1 = "<div class='videolistViewDIV'>";
 	var v2 = v1 + "<ul id='videolistViewUL' data-role='listview' data-split-icon='gear' data-inset='true'>";
 	var v3 = v2 + "<li id='videolistViewLI'>";
 	var v4 = v3 + "<a href='#vidplayer' id='videolistViewA' data-videoID='" + a.vid_id + "' ";
-	var v5 = v4 + "data-vidAddr='" + a.vid_playpath + "'>";
-	var v6 = v5 + "<img src='" + a.vid_poster_string + "'>" + a.vid_name;
+	var v5 = v4 + "data-vidAddr='" + a.httppath + "'>"; //a.vid_playpath + "'>";
+	var v6 = v5 + "<img src='" + a.posterHttp + "'>" + a.vid_name;
 	var vid = v6 + "</a></li></ul></div>";
 	return vid
 };
 function initGetAllVideo() {
-	$.get('GetAllVideo', function (data) {
-		$.each(data.vlist, function (key, val) {
+	$.get('AllVideo', (data)=> {
+		$.each(data.vlist, (key, val)=> {
 			var video = initGetAllVideoFun1(val);
 			$('#vidDIV').append(video);
 		});
 	});
-};
+};*/
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
+
+/*
 function calcDuration(d) {
 	var hr = Math.floor(d / 3600);
 	var min = Math.floor((d - (hr * 3600))/60);
@@ -291,6 +291,8 @@ function calcDuration(d) {
 	if (sec < 10) { sec = '0' + sec; };
 	return [min, sec];
 };
+
+*/
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -332,7 +334,7 @@ function blke(recm) {
 function creatPop1(recm) {
 	var pu11 = "<ul id='pop1' data-role='listview' class='ui-content' data-insert='true'>"
 	var pu12 = '';
-	$.each(recm, function (key, val) {
+	$.each(recm, (key, val)=> {
 		var s11 = "<li><a href='#' class='rart1' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
 		pu12 = pu12 + s11;
 		return pu12
@@ -343,7 +345,7 @@ function creatPop1(recm) {
 function creatPop2(recm) {
 	var pu21 = "<ul id='pop2' data-role='listview' class='ui-content' data-insert='true'>";
 	var pu22 = '';
-	$.each(recm, function (key, val) {
+	$.each(recm, (key, val)=> {
 		var s22 = "<li><a href='#' class='rart2' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
 		pu22 = pu22 + s22;
 		return pu22
@@ -354,7 +356,7 @@ function creatPop2(recm) {
 function creatPop3(recm) {
 	var pu31 = "<ul id='pop3' data-role='listview' class='ui-content' data-insert='true'>";
 	var pu32 = '';
-	$.each(recm, function (key, val) {
+	$.each(recm, (key, val)=> {
 		var s31 = "<li><a href='#' class='rart3' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
 		pu32 = pu32 + s31;
 		return pu32
@@ -365,7 +367,7 @@ function creatPop3(recm) {
 function creatPop4(recm) {
 	var pu41 = "<ul id='pop4' data-role='listview' class='ui-content' data-insert='true'>";
 	var pu42 = '';
-	$.each(recm, function (key, val) {
+	$.each(recm, (key, val)=> {
 		var s41 = "<li><a href='#' class='rart4' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
 		pu42 = pu42 + s41
 	})
@@ -375,7 +377,7 @@ function creatPop4(recm) {
 function creatPop5(recm) {
 	var pu51 = "<ul id='pop5' data-role='listview' class='ui-content' data-insert='true'>";	
 	var pu52 = '';
-	$.each(recm, function (key, val) {
+	$.each(recm, (key, val)=> {
 		var s51 = "<li><a href='#' class='rart5' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
 		pu52 = pu52 + s51
 	})
@@ -384,7 +386,7 @@ function creatPop5(recm) {
 };
 
 function initRandomPics() {
-	$.get('RandomPics', function (data) {
+	$.get('RandomPics', (data)=> {
 		var result1 = blka(data.rsamp[0].thumbnail) + blkb(data.rsamp[1].thumbnail);
 		var result2 = result1 + blkc(data.rsamp[2].thumbnail) + blkd(data.rsamp[3].thumbnail);
 		var result = result2 + blke(data.rsamp[4].thumbnail);
@@ -401,7 +403,7 @@ function initRandomPics() {
 };
 
 function RandomPics() {
-	$.get('RandomPics', function (data) {
+	$.get('RandomPics', (data)=> {
 		localStorage.setItem('nextimgset', JSON.stringify(data));
 	});
 };
@@ -428,7 +430,7 @@ function randomPicProcess() {
 function checkAlphaNums(anString) {
 	var anRe = /^[\w]+$/;
 	var anFound = anString.match(anRe);
-	if (anFound != null){ 
+	if (anFound != null) { 
 		return true;
 	} else {
 		return false;
@@ -451,9 +453,9 @@ function checkNums(numString) {
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////// SETTINGS PAGE STUFF //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-function loadStats() {
+function initLoadStats() {
 	$('#statsTab').empty();
-	$.get('GetStats', function ( data ) {
+	$.get('Stats', ( data )=> {
 		var stattwo = "<tr><th>Total Artists</th><td>" + data.stats.total_artists + "</td></tr>";
 		var statthree = "<tr><th>Total Albums</th><td>" + data.stats.total_albums + "</td></tr>";
 		var statfour = "<tr><th>Total Songs</th><td>" + data.stats.total_songs + "</td></tr>";
@@ -474,51 +476,22 @@ function loadStats() {
 var rpw;
 var rpw1;
 function rpwStart() {
-	rpw = setInterval(function () {RandomPics()}, 80000);
-	rpw1 = setInterval(function () {randomPicProcess()}, 90000);
+	rpw = setInterval(()=> {RandomPics()}, 80000);
+	rpw1 = setInterval(()=> {randomPicProcess()}, 90000);
 };
 function rpwStop() {
 	clearInterval(rpw);
 	clearInterval(rpw1);
 };
+///////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 
-function checkMP3() {
-	var a = document.createElement('audio');
-	var mp3 = a.canPlayType('audio/mpeg');
-	if (mp3 === "maybe") {
-		localStorage.setItem('mp3Sup', true);
-	}
-	if (mp3 === "") {
-		localStorage.setItem('mp3Sup', false);
-	}
-};
-
-function checkOgg() {
-	var a = document.createElement('audio');
-	var ogg = a.canPlayType('audio/ogg');
-	if (ogg === "maybe") {
-		localStorage.setItem('oggSup', 'true');
-	}
-	if (ogg === "") {
-		localStorage.setItem('oggSup', 'false');
-	}
-};
-
-function setTransCode() {
-	var transcode = localStorage.getItem('TransCode');
-	if (localStorage.getItem('TransCode') === null) {
-		transcode = 'mp3';
-	}
-	$("#select-based-flipswitch").on('flipswitchcreate', function (event, ui) {
-		$("#select-based-flipswitch").val(transcode).flipswitch('refresh');	
-	});
-	localStorage.setItem('TransCode', transcode);
-};
-
-var initAmpyche = function () {
+//var initAmpnado = function () {
+const initAmpnado = ()=> {
 	initRandomPics();
 	$('#audio2').show();
 	//This hides the search boxes
+//	$('.albsongUL').hide();
 	$('#controlGrid, #albSSD1, #albSSD2, #albListViewDIV2, #artForm, #SSD1, #SSD2, #songListViewDIV2').hide();
 	RandomPics();
 	intitArtist1P1();
@@ -528,12 +501,6 @@ var initAmpyche = function () {
 	initGetArtistAlpha();
 	initGetAlbumAlpha();
 	initGetSongAlpha();
-	initGetAllVideo();
-	loadStats();
-	checkMP3();
-	checkOgg();
-	rpwStart();
-	setTransCode();
+	initLoadStats();
 };
-
-$(window).load(initAmpyche)
+$(window).load(initAmpnado)

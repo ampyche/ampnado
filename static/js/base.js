@@ -35,9 +35,9 @@ function oc_artOF2(vv) {
 	return soupArt51			
 };
 function oc_artOF3(v) {
-	var a = "<div class='artistPageDiv' data-role='collapsible'><h4>" + v.artist + "</h4><div>";
-	var a11 = a + "<form id='" + v.artistid + "' class='artistForm'><div class='ui-field-contain'>";
-	var a222 = a11 + "<select name='" + v.artist + "' id='" + v.artistid + "' class='artistselect'>";
+	var a = "<div class='artistPageDiv' data-role='collapsible'><h4>" + v.Artist + "</h4><div>";
+	var a11 = a + "<form id='" + v.ArtistId + "' class='artistForm'><div class='ui-field-contain'>";
+	var a222 = a11 + "<select name='" + v.Artist + "' id='" + v.ArtistId + "' class='artistselect'>";
 	return a222	
 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -61,12 +61,12 @@ function och_artistselect2(v1) {
 ///////////////////////////////////////////////////////////////////////////////
 function oc_albumOF1(va) {
 	var alb1 = "<div class='albumDIV'><ul class='albumUL' data-role='listview' data-inset='true'>";
-	var alb2 = alb1 + "<li class='albumLI'><a href='#' class='albumA1' data-artist='" + va.artist + "' ";
-	var alb3 = alb2 + "data-artistid='" + va.artistid + "' data-album='" + va.album + "' ";
-	var alb4 = alb3 + "data-albumid='" + va.albumid + "'><img id='" + va.albumid + "' ";
-	var alb5 = alb4 + "src='" + va.thumbnail + "'><h3 id='albH3'>" + va.album + "</h3>";
-	var alb6 = alb5 + "<p>" + va.artist + "</p><span class='ui-li-count'>" + va.numsongs + "</span>";
-	var alb7 = alb6 + "</a></li></ul></div><div class='albsongList'><ul id='albsongUL" + va.albumid + "' ";
+	var alb2 = alb1 + "<li class='albumLI'><a href='#' class='albumA1' data-artist='" + va.Artist + "' ";
+	var alb3 = alb2 + "data-artistid='" + va.ArtistId + "' data-album='" + va.Album + "' ";
+	var alb4 = alb3 + "data-albumid='" + va.AlbumId + "'><img id='" + va.AlbumId + "' ";
+	var alb5 = alb4 + "src='" + va.AlbumArtHttpPath + "'><h3 id='albH3'>" + va.Album + "</h3>";
+	var alb6 = alb5 + "<p>" + va.Artist + "</p><span class='ui-li-count'>" + va.NumSongs + "</span>";
+	var alb7 = alb6 + "</a></li></ul></div><div class='albsongList'><ul id='albsongUL" + va.AlbumId + "' ";
 	var alb81 = alb7 + "class='albsongUL' data-role='listview' data-inset='true' data-split-icon='gear'>";
 	return alb81
 };
@@ -343,28 +343,26 @@ function oc_homeBTN_fraz6(b) {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
+
+/*
 function singPlayer1(d) {
-	
-	console.log('this is soho src');
 	console.log(d.soho);
-	
-	$('#introimg').attr('src', d.soho['lthumbnail']);
-	$('#playlistalbart').attr('src', d.soho['lthumbnail']);
-	$('#pictext').text(d.soho['artist']);
-	$('#pictext2').text(d.soho['album']);
+	$('#introimg').attr('src', d.soho['AlbumArtHttpPath']);
+	$('#playlistalbart').attr('src', d.soho['AlbumArtHttpPath']);
+	$('#pictext').text(d.soho['Song']);
+	$('#pictext2').text(d.soho['Album']);
 	audio25 = $('#audio2');
-	
-	
-	
-	
-	
-	audio25.attr('src', d.soho['httpmusicpath']);
+	audio25.attr('src', d.soho['HttpMusicPath']);
 	audio25.on('loadedmetadata', function () {
 		var dur = audio25[0].duration;
 		var cd = calcDuration(dur);
 		$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
+		$('#artistPlayBtn').text("Play 00:00").css('background-color', 'green').css("color", "white");
+		$('#artistStopBtn').text("Stop " + cd[0] + ':' + cd[1]).css('background-color', 'purple');
 	});
 };
+
+*/
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -424,22 +422,49 @@ function oc_randomInput4(v) {
 	return arpl49
 };
 
+function albumSearchFunc() {
+	$('.albumDIV, .albsongList').empty();
+	$('#albsearch-basic').textinput({preventFocusZoom: true});
+	albsearchVal = $("#albsearch-basic").val();
+	$.get('AlbumSearch',
+	{
+		'albsearchval' : albsearchVal,
+	},
+	function(data) {
+		$('#albListViewDIV2').empty();
+		$.each(data.ysearch, function ( ke, va) {
+			var alb8 = oc_albsearchBut1(va);
+			var alba33 = '';
+			$.each(va.songs, function (k, v) {
+				$.each(v, function (kk, vv) {
+					alba33 = alba33 + oc_albsearchBut2(vv);
+					return alba33
+				});
+			});
+			var result = alb8 + alba33 + "</ul></div>";
+			$('#albListViewDIV2').append(result);
+			$('.albumUL, .albsongUL').listview().trigger('refresh');
+			$('.albsongUL').hide();
+			$.mobile.loading("hide");
+		});
+	});
+};
 //This makes Artist soup
 $(document).on('click', '.artOF', function () {
 	var artass = $(this).text();
 	$('#artistOFC').collapsible("collapse");
 	$('#artistmain').empty();
-	$.get('GetArtistInfo', 
+	$.get('ArtistInfo', 
 	{
 		'selected': artass
 	},
 	function (data) {
 		$.each(data.arts, function ( key, val ) {
-			var alblength = val.albums.length;
-			var abc = "<div class='artistPageDivS' data-role='collapsible'><h4>" + val.artist + "</h4>";
-			var selected = val.albums[0][1];
+			var alblength = val.Albums.length;
+			var abc = "<div class='artistPageDivS' data-role='collapsible'><h4>" + val.Artist + "</h4>";
+			var selected = val.Albums[0][1];
 			if ( alblength === 1 ) {
-				$.get('GetImageSongsForAlbum', 
+				$.get('ImageSongsForAlbum', 
 				{
 					'selected' : selected
 				}, 
@@ -461,7 +486,7 @@ $(document).on('click', '.artOF', function () {
 				var a2 = '';
 				var a3 = '';
 				var aa1 = "<option class='artop0' value='Choose Album'>Choose Album</option>";
-				$.each(val.albums, function (k, v) {
+				$.each(val.Albums, function (k, v) {
 					var a1 = "<option class='artop1' value='" + v[1] + "'>" + v[0] + "</option>";
 					a2 = a2 + a1;
 					a3 = aa1 + a2;
@@ -475,29 +500,62 @@ $(document).on('click', '.artOF', function () {
 		$.mobile.loading("hide");
 	});
 })
+.on('click', 'a.songnameS', function () {
+	var selected_song = $(this).attr('data-songid');
+	var audio2 = $('#audio2');
+	audio2.attr('src', '');
+	$('.duration').text('00:00');
+	var trancSS = localStorage.getItem('TransCode');
+	$.get("PathArt",
+	{
+		"selected": selected_song, "transcode": trancSS,
+	},
+	function(data,status){
+		audio2.attr('src', data.httpmusicpath);
+		$('#introimg').attr('src', data.lthumbnail);
+		$('#playlistalbart').attr('src', data.lthumbnail);
+		$('#pictext').text(data.song);
+		$('#pictext2').text(data.album);
+		var boob = {'song': data.song, 'songid': data.songid};
+		localStorage.setItem('songPageGetPathArt', JSON.stringify(data));
+		localStorage.setItem("songPageSelected_SONG_SONGID", JSON.stringify(boob));
+	});
+	audio2.on('loadedmetadata', function () {
+		var dur = audio2[0].duration;
+		var cd = calcDuration(dur);
+		$('.duration, .StopBtn').text("Stop " + cd[0] + ':' + cd[1]).css('background-color', 'purple');
+		$('.PlayBtn').text("Play 00:00").css('background-color', 'green').css("color", "white");
+	});	
+})
 //This get selected song from artist page and sends it to the player
 .on('click', '.artsongA1', function () {
 	var  audio24 = $('#audio2');
 	var booty = {'song': $(this).text(), 'songid': $(this).attr('data-songid')}
-	var trancArt = localStorage.getItem('TransCode');
+
 	localStorage.setItem('artistPageSelected_SONG_SONGID', JSON.stringify(booty));
-	$.get("GetPathArt",
+	$.get("PathArt",
 	{
-		"selected": booty.songid, 'transcode': trancArt
+		"selected": booty.songid,
 	},
 	function(data) {
-		audio24.attr('src', data.httpmusicpath);
-		$('#introimg').attr('src', data.albumart);
-		$('#playlistalbart').attr('src', data.albumart);
-		$('#pictext').text(data.song);
-		$('#pictext2').text(data.album);
+		audio24.attr('src', data.HttpMusicPath);
+		$('#introimg').attr('src', data.AlbumArtHttpPath);
+		$('#playlistalbart').attr('src', data.AlbumArtHttpPath);
+		$('#pictext').text(data.Song);
+		$('#pictext2').text(data.Album);
 		localStorage.setItem('artistPageGetPathArt', JSON.stringify(data));
 		audio24.on('loadedmetadata', function () {
 			var dur = audio24[0].duration;
 			var cd = calcDuration(dur);
-			$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
+//			$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
+			$('.PlayBtn').text("Play 00:00").css('background-color', 'grey').css('color', 'black');
+			$('.StopBtn').text("Stop " + cd[0] + ':' + cd[1]).css('background-color', 'grey').css('color', 'black');
+			var ftxt = data.Song + " " + data.Artist;
+			$('.footerSong').text(data.Song);
+			$('.footerArtist').text(data.Artist);
+			
 		});
-		audio24.on('ended', function () {
+/*		audio24.on('ended', function () {
 			$.get('ClearTemp',
 			{
 				'filetodelete': data.httpmusicpath,
@@ -505,7 +563,7 @@ $(document).on('click', '.artOF', function () {
 			function (data) {
 				console.log(data.cleared);
 			});
-		});
+		});*/iArtist1P1Fun2
 	});
 })
 //This fetches the selected album and displays albumart and
@@ -515,7 +573,7 @@ $(document).on('click', '.artOF', function () {
 	$('.art1div').empty();
 	artistid = $(this).attr('id'); //This is the artistid of the selected album	
 	selected = $(this).find(':selected').val(); //this is selected albumid
-	$.get('GetImageSongsForAlbum',
+	$.get('ImageSongsForAlbum',
 		{
 			'selected' : selected //this is albumid	
 		},
@@ -564,7 +622,7 @@ $(document).on('click', '.artOF', function () {
 	var albass = $(this).text();
 	$('#albumOFC').collapsible("collapse");
 	$('#alblist').empty();
-	$.get('GetAlbumInfo', 
+	$.get('AlbumInfo', 
 	{
 		'selected': albass
 	},
@@ -572,11 +630,9 @@ $(document).on('click', '.artOF', function () {
 		$.each(data.albs, function ( key, val) {
 			var alb8 = oc_albumOF1(val);
 			var alba33 = '';
-			$.each(val.songs, function (ka, val) {
-				$.each(val, function (kk, vv) {
-					alba33 = alba33 + oc_albumOF2(vv);
-					return alba33
-				});
+			$.each(val.Songs, function (ka, val) {
+				alba33 = alba33 + oc_albumOF2(val);
+				return alba33
 			});
 			var result = alb8 + alba33 + "</ul></div>";
 			$('#alblist').append(result);
@@ -592,29 +648,26 @@ $(document).on('click', '.artOF', function () {
 	audio23.attr('src', '');
 	$('.duration').text('00:00');
 	var selSong = $(this).attr('data-songid');
-	var trancAlb = localStorage.getItem('TransCode');
-	console.log('this is trancAlb');
-	console.log(trancAlb);
-	
-	$.get("GetPathArt",
+	$.get("PathArt",
 	{
-		"selected": selSong, 'transcode': trancAlb,
+		"selected": selSong,
 	},
 	function(data){
-		var foobar10 = {'song': data.song, 'songid': selSong};
-		audio23.attr('src', data.httpmusicpath);
-		$('#introimg').attr('src', data.albumart);
-		$('#playlistalbart').attr('src', data.albumart);
-		$('#pictext').text(data.song);
-		$('#pictext2').text(data.album);
+		var foobar10 = {'song': data.Song, 'songid': selSong};
+		audio23.attr('src', data.HttpMusicPath);
+		$('#introimg').attr('src', data.AlbumArtHttpPath);
+		$('#playlistalbart').attr('src', data.AlbumArtHttpPath);
+		$('#pictext').text(data.Song);
+		$('#pictext2').text(data.Album);
 		localStorage.setItem('albumPageGetPathArt ', JSON.stringify(data));
 		localStorage.setItem('albumPageSelected_SONG_SONGID', JSON.stringify(foobar10));
 		audio23.on('loadedmetadata', function () {
 			var dur = audio23[0].duration;
 			var cd = calcDuration(dur);
 			$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
+			$('.PlayBtn').css('background-color', 'green').css("color", "white");
 		});
-		audio23.on('ended', function () {
+/*		audio23.on('ended', function () {
 			$.get('ClearTemp',
 			{
 				'filetodelete': data.httpmusicpath,
@@ -622,7 +675,7 @@ $(document).on('click', '.artOF', function () {
 			function (data) {
 				console.log(data.cleared);
 			});
-		});
+		});*/
 	});
 	$('.albsongUL').hide();
 })
@@ -636,15 +689,15 @@ $(document).on('click', '.artOF', function () {
 	var ss = $(this).text();
 	$('#songOFC').collapsible("collapse");
 	$("#songs_view").empty();
-	$.get('GetSongInfo',
+	$.get('SongInfo',
 	{
 		'selected': ss
 	},
 	function (data) {
 		$.each(data.song, function ( key, val) {
-			var ss1 = "<li class='songs_li'><a class='songname' href='#' data-songid='" + val.songid + "'>";
-			var ss2 = ss1 + "<h2>" + val.song + "</h2><h6>" + val.artist + "</h6></a><a href='#selectplpage' ";
-			var ss3 = ss2 + "data-song='" + val.song + "' data-songid='" + val.songid + "' class='addtoplaylist' ";
+			var ss1 = "<li class='songs_li'><a class='songname' href='#' data-songid='" + val.SongId + "'>";
+			var ss2 = ss1 + "<h2>" + val.Song + "</h2><h6>" + val.Artist + "</h6></a><a href='#selectplpage' ";
+			var ss3 = ss2 + "data-song='" + val.Song + "' data-songid='" + val.SongId + "' class='addtoplaylist' ";
 			var ss4 = ss3 + "data-transition='slidefade'></a></li>";
 			$("#songs_view").append(ss4);
 		});
@@ -660,20 +713,18 @@ $(document).on('click', '.artOF', function () {
 	audio2.attr('src', '');
 	$('.duration').text('00:00');
 	var selected_songid = $(this).attr('data-songid');
-	var trancS = localStorage.getItem('TransCode');
-	console.log('this is trancS');
-	console.log(trancS);
-	$.get("GetPathArt",
+
+	$.get("PathArt",
 	{
-		"selected": selected_songid, "transcode": trancS,
+		"selected": selected_songid
 	},
 	function(data) {
-		audio2.attr('src', data.httpmusicpath);
-		$('#introimg').attr('src', data.albumart);
-		$('#playlistalbart').attr('src', data.albumart);
-		$('#pictext').text(data.song);
-		$('#pictext2').text(data.album);
-		var booob = {'song': data.song, 'songid': data.songid};
+		audio2.attr('src', data.HttpMusicPath);
+		$('#introimg').attr('src', data.AlbumArtHttpPath);
+		$('#playlistalbart').attr('src', data.AlbumArtHttpPath);
+		$('#pictext').text(data.Song);
+		$('#pictext2').text(data.Album);
+		var booob = {'song': data.Song, 'songid': data.SongId};
 		localStorage.setItem('songPageGetPathArt', JSON.stringify(data));
 		localStorage.setItem("songPageSelected_SONG_SONGID", JSON.stringify(booob));
 		audio2.on('loadedmetadata', function () {
@@ -681,7 +732,7 @@ $(document).on('click', '.artOF', function () {
 			var cd = calcDuration(dur);
 			$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
 		});
-		audio2.on('ended', function () {
+/*		audio2.on('ended', function () {
 			$.get('ClearTemp',
 			{
 				'filetodelete': data.httpmusicpath,
@@ -689,7 +740,7 @@ $(document).on('click', '.artOF', function () {
 			function (data) {
 				console.log(data.cleared);
 			});
-		});
+		});*/
 	});	
 })
 //This sets the selectedSONG and selectedSONGid in the browser localstorage
@@ -698,7 +749,7 @@ $(document).on('click', '.artOF', function () {
 	var sname = {'song': $(this).attr('data-song'), 'songid': $(this).attr('data-songid')}
 	localStorage.setItem('songPageSelected_SONG_SONGID', JSON.stringify(sname));
 	$('#playPlaylistUL, #splUL, #albsplUL, #artsplUL').empty();
-	$.get("GetAllPlaylists",
+	$.get("AllPlaylists",
 	{
 		"selected": sname.songid
 	},
@@ -727,7 +778,7 @@ $(document).on('click', '.artOF', function () {
 	var arr = {'song': $(this).attr('data-song'), 'songid': $(this).attr('data-songid')};
 	localStorage.setItem("artistPageSelected_SONG_SONGID", JSON.stringify(arr));
 	$('#playPlaylistUL, #artsplUL, #albsplUL, #splUL').empty();
-	$.get("GetAllPlaylists",
+	$.get("AllPlaylists",
 	{
 		"selected": arr.songid
 	},
@@ -747,7 +798,7 @@ $(document).on('click', '.artOF', function () {
 .on('click', '.addToPlaylist', function () {
 	var sname2 = {'song': $(this).attr('data-song'), 'songid': $(this).attr('data-songid')};
 	localStorage.setItem("albumPageSelected_SONG_SONGID", JSON.stringify(sname2));
-	$.get("GetAllPlaylists",
+	$.get("AllPlaylists",
 	{
 		"selected": sname2.songid
 	},
@@ -802,25 +853,10 @@ $(document).on('click', '.artOF', function () {
 		}		
 	});
 })
-//This is the player controls for the artist, album, and songs page
-.on('click', '.stopButton', function () {	
-	$(".duration, .current").css('background-color', 'firebrick');
-	$('#audio2').get(0).pause();
-})
-.on('click', '.playButton', function () {
-	$('#audio1').attr('src', '');
-	$('.duration, .current').css('background-color', 'purple');
-	var audio2 = $('#audio2');
-	audio2[0].play();
-	audio2.on('timeupdate', function () {
-		var ct = audio2[0].currentTime;
-		var cd = calcDuration(ct);
-		$('.current').text(cd[0] + ':' + cd[1]);
-	});
-	audio2.on('ended', function () {
-		$('.duration, .current').text("00:00").css('background-color', 'black');
-	});
-})
+
+
+
+
 .on('click', '#searchBut', function () {
 	searchVal = $('#search-basic').val();
 	$.get('SongSearch',
@@ -844,34 +880,30 @@ $(document).on('click', '.artOF', function () {
 .on('click', '#SS', function () {
 	$('#SSD1, #SSD2, #songListViewDIV2').fadeToggle('fast');
 })
+
+
+
+
+
+
+.on('keypress', function (e) {
+	if (e.which == 13){
+		var alb = $("#albsearch-basic").val()
+		if (alb != '') {
+			albumSearchFunc();
+		}
+	};
+})
+
+
+
+
+
+
+
+
 .on('click', '#albsearchBut', function () {
-	$('.albumDIV, .albsongList').empty();
-	$('#albsearch-basic').textinput({preventFocusZoom: true});
-	albsearchVal = $("#albsearch-basic").val();
-	$.get('AlbumSearch',
-	{
-		'albsearchval' : albsearchVal,
-	},
-	function(data) {
-		$('#albListViewDIV2').empty();
-		$.each(data.ysearch, function ( ke, va) {
-			var alb8 = oc_albsearchBut1(va);
-			var alba33 = '';
-			$.each(va.songs, function (k, v) {
-				$.each(v, function (kk, vv) {
-					console.log('this is albumsearchBut vv[0]');
-					console.log(vv);
-					alba33 = alba33 + oc_albsearchBut2(vv);
-					return alba33
-				});
-			});
-			var result = alb8 + alba33 + "</ul></div>";
-			$('#albListViewDIV2').append(result);
-			$('.albumUL, .albsongUL').listview().trigger('refresh');
-			$('.albsongUL').hide();
-			$.mobile.loading("hide");
-		});
-	});
+	albumSearchFunc();
 })
 .on('click', '#albsearchClear', function () {
 	$('#albsearch-basic').val('');
@@ -894,7 +926,7 @@ $(document).on('click', '.artOF', function () {
 				if ( alblength === 1 ) {
 					var abc = "<div class='artistPageDivS' data-role='collapsible'><h4>" + va.artist + "</h4>";
 					var selected = va.albums[0][1]; //this is albumid
-					$.get('GetImageSongsForAlbum',
+					$.get('ImageSongsForAlbum',
 						{
 							'selected' : selected	//this is albumid	
 						},
@@ -946,20 +978,6 @@ $(document).on('click', '.artOF', function () {
 	$('#artSearchDIV').empty();
 	$.mobile.loading("hide");
 })
-.on('click', '#videolistViewA', function () {
-	$('#audio1').attr('src', '');
-	$('#audio2').attr('src', '');
-	var vAddr = $(this).attr('data-vidAddr');
-	var vId = $(this).attr('data-videoID');
-	$('#vid100').attr('src', vAddr);
-})
-.on('click', '#vartists, #valbums, #vsongs, #vplaylists, #vvideos', function () {
-	$('#vid100').attr('src', '');
-})
-.on('click', '#vidH3', function () {
-	$('#vid1DIV').fadeToggle('fast');
-	$('#vid1').attr('src', '');
-})
 .on('click', '.homeBTN, .fraz', function () {
 	rpwStop();
 	$('#popup1, #popup2, #popup3, #popup4, #popup5, #intropicGrid1').empty();
@@ -973,73 +991,6 @@ $(document).on('click', '.artOF', function () {
 	oc_homeBTN_fraz6(boohoo);
 	RandomPics();
 	rpwStart();		
-})
-.on('click', '.rart1', function () {
-	var sid = $(this).attr('data-songid');
-	$('#popup1').popup('close');
-	var tranc1 = localStorage.getItem('TransCode');
-	$.get('RamdomAlbumPicPlaySong',
-	{
-		'sid' : sid, 'transcode': tranc1
-	},
-	function (data) {
-		console.log('this is singplayer1 data');
-		console.log(data);
-		singPlayer1(data);
-	});
-	rpwStart();
-})
-.on('click', '.rart2', function () {
-	var sid = $(this).attr('data-songid');
-	$('#popup2').popup('close');
-	var tranc2 = localStorage.getItem('TransCode');
-	$.get('RamdomAlbumPicPlaySong',
-	{
-		'sid' : sid, 'transcode': tranc2
-	},
-	function (data) {
-		singPlayer1(data);
-	});
-	rpwStart();
-})
-.on('click', '.rart3', function () {
-	var sid = $(this).attr('data-songid');
-	$('#popup3').popup('close');
-	var tranc3 = localStorage.getItem('TransCode');
-	$.get('RamdomAlbumPicPlaySong',
-	{
-		'sid' : sid, 'transcode': tranc3
-	},
-	function (data) {
-		singPlayer1(data);
-	});
-	rpwStart();
-})
-.on('click', '.rart4', function () {
-	var sid = $(this).attr('data-songid');
-	$('#popup4').popup('close');
-	var tranc4 = localStorage.getItem('TransCode');
-	$.get('RamdomAlbumPicPlaySong',
-	{
-		'sid' : sid, 'transcode': tranc4
-	},
-	function (data) {
-		singPlayer1(data);
-	});
-	rpwStart();
-})
-.on('click', '.rart5', function () {
-	var sid = $(this).attr('data-songid');
-	$('#popup5').popup('close');
-	var tranc5 = localStorage.getItem('TransCode');
-	$.get('RamdomAlbumPicPlaySong',
-	{
-		'sid' : sid, 'transcode': tranc5
-	},
-	function (data) {
-		singPlayer1(data);
-	});
-	rpwStart();
 })
 .on('click', '#intropicGrid1', function () {
 	rpwStop();
@@ -1106,7 +1057,6 @@ $.mobile.loader.prototype.options.textVisible,
 			$.mobile.loading("hide");
 		});
 	} else {
-		console.log("need a popup to handle non alpha numeric characters errror");
 		$.mobile.loading("hide");
 	}
 })
@@ -1141,7 +1091,7 @@ $.mobile.loader.prototype.options.textVisible,
 	$("#pleditMain").empty();
 	var pln33 = JSON.parse(localStorage.getItem("currentSelected_PLAYLIST_PLAYLISTID"));
 	var blep = "<div id='pledith3'><h3>Edit: " + pln33.playlist + "</h3></div>";
-	$.get('GetAllPlaylistSongsFromDB',
+	$.get('AllPlaylistSongsFromDB',
 	{
 		'playlistid' : pln33.playlistid
 	},
@@ -1162,7 +1112,7 @@ $.mobile.loader.prototype.options.textVisible,
 		$('#pleditMain').append(editsongs);
 		$('.editplUL').listview().trigger('refresh');
 	});
-	$.get('GetAllPlaylists', function (data) {
+	$.get('AllPlaylists', function (data) {
 		localStorage.setItem('playlists', JSON.stringify(data));
 	})
 	$.mobile.loading("hide");
@@ -1256,7 +1206,7 @@ $.mobile.loader.prototype.options.textVisible,
 				}
 			})
 		})
-		$.get('GetAllPlaylists', function (data) {
+		$.get('AllPlaylists', function (data) {
 			localStorage.setItem('playlists', JSON.stringify(data));
 		})
 		
@@ -1288,38 +1238,21 @@ $.mobile.loader.prototype.options.textVisible,
 //This pauses the Single Song Player when the playlist load button is clicked
 //audio1 is the playlistplayer
 .on('click', '#playlistLoadBtn1', function () {
-	$('.playButton').hide();
-	$('.stopButton').hide();
+/*	$('.playButton').hide();
+	$('.stopButton').hide();*/
 	$('#audio2').attr('src', '');
 	$('.duration, .current').text("00:00").css('background-color', 'black');
 })
 .on('click', ".songname, .songnameS, .albsongsA, .artsongA1, .rart1, .rart2, .rart3, .rart4, .rart5", function () {
-	$('.playButton').show();
-	$('.stopButton').show();	
+/*	$('.playButton').show();
+	$('.stopButton').show();	*/
 	$('#audio1').attr('src', '');
-	$('#audio1').hide();
+//	$('#audio1').hide();
 })
-.on('click', ".navPls, .navVid", function () {
-	if ($('#audio2')[0].duration > 0 && !$('#audio2')[0].paused) {
-		$('.playButton, .stopButton').show();
-		$('#audio1').hide();
-	} else {
-		$('.playButton, .stopButton').hide();
-		$('#audio1').show();
-	}
-})
-.on('click', ".navArt, .navAlb, .navSong, .navVid", function () {
-	if ($('#audio1')[0].duration > 0 && !$('#audio1')[0].paused) {
-		$('.playButton, .stopButton').hide();
-		$('#audio1').show();
-	} else {
-		$('.playButton, .stopButton').show();
-		$('#audio1').hide();
-	}
-})
-.on('change', "#select-based-flipswitch", function () {
-	localStorage.setItem('TransCode', this.value);
-});
+
+
+
+;
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////// END PLAYLIST PAGE STUFF //////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////

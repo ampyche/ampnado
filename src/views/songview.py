@@ -18,38 +18,39 @@
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 ###############################################################################
-import os, uuid
-from multiprocessing import Pool
+from src.data import Data
 
-class GetFileMeta:
+class SongView:
+	def __init__(self):
+		self.tags = Data().tags_all_song_songid_artist()
+		self.songalphaoffsetlist = []
+		self.songviewlist = []
+
+	def rm_dups_songalpha(self, x): return list(set(x))
 	
-	def size(self, x):
-		try:
-			a = os.path.getsize(x)
-		except OSError:
-			a = "001"
-		return a 
+	def insert_songalpha(self, z): Data().viewsdb_songalpha_insert(dict(songalpha=z))
+	
+	def insert_songview(self, w):
+		Data().viewsdb_songview_insert(w)
 		
-	def dirpath(self, x):
-		return os.path.dirname(x)
+	def create_songView_db(self, OFC):
+		count = 0
+		page = 1
 		
-	def split_lower(self, x):
-		return os.path.splitext(x)[1].lower()
+		for s in self.tags:
+			count += 1
+			if count == int(OFC):
+				page += 1
+				count = 0
+			self.songalphaoffsetlist.append(page)
+			x = {}
+			x['Page'] = page
+			x['Song'] = s['Song']
+			x['SongId'] = s['SongId']
+			x['Artist'] = s['Artist']
+			self.songviewlist.append(x)
+		songalphaoffsetlist1 = self.rm_dups_songalpha(self.songalphaoffsetlist)
+		insertsongalpha = self.insert_songalpha(songalphaoffsetlist1)
+		insertsongview = self.insert_songview(self.songviewlist)       
 		
-	def uuidd(self):
-		return str(uuid.uuid4().hex)
-
-	def get_file_meta(self, fn):
-		fn['filesize'] = self.size(fn['filename'])
-		fn['dirpath'] = self.dirpath(fn['filename'])
-		fn['filetype'] = self.split_lower(fn['filename'])
-		fn['songid'] = self.uuidd()
-		return fn 
-		
-	def file_meta_main(self, files, acores):		
-		pool = Pool(processes=acores)
-		pm = pool.map(self.get_file_meta, files)
-		cleaned = [x for x in pm if x != None]
-		pool.close()
-		pool.join()
-		return cleaned
+		return self.songviewlist
