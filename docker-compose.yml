@@ -1,0 +1,55 @@
+version: "3.3"
+
+services:
+  db:
+    image: mongo:latest
+    #image: andresvidal/rpi3-mongodb3:latest
+    networks:
+      - ampnado
+    ports:
+      - 27017:27017
+
+  amp:
+    image: ampnado
+    build: ./ampnado
+    environment:
+      - AMP_PROGRAM_PATH=/home/charlie/Desktop/Ampnado
+
+      - MONGO_AMPNADO_MONGODB_ADDR=mongodb://db:27017/ampnadoDB
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+      - AMP_SETUP=1
+      - AMP_MEDIA_PATH=/usr/src/ampnado/Music
+      - AMP_HTTP_THUMBNAIL_DIR_PATH=/static/images/thumbnails
+      - AMP_THUMBNAIL_DIR_PATH=./static/images/thumbnails
+      - AMP_NO_ART_PIC_PATH=./static/images/noartpic.jpg
+      - AMP_SERVER_ADDR=http://192.168.1.103
+      - AMP_SERVER_PORT=6789
+      - AMP_OFFSET_SIZE=45
+      - AMP_USERNAME=admin
+      - AMP_PASSWORD=ampnado
+
+    networks:
+      - ampnado
+    ports:
+      - 6789:6789
+    volumes:
+      - ampnadovol:/usr/src/ampnado/Music
+      #- AMPNADOvol:/root/fsData
+    depends_on:
+      - db
+
+networks:
+  ampnado:
+
+volumes:
+  ampnadovol:
+    driver: local
+    driver_opts:
+      type: none
+#THIS NEEDS TO BE CHANGE TO THE CORRECT PATH ON THE PI
+      device: /home/charlie/Music
+      #device: /home/teresa/Videos/media
+      #device: /media/pi/PiTB/
+      #device: /home/teresa/Music
+      o: bind
