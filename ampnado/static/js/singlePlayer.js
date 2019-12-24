@@ -32,7 +32,6 @@ $(document).on('click', '.playButton, .PlayBtn', function () {
 	$('#audio1').attr('src', '');
 	$('.duration, .current').css('background-color', 'green').css('color', 'white');
 	$('.PlayBtn, .StopBtn').css('background-color', 'darkviolet').css('color', 'white');
-//	$('.StopBtn').css('background-color', 'darkviolet').css('color', 'white');
 	var audio2 = $('#audio2');
 	audio2[0].play();
 	dur = audio2[0].duration;

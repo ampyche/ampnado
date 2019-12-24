@@ -40,12 +40,8 @@ viewsdb = ampVDBClient.ampviewsDB
 ampPDBClient = pymongo.MongoClient("mongodb://db:27017/picdb")
 pdb = ampPDBClient.picdb
 
-
-
-
 FUN = Fun.Functions()
 RAND = Fun.RandomArtDb()
-
 
 define('server_port',
 	default= os.environ["AMP_SERVER_PORT"],

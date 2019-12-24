@@ -51,20 +51,7 @@ class FindMissingArt:
 				pass
 		return
 
-	# def convert_pngs(self, fpath):
-	# 	pngglob = glob.glob(fpath + "/*.png")
-	# 	if not len(pngglob) == 0:
-	# 		for p in pngglob:
-	# 			noext = p[:-4]
-	# 			newpath = noext + ".jpg"
-	# 			size = (100, 100)
-	# 			with Image.open(p) as img:
-	# 				img.convert("RGB")
-	# 				img.thumbnail(size, Image.ANTIALIAS)
-	# 				img.save(newpath)
-
 	def get_globs(self, mpath):
-		#self.convert_pngs(mpath)
 		x = {}
 		picid = str(uuid.uuid4().hex)
 		x['PicId'] = picid

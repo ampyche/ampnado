@@ -188,11 +188,6 @@ class Functions:
 	def get_bytes(self):
 		return Data().tags_aggregate_filesize()
 
-	# def get_ids(self):
-	# 	alltags = Data().tags_all_id()
-	# 	allt = [at['_id'] for at in alltags]
-	# 	return allt
-
 	def hash_func(self, a_string):
 		return str(hashlib.sha512(a_string.encode('utf-8')).hexdigest())
 
@@ -203,18 +198,6 @@ class Functions:
 		hash4 = ''.join((hash1, hash2, hash3))
 		hash5 = self.hash_func(hash4)
 		return auname, hash2, hash5
-		
-#		allt = []
-#		for at in alltags: 
-#			tid = at['_id']
-#			allt.append(tid)
-#		return allt
-
-	# def create_catalog_db(self, cdict):
-	# 	bytes = self.get_bytes()
-	# 	cdict['catobjList'] = self.get_ids()
-	# 	cdict['catTotal'] = self.convert_bytes(bytes['result'][0]['total']),
-	# 	self.insert_catalog_info(cdict)
 
 	def insert_user(self, a_uname, a_pword):
 		h = self.gen_hash(a_uname, a_pword)
