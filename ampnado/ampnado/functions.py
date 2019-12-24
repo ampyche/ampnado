@@ -66,14 +66,6 @@ class FindMedia:
 		except TypeError:
 			exit()
 
-	# def change_name_loop(self, path_to_music):
-	# 	for (paths, dirs, files) in os.walk(path_to_music, followlinks=True):
-	# 		for filename in files:
-	# 			fn = os.path.join(paths, filename)
-	# 			ext = os.path.splitext(fn)[1].lower()
-	# 			if ext == ".mp3":
-	# 				self.changenamelist.append(fn)
-
 class AddArtistId:
 	def __init__(self):
 		self.artist = Data().tags_distinct_artist()
