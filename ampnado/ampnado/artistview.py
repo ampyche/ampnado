@@ -20,7 +20,7 @@
 ###############################################################################
 from multiprocessing import Pool
 import multiprocessing as mu
-from src.data import Data
+from data import Data
 import os, pymongo
 v = pymongo.version
 version = v.split('.')[0]
@@ -88,6 +88,6 @@ class ArtistChunkIt:
 		chunks = self.chunks(artv, OFC)
 		gaos = self._get_alphaoffset(chunks)
 		pool = Pool(processes=cores)
-		voodoo = pool.map(self._get_pages, gaos)
+		pool.map(self._get_pages, gaos)
 		pool.close()
 		pool.join()

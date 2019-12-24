@@ -2,30 +2,29 @@
 import os
 import glob
 import uuid
-import src.createthumbnail as ct
-from src.data import Data
+import createthumbnail as ct
+from data import Data
 from pymongo import MongoClient
 
 try: from mutagen import File
 except ImportError: from mutagenx import File
 from PIL import Image
 
-client = MongoClient()
+client = MongoClient("mongodb://db:27017/ampnaodDB")
 pdb = client.picdb
 
 class FindMissingArt:
 
-	def __init__(self, config, mpath):
-		self.config = config
-		self.thumbnail_path = self.config['thumbnail_dir_path']
-		self.http_thumbnail_path = self.config['http_thumbnail_dir_path']
-		self.media_path = self.config["media_path"]
+	def __init__(self):
+		self.thumbnail_path = os.environ["AMP_THUMBNAIL_DIR_PATH"]
+		self.http_thumbnail_path = os.environ["AMP_HTTP_THUMBNAIL_DIR_PATH"]
+		self.media_path = os.environ["AMP_MEDIA_PATH"]
 		self.ArtWork = None
 		self.MP3List = []
 		self.NoArtList = []
 		self.PicDics = []
 		mlist = []
-		for (paths, dirs, files) in os.walk(mpath, followlinks=True):
+		for (paths, dirs, files) in os.walk(self.media_path, followlinks=True):
 			for filename in files:
 				fp = os.path.join(paths, filename)
 				ext = fp[-4:]
@@ -48,7 +47,7 @@ class FindMissingArt:
 					img.write(artwork)
 				self.ArtWork = newpath
 			except (KeyError, TypeError, AttributeError):
-				self.ArtWork = self.config["no_art_pic_path"]
+				self.ArtWork = os.environ["AMP_NO_ART_PIC_PATH"]
 				pass
 		return
 
@@ -93,7 +92,7 @@ class FindMissingArt:
 	def globstuff(self):
 		mg = map(self.get_globs, self.Mp3DIRList)
 		my_globs = list(mg)
-		Thumb = ct.Thumbnails(self.config)
+		Thumb = ct.Thumbnails()
 		mythumbs = [Thumb.create_thumbs(m) for m in my_globs]
 		pdb.pics.insert_many(mythumbs)
 		Data().tags_update_artID(my_globs)

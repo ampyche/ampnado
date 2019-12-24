@@ -19,10 +19,10 @@
 ###############################################################################
 ###############################################################################
 import os, re, sys, uuid, configparser, hashlib, time
-from src.functions import Functions
-from src.data import Data
+#from functions import Functions
+from data import Data
 from pymongo import MongoClient
-client = MongoClient()
+client = MongoClient("mongodb://db:27017/ampnaodDB")
 db = client.ampnadoDB
 
 ALNEW_ERROR_MESSAGE = """
@@ -136,55 +136,56 @@ class GetInputs:
 			Data().usercreds_insert_user_pword(a_uname, a_pword, a_hash)
 			print("The user   %s   with password   %s   has been created" % (a_uname, a_pword))
 
-	def create_options_dict(self, conf):
-		options_dict = {
-			"hostaddress" : conf['server_addr'],
-			"musicpath" : conf['media_path'],
-			"offset"      : str(conf['offset_size']),
-			"port"        : str(conf['server_port']),
-		}
-		return options_dict
+	# def create_options_dict(self):
+	# 	options_dict = {
+	# 		"hostaddress" : os.environ["AMP_SERVER_ADDR"],
+	# 		"musicpath" : os.environ["AMP_MEDIA_PATH"],
+	# 		"offset"      : os.environ["AMP_OFFSET_SIZE"],
+	# 		"port"        : os.environ["AMP_SERVER_PORT"],
+	# 	}
+	# 	return options_dict
 
-	def read_config(self, configpath):
-		config = configparser.ConfigParser()
-		config.read(configpath)
-		x = {
-			"server_addr": config["server-info"]["serv-addr"],
-			"server_port": config["server-info"]["serv-port"],
-			"http_thumbnail_dir_path" : config['prog-paths']["http-thumbnail-dir-path"],
-			"program_path" : config["prog-paths"]["program-path"],
-			"thumbnail_dir_path" : config["prog-paths"]["thumbnail-dir-path"],
-			"media_path": config["prog-paths"]["media-path"],
-			"no_art_pic_path": config["prog-paths"]["no-art-pic-path"],
-			"offset_size": config["server-info"]["offset-size"],
-			"username": config["user-info"]["username"],
-			"password": config["user-info"]["password"],
-			"configfile_path": config["configfile-path"]["config_path"],
-		}
-		db.options.insert(x)
-		return x
+	# def read_config(self, configpath):
+	# 	# config = configparser.ConfigParser()
+	# 	# config.read(configpath)
+	# 	x = {
+	# 		"server_addr" : os.environ["AMP_SERVER_ADDR"],
+	# 		"server_port" : os.environ["AMP_SERVER_PORT"],
+	# 		"media_path" : os.environ["AMP_MEDIA_PATH"],
+	# 		"http_thumbnail_dir_path" : os.environ["AMP_HTTP_THUMBNAIL_DIR_PATH"],
+	# 		"program_path" : os.environ["AMP_PROGRAM_PATH"],
+	# 		"thumbnail_dir_path" : os.environ["AMP_THUMBNAIL_DIR_PATH"],
+	# 		"no_art_pic_path": os.environ["AMP_NO_ART_PIC_PATH"],
+	# 		"offset_size": os.environ["AMP_OFFSET_SIZE"],
+	# 		"username": os.environ["AMP_USERNAME"],
+	# 		"password": os.environ["AMP_PASSWORD"],
+	# 		"configfile_path": None,
+	# 		#"configfile_path": config["configfile-path"]["config_path"],
+	# 	}
+	# 	db.options.insert(x)
+	# 	return x
 
-	def sanity_checks(self, conf):
-		status = 0
-		if not self.check_server_addr(conf['server_addr']):
-			status = 1
-			print("CHECK 1 HAS FAILED")
-		if not self.check_media_path(conf['media_path']):
-			status = 1
-			print("CHECK 2 HAS FAILED")
-		if not self.check_uname(conf['username']):
-			status = 1
-			print("CHECK 3 HAS FAILED")
-		if not self.check_pword(conf['password']):
-			status = 1
-			print("CHECK 4 HAS FAILED")
-		# if not self.check_if_uname_already_in_db(conf['username'], conf['password']):
-		# 	status = 1
-		# 	print("CHECK 5 HAS FAILED")
-		if status != 1:
-			h = self.gen_hash(conf['username'], conf['password'])
-			self.insert_user(h[0], h[1], h[2], conf['password'])
-			return self.create_options_dict(conf)
+	# def sanity_checks(self, conf):
+	# 	status = 0
+	# 	if not self.check_server_addr(os.environ["AMP_SERVER_ADDR"]):
+	# 		status = 1
+	# 		print("CHECK 1 HAS FAILED")
+	# 	if not self.check_media_path(os.environ["AMP_MEDIA_PATH"]):
+	# 		status = 1
+	# 		print("CHECK 2 HAS FAILED")
+	# 	if not self.check_uname(os.environ["AMP_USERNAME"]):
+	# 		status = 1
+	# 		print("CHECK 3 HAS FAILED")
+	# 	if not self.check_pword(os.environ["AMP_PASSWORD"]):
+	# 		status = 1
+	# 		print("CHECK 4 HAS FAILED")
+	# 	# if not self.check_if_uname_already_in_db(conf['username'], conf['password']):
+	# 	# 	status = 1
+	# 	# 	print("CHECK 5 HAS FAILED")
+	# 	if status != 1:
+	# 		h = self.gen_hash(os.environ["AMP_USERNAME"], os.environ["AMP_PASSWORD"])
+	# 		self.insert_user(h[0], h[1], h[2], os.environ["AMP_PASSWORD"])
+	# 		return self.create_options_dict()
 
 	def remove_user(self, a_uname, a_pword):
 		aid = Data().fone_usercreds_user_pword(a_uname, a_pword)

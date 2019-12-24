@@ -18,7 +18,7 @@
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 ###############################################################################
-from src.data import Data
+from data import Data
 
 class SongView:
 	def __init__(self):
@@ -50,7 +50,7 @@ class SongView:
 			x['Artist'] = s['Artist']
 			self.songviewlist.append(x)
 		songalphaoffsetlist1 = self.rm_dups_songalpha(self.songalphaoffsetlist)
-		insertsongalpha = self.insert_songalpha(songalphaoffsetlist1)
-		insertsongview = self.insert_songview(self.songviewlist)       
+		self.insert_songalpha(songalphaoffsetlist1)
+		self.insert_songview(self.songviewlist)       
 		
 		return self.songviewlist

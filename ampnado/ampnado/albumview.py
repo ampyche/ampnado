@@ -21,7 +21,7 @@
 import os, logging
 from multiprocessing import Pool
 import multiprocessing as mu
-from src.data import Data
+from data import Data
 import pymongo
 
 v = pymongo.version
@@ -96,6 +96,6 @@ class AlbumChunkIt:
 		chunks = self.chunks(albv, OFC)
 		gaos = self.get_alphaoffset(chunks)
 		pool = Pool(processes=cores)
-		voodoo = pool.map(self.get_pages, gaos)
+		pool.map(self.get_pages, gaos)
 		pool.close()
 		pool.join()

@@ -29,12 +29,20 @@ import tornado.ioloop
 import tornado.web
 from tornado.options import define, options, parse_command_line
 import pymongo
-import src.functions as Fun
+import functions as Fun
 
-client = pymongo.MongoClient()
-db = client.ampnadoDB
-viewsdb = client.ampviewsDB
-pdb = client.picdb
+ampDBClient = pymongo.MongoClient("mongodb://db:27017/ampnadoDB")
+db = ampDBClient.ampnadoDB
+
+ampVDBClient = pymongo.MongoClient("mongodb://db:27017/ampviewsDB")
+viewsdb = ampVDBClient.ampviewsDB
+
+ampPDBClient = pymongo.MongoClient("mongodb://db:27017/picdb")
+pdb = ampPDBClient.picdb
+
+
+
+
 FUN = Fun.Functions()
 RAND = Fun.RandomArtDb()
 
@@ -96,9 +104,11 @@ class Application(tornado.web.Application):
 		]
 		settings = dict(
 #			static_path = os.path.join(os.path.dirname(__file__), "static"),
-			static_path = os.environ["AMP_PROGRAM_PATH"] + "/static",
+#			static_path = os.environ["AMP_PROGRAM_PATH"] + "/ampnado/static",
+			static_path = "./static",
 #			template_path = os.path.join(os.path.dirname(__file__), "templates"),
-			template_path = os.environ["AMP_PROGRAM_PATH"] + "/templates",
+#			template_path = os.environ["AMP_PROGRAM_PATH"] + "/ampnado/templates",
+			template_path = "./templates",
 			login_url = "/login",
 			cookie_secret = hashlib.sha512(str(random.randrange(100)).encode('utf-8')).hexdigest(),
 			xsrf_cookies = True,

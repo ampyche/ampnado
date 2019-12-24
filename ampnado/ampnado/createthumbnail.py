@@ -22,13 +22,11 @@ import os, base64, glob
 from PIL import Image
 from pymongo import MongoClient, ASCENDING, DESCENDING
 
-client = MongoClient()
+client = MongoClient("mongodb://db:27017/ampnaodDB")
 db = client.ampnadoDB
 viewsdb = client.ampviewsDB
 
 class Thumbnails():
-	def __init__(self, config):
-		self.config = config
 
 	def get_smallthumb(self, size, location, filename):
 		try:
@@ -55,7 +53,7 @@ class Thumbnails():
 			return "None"
 
 	def create_thumbs(self, p):
-		loc1 = self.config['program_path'] +" temp/" + p["PicId"] + ".jpg"
+		loc1 = os.environ["AMP_PROGRAM_PATH"] +" temp/" + p["PicId"] + ".jpg"
 		if os.path.exists(loc1):
 			os.remove(loc1)
 		d2thumb = (125, 125)

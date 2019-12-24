@@ -19,21 +19,25 @@
 ###############################################################################
 ###############################################################################
 import os, random, time, hashlib, uuid
-from src.data import Data
+from data import Data
 from pymongo import MongoClient, ASCENDING, DESCENDING
 try: from mutagen import File
 except ImportError: from mutagenx import File
-import src.metatags as MT
+import metatags as MT
 
-client = MongoClient()
-db = client.ampnadoDB
-viewsdb = client.ampviewsDB
+ampDBClient = MongoClient("mongodb://db:27017/ampnadoDB")
+db = ampDBClient.ampnadoDB
+
+ampVDBClient = MongoClient("mongodb://db:27017/ampviewsDB")
+viewsdb = ampVDBClient.ampviewsDB
 
 class FindMedia:
 		
 	def find_music(self, ptm):
 		try:
 			mlist = []
+			print('THIS IS PTM \n')
+			print(ptm)
 			for (paths, dirs, files) in os.walk(ptm, followlinks=True):
 				for filename in files:
 					print("Processing:\n %s" % filename)
@@ -55,8 +59,7 @@ class FindMedia:
 							"PicId": "",
 							"ArtistId": "",
 							"AlbumId": "",
-							"HttpMusicPath": "/" + fnn.split("/", 3)[3],
-							#"HttpMusicPath": "/Music/" + fnn.split("/", 5)[5],
+							"HttpMusicPath": "/" + fnn.split("/", 4)[4],
 						}
 						mlist.append(x)
 			db.main.insert_many(mlist)

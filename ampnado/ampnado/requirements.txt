@@ -1,0 +1,4 @@
+mutagen==1.43.0
+Pillow==6.2.1
+pymongo==3.10.0
+tornado==3.2.1
