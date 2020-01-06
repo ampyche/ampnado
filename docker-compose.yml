@@ -2,8 +2,8 @@ version: "3.3"
 
 services:
   db:
-    image: mongo:latest
-    #image: andresvidal/rpi3-mongodb3:latest
+    #image: mongo:latest
+    image: andresvidal/rpi3-mongodb3:latest
     networks:
       - ampnado
     ports:
@@ -11,7 +11,7 @@ services:
 
   amp:
     image: ampnado
-    build: ./ampnado
+    build: .
     environment:
       - AMP_PROGRAM_PATH=/home/charlie/Desktop/Ampnado
 
@@ -35,7 +35,6 @@ services:
       - 6789:6789
     volumes:
       - ampnadovol:/usr/src/ampnado/Music
-      #- AMPNADOvol:/root/fsData
     depends_on:
       - db
 
@@ -48,8 +47,5 @@ volumes:
     driver_opts:
       type: none
 #THIS NEEDS TO BE CHANGE TO THE CORRECT PATH ON THE PI
-      device: /home/charlie/Music
-      #device: /home/teresa/Videos/media
-      #device: /media/pi/PiTB/
-      #device: /home/teresa/Music
+      device: /home/pi/Music
       o: bind

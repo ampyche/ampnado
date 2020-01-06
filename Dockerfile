@@ -1,4 +1,5 @@
-FROM python:3
+#FROM python:3
+FROM arm32v7/python3.8-alpine3.10
 WORKDIR /usr/src/ampnado
 COPY ampnado .
 RUN \

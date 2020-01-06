@@ -36,8 +36,6 @@ class FindMedia:
 	def find_music(self, ptm):
 		try:
 			mlist = []
-			print('THIS IS PTM \n')
-			print(ptm)
 			for (paths, dirs, files) in os.walk(ptm, followlinks=True):
 				for filename in files:
 					print("Processing:\n %s" % filename)
