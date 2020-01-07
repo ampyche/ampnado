@@ -66,12 +66,15 @@ class FindMedia:
 
 class AddArtistId:
 	def __init__(self):
+
 		self.artist = Data().tags_distinct_artist()
-		self.artlist = []
-	
-	def add_artistids(self):
-		self.artlist = [{"Artist":a, "ArtistId":str(uuid.uuid4().hex)} for a in self.artist]
+		# self.artlist = []
+		self.artlist = [{"Artist":a, "ArtistId": str(uuid.uuid4().hex) } for a in self.artist]
 		Data().tags_update_artistid(self.artlist)
+	
+	# def add_artistids(self):
+	# 	self.artlist = [{"Artist":a, "ArtistId": self.artistId } for a in self.artist]
+	# 	Data().tags_update_artistid(self.artlist)
 
 class AddAlbumId:
 	def __init__(self):

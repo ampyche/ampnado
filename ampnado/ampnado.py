@@ -64,8 +64,10 @@ class SetUp():
 		maintime = btime - atime
 		print("Main DB setup time %s" % maintime)
 		
-		from functions import AddArtistId
-		AddArtistId().add_artistids()
+		import functions as funct
+		#from functions import AddArtistId
+		funct.AddArtistId()
+		#AddArtistId().add_artistids()
 		ctime = time.time()
 		artidtime = ctime - atime
 		print("AddArtistId time %s" % artidtime)
