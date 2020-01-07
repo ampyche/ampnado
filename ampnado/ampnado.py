@@ -64,16 +64,17 @@ class SetUp():
 		maintime = btime - atime
 		print("Main DB setup time %s" % maintime)
 		
-		import functions as funct
+		#import functions as funct
 		#from functions import AddArtistId
-		funct.AddArtistId()
+		fun.AddArtistId()
 		#AddArtistId().add_artistids()
 		ctime = time.time()
 		artidtime = ctime - atime
 		print("AddArtistId time %s" % artidtime)
 
-		from functions import AddAlbumId
-		AddAlbumId().add_albumids()
+		# from functions import AddAlbumId
+		# AddAlbumId().add_albumids()
+		fun.AddAlbumId()
 		dtime = time.time()
 		albidtime = dtime - atime
 		print("AddAlbumId time %s" % albidtime)
@@ -100,20 +101,20 @@ class SetUp():
 		songviewtime = gtime - atime
 		print("Songview time %s" % songviewtime)
 		
-		from functions import Indexes
-		Indexes().creat_db_indexes()
+		#from functions import Indexes
+		fun.Indexes().creat_db_indexes()
 		htime = time.time()
 		indextime = htime - atime
 		print("Index time %s" % indextime)
 		
-		from functions import DbStats
-		DbStats().db_stats()
+		#from functions import DbStats
+		fun.DbStats().db_stats()
 		itime = time.time()
 		statstime = itime - atime
 		print("DBStats time is %s" % statstime)
 
-		from functions import RandomArtDb
-		RandomArtDb().create_random_art_db()
+		#from functions import RandomArtDb
+		fun.RandomArtDb().create_random_art_db()
 		jtime = time.time()
 		ranarttime = jtime - atime
 		print("RandomArtDB time is %s" % ranarttime)

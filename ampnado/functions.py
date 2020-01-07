@@ -72,18 +72,21 @@ class AddArtistId:
 		self.artlist = [{"Artist":a, "ArtistId": str(uuid.uuid4().hex) } for a in self.artist]
 		Data().tags_update_artistid(self.artlist)
 	
-	# def add_artistids(self):
-	# 	self.artlist = [{"Artist":a, "ArtistId": self.artistId } for a in self.artist]
+	#def add_artistids(self):
+	# 	self.artlist = [{"Artist":a, "ArtistId": str(uuid.uuid4().hex) } for a in self.artist]
 	# 	Data().tags_update_artistid(self.artlist)
 
 class AddAlbumId:
 	def __init__(self):
 		self.album = Data().tags_distinct_album()
-		self.albumlist = []
-		
-	def add_albumids(self):
+		# self.albumlist = []
 		self.albumlist = [{"Album":a, "AlbumId":str(uuid.uuid4().hex)} for a in self.album]	
 		Data().tags_update_albumid(self.albumlist)
+
+		
+	# def add_albumids(self):
+	# 	self.albumlist = [{"Album":a, "AlbumId":str(uuid.uuid4().hex)} for a in self.album]	
+	# 	Data().tags_update_albumid(self.albumlist)
 
 class Indexes:
 	def creat_db_indexes(self):
