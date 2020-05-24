@@ -12,7 +12,7 @@ services:
       - /home/teresa/AmpnadoDockerData/mongodbData:/data/db
 
   amp:
-    image: ampnado:latest
+    image: ampnado:02
     build: .
     environment:
       - AMP_PROGRAM_PATH=/usr/share/Ampnado
