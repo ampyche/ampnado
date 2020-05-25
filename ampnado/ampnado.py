@@ -40,6 +40,7 @@ db = ampDBClient.ampnadoDB
 
 class SetUp():
 	def __init__(self):
+		self.setup_status = os.environ["AMP_SETUP"]
 		print("SetUp HAS STARTED")
 		FUN = fun.FindMedia()
 		self.FUN = FUN
@@ -47,7 +48,8 @@ class SetUp():
 		FUNKY.insert_user(os.environ["AMP_USERNAME"], os.environ["AMP_PASSWORD"])
 
 
-	def gettime(self, at): return (time.time() - at)
+	def gettime(self, at):
+		return (time.time() - at)
 
 	def main(self):
 		atime = time.time()
@@ -132,9 +134,22 @@ class SetUp():
 		ptime = time.time()
 		t = ptime - atime
 		print("SETUP HAS BEEN COMPLETED IN %s SECONDS" % t)
+	
+	def setup_status_check(self):
+		import glob
+
+		# setup_status = os.environ["AMP_SETUP"]
+		db_status = len(glob.glob("/data/db/*.wt"))
+		pic_status = len(glob.glob("/usr/share/Ampnado/static/images/thumbnails/*.jpg"))
+		
+		if  db_status != 0 and pic_status != 0:
+			import ampserver as app
+			app.main()
+		else:
+			self.main()
+			import ampserver as app
+			app.main()
 
 if __name__ == "__main__":
 	su = SetUp()
-	su.main()
-	import ampserver as app
-	app.main()
+	su.setup_status_check()
