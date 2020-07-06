@@ -1,3 +1,8 @@
+# to update 
+# docker-compose stop
+# docker-compose pull
+# docker-compose up -d
+
 version: "3.3"
 
 services:
@@ -12,7 +17,7 @@ services:
       - /home/teresa/AmpnadoDockerData/mongodbData:/data/db
 
   amp:
-    image: ampnado:02
+    image: porthose/ampnado:latest
     build: .
     environment:
       - AMP_PROGRAM_PATH=/usr/share/Ampnado
@@ -29,6 +34,8 @@ services:
       - AMP_OFFSET_SIZE=45
       - AMP_USERNAME=admin
       - AMP_PASSWORD=ampnado
+      - bogus=bogus
+      - fuck=fuck
     networks:
       - ampnado
     ports:

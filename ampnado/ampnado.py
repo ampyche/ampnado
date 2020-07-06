@@ -18,20 +18,23 @@
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 ###############################################################################
-import os, time, argparse
-#import inputs as gp
+import os, time, argparse, glob
 import functions as fun
 import findjpgs as fj
 from pymongo import MongoClient
 from pprint import pprint
 from data import Data
+from artistview import ArtistView
+from artistview import ArtistChunkIt
+from albumview import AlbumView
+from albumview import AlbumChunkIt
+from songview import SongView
 
 ampDBClient = MongoClient("mongodb://db:27017/ampnadoDB")
 ampDBClient.drop_database("ampnadoDB")
 
 ampvDBClient = MongoClient("mongodb://db:27017/ampviewsDB")
 ampvDBClient.drop_database("ampviewsDB")
-#client.drop_database("config")
 
 picDBClient = MongoClient("mongodb://db:27017/picdb")
 picDBClient.drop_database("picdb")
@@ -46,7 +49,6 @@ class SetUp():
 		self.FUN = FUN
 		FUNKY = fun.Functions()
 		FUNKY.insert_user(os.environ["AMP_USERNAME"], os.environ["AMP_PASSWORD"])
-
 
 	def gettime(self, at):
 		return (time.time() - at)
@@ -65,64 +67,48 @@ class SetUp():
 		btime = time.time()
 		maintime = btime - atime
 		print("Main DB setup time %s" % maintime)
-		
-		#import functions as funct
-		#from functions import AddArtistId
+
 		fun.AddArtistId()
-		#AddArtistId().add_artistids()
 		ctime = time.time()
 		artidtime = ctime - atime
 		print("AddArtistId time %s" % artidtime)
 
-		# from functions import AddAlbumId
-		# AddAlbumId().add_albumids()
 		fun.AddAlbumId()
 		dtime = time.time()
 		albidtime = dtime - atime
 		print("AddAlbumId time %s" % albidtime)
 
-		from artistview import ArtistView
-		from artistview import ArtistChunkIt
 		AV = ArtistView().main()
 		ArtistChunkIt().main(AV, os.environ["AMP_OFFSET_SIZE"])
 		etime = time.time()
 		artistviewtime = etime - atime
 		print("Artistview time %s" % artistviewtime)		
 
-		from albumview import AlbumView
-		from albumview import AlbumChunkIt
 		ALBV = AlbumView().main()
 		AlbumChunkIt().main(ALBV, os.environ["AMP_OFFSET_SIZE"])
 		ftime = time.time()
 		albviewtime = ftime - atime
 		print("Albumview time %s" % albviewtime)		
 
-		from songview import SongView
 		SongView().create_songView_db(os.environ["AMP_OFFSET_SIZE"])
 		gtime = time.time()
 		songviewtime = gtime - atime
 		print("Songview time %s" % songviewtime)
-		
-		#from functions import Indexes
+
 		fun.Indexes().creat_db_indexes()
 		htime = time.time()
 		indextime = htime - atime
 		print("Index time %s" % indextime)
 		
-		#from functions import DbStats
 		fun.DbStats().db_stats()
 		itime = time.time()
 		statstime = itime - atime
 		print("DBStats time is %s" % statstime)
 
-		#from functions import RandomArtDb
 		fun.RandomArtDb().create_random_art_db()
 		jtime = time.time()
 		ranarttime = jtime - atime
 		print("RandomArtDB time is %s" % ranarttime)
-
-
-
 
 #		#this is for removeuser
 #		try:
@@ -136,9 +122,6 @@ class SetUp():
 		print("SETUP HAS BEEN COMPLETED IN %s SECONDS" % t)
 	
 	def setup_status_check(self):
-		import glob
-
-		# setup_status = os.environ["AMP_SETUP"]
 		db_status = len(glob.glob("/data/db/*.wt"))
 		pic_status = len(glob.glob("/usr/share/Ampnado/static/images/thumbnails/*.jpg"))
 		
