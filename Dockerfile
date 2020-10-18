@@ -17,13 +17,13 @@ RUN \
 	mkdir /usr/share/Ampnado/static/images/thumbnails && \
 	chmod -R 0755 /usr/share/Ampnado/static/images/thumbnails
 
-RUN \
-	mkdir /usr/share/Ampnado/templates && \
-	chmod -R 0755 /usr/share/Ampnado/templates
+# RUN \
+# 	mkdir /usr/share/Ampnado/templates && \
+# 	chmod -R 0755 /usr/share/Ampnado/templates
 
-COPY \
-	ampnado/templates/ampnado.html /usr/share/Ampnado/templates/ && \
-	ampnado/templates/login.html /usr/share/Ampnado/templates/
+# COPY \
+# 	ampnado/templates/ampnado.html /usr/share/Ampnado/templates/ && \
+# 	ampnado/templates/login.html /usr/share/Ampnado/templates/
 
 CMD [ "python3", "/usr/share/Ampnado/ampnado.py" ]
 
