@@ -15,8 +15,8 @@ RUN \
 COPY \
 	ampnado /usr/share/Ampnado && \
 	ampnado/static/images/noartpic.jpg /usr/share/Ampnado/static/images/ && \
-	ampnado/templates/ampnado.html /usr/share/Ampnado/static/templates/ && \
-	ampnado/templates/login.html /usr/share/Ampnado/static/templates/
+	ampnado/templates/ampnado.html /usr/share/Ampnado/templates/ && \
+	ampnado/templates/login.html /usr/share/Ampnado/templates/
 
 CMD [ "python3", "/usr/share/Ampnado/ampnado.py" ]
 
