@@ -1,4 +1,4 @@
-FROM buster-slim:latest
+FROM debian:buster-slim
 RUN mkdir /usr/share/Ampnado
 COPY ampnado /usr/share/Ampnado
 WORKDIR /usr/share/Ampnado
