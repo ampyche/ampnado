@@ -2,19 +2,19 @@ FROM amp-build-deps:latest
 
 RUN \
 	mkdir /usr/share/Ampnado && \
-	chmod -R 0755 /usr/share/Ampnado
-
-COPY ampnado /usr/share/Ampnado
-
-RUN \
+	chmod -R 0755 /usr/share/Ampnado && \
 	chmod -R 0755 /usr/share/Ampnado/static && \
-	chmod -R 0755 /usr/share/Ampnado/static/images
-
-COPY ampnado/static/images/noartpic.jpg /usr/share/Ampnado/static/images/
-
-RUN \
+	chmod -R 0755 /usr/share/Ampnado/static/images && \
 	mkdir /usr/share/Ampnado/static/images/thumbnails && \
-	chmod -R 0755 /usr/share/Ampnado/static/images/thumbnails
+	chmod -R 0755 /usr/share/Ampnado/static/images/thumbnails && \
+	mkdir /usr/share/Ampnado/static/templates && \
+	chmod -R 0755 /usr/share/Ampnado/static/templates
+
+COPY \
+	ampnado /usr/share/Ampnado && \
+	ampnado/static/images/noartpic.jpg /usr/share/Ampnado/static/images/ && \
+	ampnado/templates/ampnado.html /usr/share/Ampnado/static/templates/ && \
+	ampnado/templates/login.html /usr/share/Ampnado/static/templates/
 
 CMD [ "python3", "/usr/share/Ampnado/ampnado.py" ]
 
