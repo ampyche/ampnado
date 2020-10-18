@@ -8,7 +8,11 @@ COPY ampnado /usr/share/Ampnado
 
 RUN \
 	chmod -R 0755 /usr/share/Ampnado/static && \
-	chmod -R 0755 /usr/share/Ampnado/static/images && \
+	chmod -R 0755 /usr/share/Ampnado/static/images
+
+COPY ampnado/static/noartpic.jpg /usr/share/Ampnado/static/images/
+
+RUN \
 	mkdir /usr/share/Ampnado/static/images/thumbnails && \
 	chmod -R 0755 /usr/share/Ampnado/static/images/thumbnails
 
