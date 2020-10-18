@@ -7,17 +7,17 @@ version: "3.3"
 
 services:
   db:
-    image: mongo:latest
-    #image: andresvidal/rpi3-mongodb3:latest
+    # image: mongo:latest
+    image: andresvidal/rpi3-mongodb3:latest
     networks:
       - ampnado
     ports:
       - 27017:27017
-    volumes:
-      - /home/teresa/AmpnadoDockerData/mongodbData:/data/db
+    # volumes:
+    #   - /home/teresa/AmpnadoDockerData/mongodbData:/data/db
 
   amp:
-    image: porthose/ampnado:latest
+    image: ampnado:latest
     build: .
     environment:
       - AMP_PROGRAM_PATH=/usr/share/Ampnado
@@ -42,7 +42,7 @@ services:
       - 6789:6789
     volumes:
       # this points to where the music is located in the container
-      - ampnadovol:/usr/share/Ampnado/Music/A
+      - ampnadovol:/usr/share/Ampnado/Music/
       # this points to where our thumbnails are located in the container
       - ampnadopicvol:/usr/share/Ampnado/static/images/thumbnails
     depends_on:
@@ -52,7 +52,7 @@ networks:
   ampnado:
 
 volumes:
-  mongovol:
+  # mongovol:
   #   driver: local
   #   driver_opts: 
   #     type: none
@@ -63,7 +63,7 @@ volumes:
     driver: local
     driver_opts: 
       type: none
-      device: /home/teresa/AmpnadoDockerData/picData
+      device: /home/pi/AmpnadoDockerData/picData
       o: bind
 
   ampnadovol:
@@ -74,6 +74,6 @@ volumes:
       #device: /home/charlie/Music
       #device: /home/teresa/Videos/media
       #device: /media/pi/PiTB/
-      device: /home/teresa/Music
-      #device: /home/pi/Music
+      # device: /home/teresa/Music
+      device: /home/pi/Music
       o: bind
