@@ -19,7 +19,7 @@ class FindMissingArt:
 		self.thumbnail_path = os.environ["AMP_THUMBNAIL_DIR_PATH"]
 		self.http_thumbnail_path = os.environ["AMP_HTTP_THUMBNAIL_DIR_PATH"]
 		self.media_path = os.environ["AMP_MEDIA_PATH"]
-		self.ArtWork = None
+		self.ArtWork = os.environ["AMP_NO_ART_PIC_PATH"]
 		self.MP3List = []
 		self.NoArtList = []
 		self.PicDics = []

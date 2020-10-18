@@ -29,7 +29,7 @@ services:
       - AMP_HTTP_THUMBNAIL_DIR_PATH=/static/images/thumbnails
       - AMP_THUMBNAIL_DIR_PATH=./static/images/thumbnails
       - AMP_NO_ART_PIC_PATH=./static/images/noartpic.jpg
-      - AMP_SERVER_ADDR=http://192.168.1.34
+      - AMP_SERVER_ADDR=http://192.168.1.26
       - AMP_SERVER_PORT=6789
       - AMP_OFFSET_SIZE=45
       - AMP_USERNAME=admin
