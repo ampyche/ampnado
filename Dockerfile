@@ -15,9 +15,9 @@ COPY ampnado/static/images/noartpic.jpg /usr/share/Ampnado/static/images/
 
 RUN \
 	mkdir /usr/share/Ampnado/static/images/thumbnails && \
-	chmod -R 0755 /usr/share/Ampnado/static/images/thumbnails
-	# mkdir /usr/share/Ampnado/templates && \
-	# chmod -R 0755 /usr/share/Ampnado/templates
+	chmod -R 0755 /usr/share/Ampnado/static/images/thumbnails && \
+	mkdir /usr/share/Ampnado/templates && \
+	chmod -R 0755 /usr/share/Ampnado/templates
 
 COPY \
 	ampnado/templates/ampnado.html /usr/share/Ampnado/templates/ && \
