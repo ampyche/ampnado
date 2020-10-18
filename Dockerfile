@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM buster-slim:latest
 RUN mkdir /usr/share/Ampnado
 COPY ampnado /usr/share/Ampnado
 WORKDIR /usr/share/Ampnado
