@@ -377,7 +377,7 @@ const oc_randomInput4 = (v) => {
 	return arpl3 + "data-msgtext=''>" + v.playlistname + "</a></li>"
 };
 
-const albumSearchFunc = () => {
+const albumSearchFunc = function() {
 	$('.albumDIV, .albsongList').empty();
 	$('#albsearch-basic').textinput({preventFocusZoom: true});
 	albsearchVal = $("#albsearch-basic").val();
@@ -404,7 +404,7 @@ const albumSearchFunc = () => {
 	});
 };
 //This makes Artist soup
-$(document).on('click', '.artOF', () => {
+$(document).on('click', '.artOF', function() {
 	let artass = $(this).text();
 	$('#artistOFC').collapsible("collapse");
 	$('#artistmain').empty();
@@ -453,7 +453,7 @@ $(document).on('click', '.artOF', () => {
 		$.mobile.loading("hide");
 	});
 })
-.on('click', 'a.songnameS', () => {
+.on('click', 'a.songnameS', function() {
 	let selected_song = $(this).attr('data-songid');
 	let audio2 = $('#audio2');
 	audio2.attr('src', '');
@@ -473,7 +473,7 @@ $(document).on('click', '.artOF', () => {
 		localStorage.setItem('songPageGetPathArt', JSON.stringify(data));
 		localStorage.setItem("songPageSelected_SONG_SONGID", JSON.stringify(boob));
 	});
-	audio2.on('loadedmetadata', () => {
+	audio2.on('loadedmetadata', function() {
 		var dur = audio2[0].duration;
 		var cd = calcDuration(dur);
 		$('.duration, .StopBtn').text("Stop " + cd[0] + ':' + cd[1]).css('background-color', 'purple');
@@ -481,7 +481,7 @@ $(document).on('click', '.artOF', () => {
 	});	
 })
 //This get selected song from artist page and sends it to the player
-.on('click', '.artsongA1', () => {
+.on('click', '.artsongA1', function() {
 	var  audio24 = $('#audio2');
 	let booty = {'song': $(this).text(), 'songid': $(this).attr('data-songid')}
 	localStorage.setItem('artistPageSelected_SONG_SONGID', JSON.stringify(booty));
@@ -496,7 +496,7 @@ $(document).on('click', '.artOF', () => {
 		$('#pictext').text(data.Song);
 		$('#pictext2').text(data.Album);
 		localStorage.setItem('artistPageGetPathArt', JSON.stringify(data));
-		audio24.on('loadedmetadata', () => {
+		audio24.on('loadedmetadata', function() {
 			var dur = audio24[0].duration;
 			var cd = calcDuration(dur);
 //			$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
@@ -507,7 +507,7 @@ $(document).on('click', '.artOF', () => {
 			$('.footerArtist').text(data.Artist);
 			
 		});
-/*		audio24.on('ended', () => {
+/*		audio24.on('ended', function() {
 			$.get('ClearTemp',
 			{
 				'filetodelete': data.httpmusicpath,
@@ -520,7 +520,7 @@ $(document).on('click', '.artOF', () => {
 })
 //This fetches the selected album and displays albumart and
 //song list for artist page
-.on('change', '.artistselect', () => {
+.on('change', '.artistselect', function() {
 	$('.artistimg').remove(); //Clear albumart and songs list
 	$('.art1div').empty();
 	artistid = $(this).attr('id'); //This is the artistid of the selected album	
@@ -529,10 +529,10 @@ $(document).on('click', '.artOF', () => {
 		{
 			'selected' : selected //this is albumid	
 		},
-		(data) => {
+		function(data) {
 			let athree = och_artistselect1(data);
 			let artLIString = ''
-			$.each(data.getimgsonalb.songs, (k, v) => {
+			$.each(data.getimgsonalb.songs, function(k, v) {
 				let four3 = och_artistselect2(v);
 				artLIString = artLIString + four3;
 				return artLIString
@@ -546,7 +546,7 @@ $(document).on('click', '.artOF', () => {
 	);
 })
 //This removes the image and songlist from the collapsible when it is collapsed
-.on('collapsiblecollapse', '.artistPageDiv', () => {
+.on('collapsiblecollapse', '.artistPageDiv', function() {
 	$('.artistimg').remove();
 	$('.art1div').empty();
 })
@@ -566,7 +566,7 @@ $(document).on('click', '.artOF', () => {
 	});
 })
 //This hides and shows the albums page songs listview
-.on('click', '.albumA1', () => {
+.on('click', '.albumA1', function() {
 	bebe = "#albsongUL" + $(this).attr('data-albumid');
 	$(bebe).fadeToggle('fast');
 })
@@ -578,8 +578,8 @@ $(document).on('click', '.artOF', () => {
 	{
 		'selected': albass
 	},
-	(data) => {
-		$.each(data.albs, ( key, val) => {
+	function(data) {
+		$.each(data.albs, function( key, val) {
 			let alb8 = oc_albumOF1(val);
 			let alba33 = '';
 			$.each(val.Songs, (ka, val) => {
@@ -613,7 +613,7 @@ $(document).on('click', '.artOF', () => {
 		$('#pictext2').text(data.Album);
 		localStorage.setItem('albumPageGetPathArt ', JSON.stringify(data));
 		localStorage.setItem('albumPageSelected_SONG_SONGID', JSON.stringify(foobar10));
-		audio23.on('loadedmetadata', () => {
+		audio23.on('loadedmetadata', function() {
 			var dur = audio23[0].duration;
 			var cd = calcDuration(dur);
 			$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
@@ -632,12 +632,12 @@ $(document).on('click', '.artOF', () => {
 	$('.albsongUL').hide();
 })
 //This adds the song and songid to localstorage 
-.on('click', '.addToPlaylist', () => {
+.on('click', '.addToPlaylist', function() {
 	let albssid = {'song': $(this).attr('data-song'), 'songid': $(this).attr('data-songid')}	
 	localStorage.setItem('albumPageSelected_SONG_SONGID', JSON.stringify(albssid));
 })
 //This gets the songs for the selected Alpha selecter
-.on('click', '.songOF', () => {
+.on('click', '.songOF', function() {
 	let ss = $(this).text();
 	$('#songOFC').collapsible("collapse");
 	$("#songs_view").empty();
@@ -645,8 +645,8 @@ $(document).on('click', '.artOF', () => {
 	{
 		'selected': ss
 	},
-	(data) => {
-		$.each(data.song, ( key, val) => {
+	function(data) {
+		$.each(data.song, function( key, val) {
 			let ss1 = "<li class='songs_li'><a class='songname' href='#' data-songid='" + val.SongId + "'>";
 			let ss2 = ss1 + "<h2>" + val.Song + "</h2><h6>" + val.Artist + "</h6></a><a href='#selectplpage' ";
 			let ss3 = ss2 + "data-song='" + val.Song + "' data-songid='" + val.SongId + "' class='addtoplaylist' ";
@@ -680,7 +680,7 @@ $(document).on('click', '.artOF', () => {
 		let booob = {'song': data.Song, 'songid': data.SongId};
 		localStorage.setItem('songPageGetPathArt', JSON.stringify(data));
 		localStorage.setItem("songPageSelected_SONG_SONGID", JSON.stringify(booob));
-		audio2.on('loadedmetadata', () => {
+		audio2.on('loadedmetadata', function() {
 			var dur = audio2[0].duration;
 			var cd = calcDuration(dur);
 			$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
@@ -698,7 +698,7 @@ $(document).on('click', '.artOF', () => {
 })
 //This sets the selectedSONG and selectedSONGid in the browser localstorage
 //for the add to playlist button on the songs page.
-.on('click', '.addtoplaylist', () => {
+.on('click', '.addtoplaylist', function() {
 	let sname = {'song': $(this).attr('data-song'), 'songid': $(this).attr('data-songid')}
 	localStorage.setItem('songPageSelected_SONG_SONGID', JSON.stringify(sname));
 	$('#playPlaylistUL, #splUL, #albsplUL, #artsplUL').empty();
@@ -727,7 +727,7 @@ $(document).on('click', '.artOF', () => {
 	$.mobile.loading("hide");
 })
 //This is the artists page
-.on('click', '.artToPlaylistBtn', () => {
+.on('click', '.artToPlaylistBtn', function() {
 	let arr = {'song': $(this).attr('data-song'), 'songid': $(this).attr('data-songid')};
 	localStorage.setItem("artistPageSelected_SONG_SONGID", JSON.stringify(arr));
 	$('#playPlaylistUL, #artsplUL, #albsplUL, #splUL').empty();
@@ -736,7 +736,7 @@ $(document).on('click', '.artOF', () => {
 		"selected": arr.songid
 	},
 	function(data) {
-		$.each(data.plnames, (k, v) => {
+		$.each(data.plnames, function(k, v) {
 			$('#playPlaylistUL').append(oc_artToPlaylistBtn1(v));
 			$('#splUL').append(oc_artToPlaylistBtn2(v));
 			$('#albsplUL').append(oc_artToPlaylistBtn3(v));
@@ -748,7 +748,7 @@ $(document).on('click', '.artOF', () => {
 	$.mobile.loading("hide");
 })
 //this is the albums page
-.on('click', '.addToPlaylist', () => {
+.on('click', '.addToPlaylist', function() {
 	let sname2 = {'song': $(this).attr('data-song'), 'songid': $(this).attr('data-songid')};
 	localStorage.setItem("albumPageSelected_SONG_SONGID", JSON.stringify(sname2));
 	$.get("AllPlaylists",
@@ -777,7 +777,7 @@ $(document).on('click', '.artOF', () => {
 	$.mobile.loading("hide");
 })
 //This gets playlist selection and adds song to playlistdb for the albums page
-.on('click', '.albumSelBtn', () => {
+.on('click', '.albumSelBtn', function() {
 	let selectedPlaylist1 = {'playlist': $(this).text(), 'playlistid': $(this).attr('data-playlistid')};
 	localStorage.setItem("currentSelected_PLAYLIST_PLAYLISTID", JSON.stringify(selectedPlaylist1));
 	var name1 = JSON.parse(localStorage.getItem("albumPageSelected_SONG_SONGID"));
@@ -792,7 +792,7 @@ $(document).on('click', '.artOF', () => {
 	});
 })
 //This gets playlist selection and adds song to playlist
-.on('click', '.songSelBtn', () => {
+.on('click', '.songSelBtn', function() {
 	let selectedPlaylist2 = {'playlist': $(this).text(), 'playlistid': $(this).attr('data-playlistid')};
 	localStorage.setItem("currentSelected_PLAYLIST_PLAYLISTID", JSON.stringify(selectedPlaylist2));
 	var name2 = JSON.parse(localStorage.getItem('songPageSelected_SONG_SONGID'));
@@ -810,7 +810,7 @@ $(document).on('click', '.artOF', () => {
 
 
 
-.on('click', '#searchBut', () => {
+.on('click', '#searchBut', function() {
 	searchVal = $('#search-basic').val();
 	$.get('SongSearch',
 	{
@@ -826,11 +826,11 @@ $(document).on('click', '.artOF', () => {
 		$.mobile.loading("hide");
 	});
 })
-.on('click', '#searchClear', () => {
+.on('click', '#searchClear', function() {
 	$('#search-basic').val('');
 	$("#songs_view2").empty();
 })
-.on('click', '#SS', () => {
+.on('click', '#SS', function() {
 	$('#SSD1, #SSD2, #songListViewDIV2').fadeToggle('fast');
 })
 
@@ -839,7 +839,7 @@ $(document).on('click', '.artOF', () => {
 
 
 
-.on('keypress', (e) => {
+.on('keypress', function(e) {
 	if (e.which == 13){
 		let alb = $("#albsearch-basic").val()
 		if (alb != '') {
@@ -855,26 +855,26 @@ $(document).on('click', '.artOF', () => {
 
 
 
-.on('click', '#albsearchBut', () => {
+.on('click', '#albsearchBut', function() {
 	albumSearchFunc();
 })
-.on('click', '#albsearchClear', () => {
+.on('click', '#albsearchClear',function() {
 	$('#albsearch-basic').val('');
 	$('#albListViewDIV2').fadeToggle('fast').empty();
 })
-.on('click', '#albSS', () => {
+.on('click', '#albSS', function() {
 	$('#albSSD1, #albSSD2, #albListViewDIV2').fadeToggle('fast');
 })
-.on('click', '#artsearchBut', () => {
+.on('click', '#artsearchBut', function() {
 	$('#artistmain').empty();
 	artsearchval = $('#artsearch-basic').val();
 	$.get('ArtistSearch',
 	{
 		"artsearchval" : artsearchval,
 	},
-	(data) => {
-		$.each(data, ( key, val ) => {
-			$.each(val, ( ke, va ) => {
+	function(data) {
+		$.each(data, function( key, val ) {
+			$.each(val, function( ke, va ) {
 				alblength = va.albums.length;
 				if ( alblength === 1 ) {
 					let abc = "<div class='artistPageDivS' data-role='collapsible'><h4>" + va.artist + "</h4>";
@@ -883,7 +883,7 @@ $(document).on('click', '.artOF', () => {
 						{
 							'selected' : selected	//this is albumid	
 						},
-						(data) => {
+						function(data) {
 							let a3 = oc_artsearchBut1(data.getimgsonalb.thumbnail);							
 							liString = '';
 							$.each(data.getimgsonalb.songs, (kk, vv) => {
@@ -914,24 +914,24 @@ $(document).on('click', '.artOF', () => {
 		$.mobile.loading("hide");
 	});
 })
-.on('click', '#artSS', () => {
+.on('click', '#artSS', function() {
 	$('#artForm').fadeToggle('fast');
 })
-.on('click', '#search-basic', () => {
+.on('click', '#search-basic', function() {
 	$('#search-basic').val('');
 })
-.on('click', '#artsearch-basic', () => {
+.on('click', '#artsearch-basic', function() {
 	$('#artsearch-basic').val('');
 })
-.on('click', '#albsearch-basic', () => {
+.on('click', '#albsearch-basic', function() {
 	$('#albsearch-basic').val('');
 })
-.on('click', '#artsearchClear', () => {
+.on('click', '#artsearchClear', function() {
 	$('#artsearch-basic').val('');
 	$('#artSearchDIV').empty();
 	$.mobile.loading("hide");
 })
-.on('click', '.homeBTN, .fraz', () => {
+.on('click', '.homeBTN, .fraz', function() {
 	rpwStop();
 	$('#popup1, #popup2, #popup3, #popup4, #popup5, #intropicGrid1').empty();
 	let boohoo = JSON.parse(localStorage.getItem('nextimgset'));
@@ -945,14 +945,14 @@ $(document).on('click', '.artOF', () => {
 	RandomPics();
 	rpwStart();		
 })
-.on('click', '#intropicGrid1', () => {
+.on('click', '#intropicGrid1', function() {
 	rpwStop();
 })
-.on("click", ".hide-page-loading-msg", () => {
+.on("click", ".hide-page-loading-msg", function() {
 	$.mobile.loading("hide");
 })
 //This shows our spinner during ajax calls
-.on('click', ".show-page-loading-msg", () => {
+.on('click', ".show-page-loading-msg", function() {
 	var $this = $(this),
 		theme = $this.jqmData("theme") ||
 $.mobile.loader.prototype.options.theme,
@@ -974,18 +974,18 @@ $.mobile.loader.prototype.options.textVisible,
 //////////////////////////// PLAYLIST PAGE STUFF //////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 //$(document).on('click', '.playlistLi', () => {
-.on('click', '.playlistLi', () => {
+.on('click', '.playlistLi', function() {
 	$('#controlGrid').fadeToggle('fast');
 	$('#playlistcollapsible').collapsible('collapse');
 })
-.on('click', '.plssel, .pldl', () => {
+.on('click', '.plssel, .pldl', function() {
 	$('#controlGrid').fadeToggle('fast');
 })
-.on('click', '#randomInput', () => {
+.on('click', '#randomInput', function() {
 	$('#addrandomplaylist').collapsible('collapse');
 })
 //This adds a new playlist to the db
-.on('click', '#butsub', () => {
+.on('click', '#butsub', function() {
 	$('#addnewplaylistDiv').collapsible('collapse');
 	var text1 = $('input#text1').val();
 	var checkAN = checkAlphaNums(text1);
@@ -996,7 +996,7 @@ $.mobile.loader.prototype.options.textVisible,
 		},
 		function(data) {
 			$('#playPlaylistUL, #artsplUL, #albsplUL, #splUL').empty();
-			$.each(data.pnames, (k, v) => {
+			$.each(data.pnames, function(k, v) {
 				let pln = {'playlist': v.playlistname, 'playlistid': v.playlistid};
 				localStorage.setItem("currentSelected_PLAYLIST_PLAYLISTID", JSON.stringify(pln));
 				$('#playPlaylistUL').append(oc_butsub1(v));
@@ -1014,23 +1014,23 @@ $.mobile.loader.prototype.options.textVisible,
 	}
 })
 //Get current selected playlist
-.on('click', '.plplay', () => {
+.on('click', '.plplay', function() {
 	taz = {'playlist': $(this).text(), 'playlistid': $(this).attr('data-playlistid')};
 	localStorage.setItem("currentSelected_PLAYLIST_PLAYLISTID", JSON.stringify(taz));
 	$('#playlistcollapsible').collapsible('collapse');
 	$('#audio1').show();
 })
 //delete a playlist
-.on('click', '#playlistDeleteBtn1', () => {
+.on('click', '#playlistDeleteBtn1', function() {
 	$('#playPlaylistUL').empty();
 	let selpl = JSON.parse(localStorage.getItem("currentSelected_PLAYLIST_PLAYLISTID"));
 	$.get('DeletePlaylistFromDB',
 	{
 		"playlistid" : selpl.playlistid
 	},
-	(data) => {
+	function(data) {
 		localStorage.setItem('playlists', JSON.stringify(data));
-		$.each(data.npl, (k, v) => {
+		$.each(data.npl, function(k, v) {
 			let pllone = "<li class='playlistLi' data-playlistid='" + v.playlistid + "'><a href='#' class='plplay ";
 			let plltwo = pllone + "ui-btn ui-mini ui-icon-bullets ui-btn-icon-right' ";
 			let pllthree = plltwo + "data-playlistid='" + v.playlistid + "'>" + v.playlistname + "</a></li>";
@@ -1040,7 +1040,7 @@ $.mobile.loader.prototype.options.textVisible,
 		$.mobile.loading("hide");
 	});
 })
-.on('click', '#playlistEditBtn1', () => {
+.on('click', '#playlistEditBtn1', function() {
 	$("#pleditMain").empty();
 	let pln33 = JSON.parse(localStorage.getItem("currentSelected_PLAYLIST_PLAYLISTID"));
 	let blep = "<div id='pledith3'><h3>Edit: " + pln33.playlist + "</h3></div>";
@@ -1048,11 +1048,11 @@ $.mobile.loader.prototype.options.textVisible,
 	{
 		'playlistid' : pln33.playlistid
 	},
-	(data) => {
+	function(data) {
 		let ple1 = "<div class='pleditLV'>";
 		let ple = ple1 + "<ul class='editplUL' data-role='listview' data-inset='true' data-split-icon='gear'>";
 		let s3 = "";
-		$.each(data.taz, (key, val) => {
+		$.each(data.taz, function(key, val) {
 			var lvLI1 = "<li><a href='#' class='lviewLi' data-sonID='" + val[1] + "'>" + val[0] + "</a>";
 			var lvLI2 = lvLI1 + "<a href='#editpopup' data-sonID='" + val[1] + "' data-rel='popup' class='plpsongsA2  ";
 			var lvLI3 = lvLI2 + "ui-btn' data-textonly='false' data-textvisible='false' data-msgtext=''></a></li>";
@@ -1065,21 +1065,21 @@ $.mobile.loader.prototype.options.textVisible,
 		$('#pleditMain').append(editsongs);
 		$('.editplUL').listview().trigger('refresh');
 	});
-	$.get('AllPlaylists', (data) => {
+	$.get('AllPlaylists', function(data) {
 		localStorage.setItem('playlists', JSON.stringify(data));
 	})
 	$.mobile.loading("hide");
 })
-.on('click', '.lviewLi', () => {
+.on('click', '.lviewLi', function() {
 	delsong = {'delsong': $(this).text(), 'delsongid': $(this).attr('data-sonID')};
 	localStorage.setItem('editPageSelected_SONG_SONGID', JSON.stringify(delsong));
 })
 //This sets the values in the delete popup
-.on('click', '.plpsongsA2', () => {
+.on('click', '.plpsongsA2', function() {
 	let plsnid = {'dsongid': $(this).attr("data-sonID")};
 	crock = localStorage.setItem("editPage_DELETE_SONGID", JSON.stringify(plsnid));
 })
-.on('click', '#editYesBtn' , () => {
+.on('click', '#editYesBtn' , function() {
 	$('#pleditMain').empty();
 	let snID = JSON.parse(localStorage.getItem("editPage_DELETE_SONGID"));
 	let pln = JSON.parse(localStorage.getItem("currentSelected_PLAYLIST_PLAYLISTID"));
@@ -1092,9 +1092,9 @@ $.mobile.loader.prototype.options.textVisible,
 	},
 	(data) => {
 		let s3 = "";
-		$.each(data, (key, valu) => {
-			$.each(valu, (key, val) => {
-				$.each(val, (k, v) => {
+		$.each(data, function(key, valu) {
+			$.each(valu, function(key, val) {
+				$.each(val, function(k, v) {
 					var lvLI1 = "<li><a href='#' class='lviewLi' data-sonID='" + v.songid + "'>" + v.song + "</a>";
 					var lvLI2 = lvLI1 + "<a href='#editpopup' data-sonID='" + v.sonID + "' data-rel='popup' ";
 					var lvLI3 = lvLI2 + "class='plpsongsA2  ui-btn' data-textonly='false' data-textvisible='false' ";
@@ -1110,14 +1110,14 @@ $.mobile.loader.prototype.options.textVisible,
 	});
 })
 //These sets the playlist page random playlist text inputs to blank when they are clicked on
-.on('click', '#text2', () => {
+.on('click', '#text2', function() {
 	$('#text2').val('');
 })
-.on('click', '#text3', () => {
+.on('click', '#text3', function() {
 	$('#text3').val('');
 })
 //This adds a random playlist to the db
-.on('click', '#randomInput', () => {
+.on('click', '#randomInput', function() {
 	var nan = "<p>Please only enter alpha numeric charcters.</p>";
 	var noAlphaNum = nan + "<a href='#' class='ui-btn'>OK</a>";
 	var nn = "<p>Please only enter numeric characters.</p>";
@@ -1145,7 +1145,7 @@ $.mobile.loader.prototype.options.textVisible,
 		{
 			 'playlistname' : t2, 'playlistcount' : t3
 		},
-		(data) => {
+		function(data) {
 			$.each(data.plists, (k, v) => {
 				$('#playPlaylistUL').append(oc_randomInput1(v));
 				$('#splUL').append(oc_randomInput2(v));
@@ -1158,24 +1158,24 @@ $.mobile.loader.prototype.options.textVisible,
 				}
 			})
 		})
-		$.get('AllPlaylists', (data) => {
+		$.get('AllPlaylists', function(data) {
 			localStorage.setItem('playlists', JSON.stringify(data));
 		})
 		
 	}
 	$.mobile.loading("hide");
 })
-.on('click', '#nanp', () => {
+.on('click', '#nanp', function() {
 	$('#noAlphaNumPopup').popup('close');	
 	$('#text2').text('');
 	$('#text3').text('');
 })
-.on('click', '#nnp', () => {
+.on('click', '#nnp', function() {
 	$('#noNumPopup').popup('close');
 	$('#text2').text('');
 	$('#text3').text('');
 })
-.on('click', '#playlistDownLoadBtn1', (e) => {
+.on('click', '#playlistDownLoadBtn1', function(e) {
 	e.preventDefault();
 	let plid = JSON.parse(localStorage.getItem('currentSelected_PLAYLIST_PLAYLISTID'));
 	$.get("Download",
@@ -1189,13 +1189,13 @@ $.mobile.loader.prototype.options.textVisible,
 })
 //This pauses the Single Song Player when the playlist load button is clicked
 //audio1 is the playlistplayer
-.on('click', '#playlistLoadBtn1', () => {
+.on('click', '#playlistLoadBtn1', function() {
 /*	$('.playButton').hide();
 	$('.stopButton').hide();*/
 	$('#audio2').attr('src', '');
 	$('.duration, .current').text("00:00").css('background-color', 'black');
 })
-.on('click', ".songname, .songnameS, .albsongsA, .artsongA1, .rart1, .rart2, .rart3, .rart4, .rart5", () => {
+.on('click', ".songname, .songnameS, .albsongsA, .artsongA1, .rart1, .rart2, .rart3, .rart4, .rart5", function() {
 /*	$('.playButton').show();
 	$('.stopButton').show();	*/
 	$('#audio1').attr('src', '');
