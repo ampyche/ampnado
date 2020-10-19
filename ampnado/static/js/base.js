@@ -665,7 +665,8 @@ $(document).on('click', '.artOF', () => {
 	audio2.attr('src', '');
 	$('.duration').text('00:00');
 	let selected_songid = $(this).attr('data-songid');
-
+	console.log("THIS IS ASONG FOR PATHART")
+	console.log(selected_songid);
 	$.get("PathArt",
 	{
 		"selected": selected_songid
