@@ -283,10 +283,13 @@ class PathArtHandler(BaseHandler):
 	@tornado.gen.coroutine
 	def get(self):
 		p = parse_qs(urlparse(self.request.full_url()).query)
+		print("THIS IS P")
+		print(p)
 		selected = p['selected'][0]
 		fileinfo = yield self.get_file_info(selected)
 		picinfo = yield self.get_pic_info(fileinfo["PicId"])
 		fileinfo['AlbumArtHttpPath'] = picinfo['AlbumArtHttpPath']
+		print(fileinfo)
 		self.write(fileinfo)
 
 class AllPlaylistSongsFromDBHandler(BaseHandler):
