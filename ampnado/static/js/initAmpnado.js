@@ -39,9 +39,9 @@ const iArtist1P1Fun3 = (d2) => {
 	let artc = artB + "<select name='" + d2.Artist + "' id='" + d2.ArtistId + "' class='artistselect'>";
 	return artc	
 };
-const intitArtist1P1 = () => {
-	$.get('InitialArtistInfo', (data) => {
-		$.each(data.ia, ( key, val ) => {
+const intitArtist1P1 = function() {
+	$.get('InitialArtistInfo', function(data) {
+		$.each(data.ia, function( key, val ) {
 			if ( val.Albums.length === 1 ) {
 				let abc = "<div class='artistPageDivS' data-role='collapsible'><h4>" + val.Artist + "</h4>";
 				let selected = val.Albums[0][1];
@@ -49,10 +49,10 @@ const intitArtist1P1 = () => {
 					{
 						'selected' : selected //this is albumid	
 					},
-					(data) => {
+					function(data) {
 						let art3 = iArtist1P1Fun1(data);
 						let liString = '';
-						$.each(data.getimgsonalb.songs, (kk, vv) => {
+						$.each(data.getimgsonalb.songs, function(kk, vv) {
 							return liString + iArtist1P1Fun2(vv);
 						})
 						let result2 = abc + art3 + liString + "</ul></div>";
@@ -63,7 +63,7 @@ const intitArtist1P1 = () => {
 				let a2 = '';
 				let a3 = '';
 				let aa1 = "<option class='artop0' value='Choose Album'>Choose Album</option>";
-				$.each(val.Albums, (k, v) => {
+				$.each(val.Albums, function(k, v) {
 					let a1 = "<option class='artop1' value='" + v[1] + "'>" + v[0] + "</option>";
 					a2 = a2 + a1;
 					return aa1 + a2
@@ -95,12 +95,12 @@ const initAlbum1P1Fun2 = (c1) => {
 	let albab2 = albab1 + "class='addToPlaylist' data-pageid='albums' data-song='" + c1[0] + "' ";
 	return albab2 + "data-songid='" + c1[1] + "' data-transition='slidefade'></a></li>";
 };
-const initAlbum1P1 = () => {
-	$.get('InitialAlbumInfo', (data) => {
-		$.each(data.ial, (key, val) => {
+const initAlbum1P1 = function() {
+	$.get('InitialAlbumInfo', function(data) {
+		$.each(data.ial, function(key, val) {
 			let alb8 = initAlbum1P1Fun1(val)
 			let alba3 = '';
-			$.each(val.Songs, (k, v) => {
+			$.each(val.Songs, function(k, v) {
 				let albab3 = initAlbum1P1Fun2(v);
 				return alba3 + albab3;
 			});
@@ -119,9 +119,9 @@ const initSong1P1Fun1 = (e1) => {
 	let s3 = s2 + "data-pageid='songs' data-song='" + e1.Song + "' data-songid='" + e1.SongId + "' ";
 	return s3 + "class='addtoplaylist' data-transition='slidefade'></a></li>";
 };
-const initSong1P1 = () => {
-	$.get('InitialSongInfo', (data) => {
-		$.each(data.ias, ( key, val) => {
+const initSong1P1 = function() {
+	$.get('InitialSongInfo', function(data) {
+		$.each(data.ias, function( key, val) {
 			let s4 = initSong1P1Fun1(val);
 			$("#songs_view").append(s4);
 		});
@@ -153,17 +153,17 @@ const initGetAllPlaylistsFun5 = (f4) => {
 	let artspl2 = artspl1 + " ui-btn ui-btn-mini ui-icon-bullets ui-btn-icon-right ui-corner-all'";
 	return artspl2 + " data-textonly='false' data-textvisible='false' data-msgtext=''>" + f4 + "</a></li>";
 };
-const initGetAllPlaylists = () => {
-	$.get('AllPlaylists', (data) => {
+const initGetAllPlaylists = function() {
+	$.get('AllPlaylists', function(data) {
 		localStorage.setItem('playlists', JSON.stringify(data));
 		let plone = '';
 		let spl = '';
 		let albspl='';
 		let artspl='';
 		$('#playPlaylistUL').empty();
-		$.each(data, (key, val) => {
+		$.each(data, function(key, val) {
 			if (val != "Please create a playlist") {
-				$.each(val, (k, v) => {
+				$.each(val, function(k, v) {
 					let pl2 = initGetAllPlaylistsFun1(v);
 					return plone + pl2;
 				})
@@ -172,7 +172,7 @@ const initGetAllPlaylists = () => {
 				return plone + pl4;
 			}
 		})
-		$.each(data, (k, v) => {
+		$.each(data, function(k, v) {
 			let spl3 = initGetAllPlaylistsFun3(v);
 			let albspl3 = initGetAllPlaylistsFun4(v);
 			let artspl3 = initGetAllPlaylistsFun5(v);
@@ -190,7 +190,7 @@ const initGetAllPlaylists = () => {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const initAddOne = (g1) => {
+const initAddOne = function(g1) {
 	return g1 + 1
 };
 const initGetArtistAlphaFun2 = (g2, g3) => {
@@ -198,9 +198,9 @@ const initGetArtistAlphaFun2 = (g2, g3) => {
 	let w2 = w1 + "class='artOF show-page-loading-msg ui-btn ui-btn-mini ui-btn-inline ui-corner-all' ";
 	return w2 + "data-textonly='false' data-textvisibility='false' data-msgtext=''>" + g3 + "</span>";
 };
-const initGetArtistAlpha = () => {
-	$.get('ArtistAlpha', (data) => {
-		$.each( data.artal, (key, val) => {
+const initGetArtistAlpha = function() {
+	$.get('ArtistAlpha', function(data) {
+		$.each( data.artal, function(key, val) {
 			let k = initAddOne(val);
 			let w3 = initGetArtistAlphaFun2(k, val);
 			$('#artistOFwrap').append(w3);
@@ -210,14 +210,14 @@ const initGetArtistAlpha = () => {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const initGetAlbumAlphaFun1 = (kk, cc) => {
+const initGetAlbumAlphaFun1 = function(kk, cc) {
 	let ww1 = "<span id='albumOF" + kk + "' ";
 	let ww2 = ww1 + "class='albumOF show-page-loading-msg ui-btn ui-btn-mini ui-btn-inline ui-corner-all' ";
 	return ww2 + "data-textonly='false' data-textvisibility='false' data-msgtext=''>" + cc + "</span>";
 };
-const initGetAlbumAlpha = () => {
-	$.get('AlbumAlpha', (data) => {
-		$.each(data.albal, (ke, va) => {
+const initGetAlbumAlpha = function() {
+	$.get('AlbumAlpha', function(data) {
+		$.each(data.albal, function(ke, va) {
 			let kk = initAddOne(ke);
 			let ww3 = initGetAlbumAlphaFun1(kk, va);
 			$('#albumOFwrap').append(ww3);
@@ -227,14 +227,14 @@ const initGetAlbumAlpha = () => {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const initGetSongAlphaFun1 = (b) => {
+const initGetSongAlphaFun1 = function(b) {
 	let www1 = "<span id='songAlpaSpan' ";
 	let www2 = www1 + "class='songOF show-page-loading-msg ui-btn ui-btn-mini ui-btn-inline ui-corner-all' ";
 	return www2 + "data-textonly='false' data-textvisibility='false' data-msgtext=''>" + b + "</span>";
 };
-const initGetSongAlpha = () => {
-	$.get('SongAlpha', (data) => {
-		$.each(data.songal, (k2, vk) => {
+const initGetSongAlpha = function() {
+	$.get('SongAlpha', function(data) {
+		$.each(data.songal, function(k2, vk) {
 			let www3 = initGetSongAlphaFun1(vk);
 			$('#songOFwrap').append(www3);
 		});
@@ -254,8 +254,8 @@ const initGetSongAlpha = () => {
 	return vid
 };
 function initGetAllVideo() {
-	$.get('AllVideo', (data) => {
-		$.each(data.vlist, (key, val) => {
+	$.get('AllVideo', function(data) {
+		$.each(data.vlist, function(key, val) {
 			let video = initGetAllVideoFun1(val);
 			$('#vidDIV').append(video);
 		});
@@ -279,84 +279,84 @@ function calcDuration(d) {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const blka = (recm) => {
+const blka = function(recm) {
 	let ba1 = "<div class='ui-block-a' data-theme='a'>";
 	let ba2 = ba1 + "<a href='#popup1' data-rel='popup' data-transition='pop'>";
 	let ba3 = ba2 + "<img src='" + recm + "' class='PicGrid'>";
 	return ba3 + "</img></a></div>";
 };
-const blkb = (recm) => {
+const blkb = function(recm) {
 	let bb1 = "<div class='ui-block-b' data-theme='a'>";
 	let bb2 = bb1 + "<a href='#popup2' data-rel='popup' data-transition='pop'>";
 	let bb3 = bb2 + "<img src='" + recm + "' class='PicGrid'>";
 	return bb3 + "</img></a></div>";
 };
-const blkc = (recm) => {
+const blkc = function(recm) {
 	let bc1 = "<div class='ui-block-c' data-theme='a'>";
 	let bc2 = bc1 + "<a href='#popup3' data-rel='popup' data-transition='pop'>";
 	let bc3 = bc2 + "<img src='" + recm + "' class='PicGrid'>";
 	return bc3 + "</img></a></div>";
 };
-const blkd = (recm) => {
+const blkd = function(recm) {
 	let bd1 = "<div class='ui-block-d' data-theme='a'>";
 	let bd2 = bd1 + "<a href='#popup4' data-rel='popup' data-transition='pop'>";
 	let bd3 = bd2 + "<img src='" + recm + "' class='PicGrid'>";
 	return bd3 + "</img></a></div>";
 };
-const blke = (recm) => {
+const blke = function(recm) {
 	let be1 = "<div class='ui-block-e' data-theme='a'>";
 	let be2 = be1 + "<a href='#popup5' data-rel='popup' data-transition='pop'>";
 	let be3 = be2 + "<img src='" + recm + "' class='PicGrid'>";
 	return be3 + "</img></a></div>";
 };
-const creatPop1 = (recm) => {
+const creatPop1 = function(recm) {
 	let pu11 = "<ul id='pop1' data-role='listview' class='ui-content' data-insert='true'>"
 	let pu12 = '';
-	$.each(recm, (key, val) => {
+	$.each(recm, function(key, val) {
 		let s11 = "<li><a href='#' class='rart1' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
 		return pu12 + s11;
 	})
 	return pu11 + pu12 + "</ul>";
 };
-const creatPop2 = (recm) => {
+const creatPop2 = function(recm) {
 	let pu21 = "<ul id='pop2' data-role='listview' class='ui-content' data-insert='true'>";
 	let pu22 = '';
-	$.each(recm, (key, val) => {
+	$.each(recm, function(key, val) {
 		let s22 = "<li><a href='#' class='rart2' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
 		return pu22 + s22;
 	})
 	return pu21 + pu22 + "</ul>"
 };
-const creatPop3 = (recm) => {
+const creatPop3 = function(recm) {
 	let pu31 = "<ul id='pop3' data-role='listview' class='ui-content' data-insert='true'>";
 	let pu32 = '';
-	$.each(recm, (key, val) => {
+	$.each(recm, function(key, val) {
 		let s31 = "<li><a href='#' class='rart3' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
 		return pu32 + s31
 	})
 	return pu31 + pu32 + "</ul>"
 };
-const creatPop4 = (recm) => {
+const creatPop4 = function(recm) {
 	let pu41 = "<ul id='pop4' data-role='listview' class='ui-content' data-insert='true'>";
 	let pu42 = '';
-	$.each(recm, (key, val) => {
+	$.each(recm, function(key, val) {
 		let s41 = "<li><a href='#' class='rart4' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
 		pu42 = pu42 + s41
 	})
 	return pu41 + pu42 + "</ul>"
 };
-const creatPop5 = (recm) => {
+const creatPop5 = function(recm) {
 	let pu51 = "<ul id='pop5' data-role='listview' class='ui-content' data-insert='true'>";	
 	let pu52 = '';
-	$.each(recm, (key, val) => {
+	$.each(recm, function(key, val) {
 		let s51 = "<li><a href='#' class='rart5' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
 		pu52 = pu52 + s51
 	})
 	return pu51 + pu52 + "</ul>"
 };
 
-const initRandomPics = () => {
-	$.get('RandomPics', (data) => {
+const initRandomPics = function() {
+	$.get('RandomPics', function(data) {
 		let result1 = blka(data.rsamp[0].thumbnail) + blkb(data.rsamp[1].thumbnail);
 		let result2 = result1 + blkc(data.rsamp[2].thumbnail) + blkd(data.rsamp[3].thumbnail);
 		let result = result2 + blke(data.rsamp[4].thumbnail);
@@ -371,12 +371,12 @@ const initRandomPics = () => {
 		$('#popup1, #popup2, #popup3, #popup4, #popup5').popup().trigger('create');
 	});
 };
-const RandomPics = () => {
-	$.get('RandomPics', (data) => {
+const RandomPics = function() {
+	$.get('RandomPics', function(data) {
 		localStorage.setItem('nextimgset', JSON.stringify(data));
 	});
 };
-const randomPicProcess = () => {
+const randomPicProcess = function() {
 	let d = JSON.parse(localStorage.getItem('nextimgset'));
 	let result1 = blka(d.rsamp[0].thumbnail) + blkb(d.rsamp[1].thumbnail);
 	let result2 = result1 + blkc(d.rsamp[2].thumbnail) + blkd(d.rsamp[3].thumbnail);
@@ -395,7 +395,7 @@ const randomPicProcess = () => {
 //////////////////////////// PLAYLIST PAGE STUFF //////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 //check a string for alpha-numeric characters only
-const checkAlphaNums = (anString) => {
+const checkAlphaNums = function(anString) {
 	let anRe = /^[\w]+$/;
 	let anFound = anString.match(anRe);
 	if (anFound != null) { 
@@ -405,7 +405,7 @@ const checkAlphaNums = (anString) => {
 	}
 };
 //checks a sting for only numeric characters
-const checkNums = (numString) => {
+const checkNums = function(numString) {
 	let numRe = /^[0-9]*$/;
 	let numFound = numString.match(numRe);
 	if (numFound != null){
@@ -421,9 +421,9 @@ const checkNums = (numString) => {
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////// SETTINGS PAGE STUFF //////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-const initLoadStats = () => {
+const initLoadStats = function() {
 	$('#statsTab').empty();
-	$.get('Stats', ( data ) => {
+	$.get('Stats', function( data ) {
 		let stattwo = "<tr><th>Total Artists</th><td>" + data.stats.total_artists + "</td></tr>";
 		let statthree = "<tr><th>Total Albums</th><td>" + data.stats.total_albums + "</td></tr>";
 		let statfour = "<tr><th>Total Songs</th><td>" + data.stats.total_songs + "</td></tr>";
@@ -443,11 +443,11 @@ const initLoadStats = () => {
 ///////////////////////////////////////////////////////////////////////////////
 let rpw;
 let rpw1;
-const rpwStart = () => {
-	rpw = setInterval(() => {RandomPics()}, 80000);
-	rpw1 = setInterval(() => {randomPicProcess()}, 90000);
+const rpwStart = function() {
+	rpw = setInterval(function() {RandomPics()}, 80000);
+	rpw1 = setInterval(function() {randomPicProcess()}, 90000);
 };
-const rpwStop = () => {
+const rpwStop = function() {
 	clearInterval(rpw);
 	clearInterval(rpw1);
 };
@@ -455,7 +455,7 @@ const rpwStop = () => {
 //////////////////////////////////////////////////////////////////////////////////
 
 //let initAmpnado = function () {
-const initAmpnado = () => {
+const initAmpnado = function() {
 	initRandomPics();
 	$('#audio2').show();
 	//This hides the search boxes
