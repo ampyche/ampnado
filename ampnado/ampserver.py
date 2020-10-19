@@ -101,7 +101,7 @@ class Application(tornado.web.Application):
 		settings = dict(
 #			static_path = os.path.join(os.path.dirname(__file__), "static"),
 #			static_path = os.environ["AMP_PROGRAM_PATH"] + "/ampnado/static",
-			static_path = "/static",
+			static_path = "/usr/share/Ampnado/static",
 #			template_path = os.path.join(os.path.dirname(__file__), "templates"),
 #			template_path = os.environ["AMP_PROGRAM_PATH"] + "/ampnado/templates",
 			template_path = "/usr/share/Ampnado/templates",

@@ -26,7 +26,7 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=example
       - AMP_SETUP=1
       - AMP_MEDIA_PATH=/usr/share/Ampnado/Music
-      - AMP_HTTP_THUMBNAIL_DIR_PATH=/usr/share/Ampnado/static/images/thumbnails
+      - AMP_HTTP_THUMBNAIL_DIR_PATH=/static/images/thumbnails
       - AMP_THUMBNAIL_DIR_PATH=/usr/share/Ampnado/static/images/thumbnails
       - AMP_NO_ART_PIC_PATH=/usr/share/Ampnado/static/images/noartpic.jpg
       - AMP_SERVER_ADDR=http://192.168.1.26
