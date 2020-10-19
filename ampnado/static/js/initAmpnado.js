@@ -19,13 +19,13 @@
 ###############################################################################
 ###############################################################################
 */
-const iArtist1P1Fun1 = (d0) => {
+const iArtist1P1Fun1 = function(d0) {
 	let art1 = "<div><img class='artistimgS' src='" + d0.getimgsonalb.thumbnail + "'></img>";
 	let art2 = art1 + "</div><div class='art1divS'><ul class='artistSongULS' data-role='listview' ";
 	return art2 + "data-inset='true' data-split-icon='gear'>";
 };
 
-const iArtist1P1Fun2 = (d1) => {
+const iArtist1P1Fun2 = function(d1) {
 	let arttwo = "<li class='artSongLIS'><a href='#' class='artsongA1' ";
 	let artthree = arttwo + "data-songid='" + d1[1] + "'>" + d1[0] + "</a><a ";
 	let artfour = artthree + "href='#artistselectplpage' class='artToPlaylistBtn' ";
@@ -33,7 +33,7 @@ const iArtist1P1Fun2 = (d1) => {
 	return artfive + "data-transition='slidefade'></a></li>";
 };
 
-const iArtist1P1Fun3 = (d2) => {
+const iArtist1P1Fun3 = function(d2) {
 	let artA = "<div class='artistPageDiv' data-role='collapsible'><h4>" + d2.Artist + "</h4><div>";
 	let artB = artA + "<form id='" + d2.ArtistId + "' class='artistForm'><div class='ui-field-contain'>";
 	let artc = artB + "<select name='" + d2.Artist + "' id='" + d2.ArtistId + "' class='artistselect'>";
@@ -79,7 +79,7 @@ const intitArtist1P1 = function() {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const initAlbum1P1Fun1 = (c0) => {
+const initAlbum1P1Fun1 = function(c0) {
 	let alb1 = "<div class='albumDIV'><ul class='albumUL' data-role='listview' data-inset='true'>";
 	let alb2 = alb1 + "<li class='albumLI'><a href='#' class='albumA1' data-artist='" + c0.Artist + "' ";
 	let alb3 = alb2 + "data-artistid='" + c0.ArtistId + "' data-album='" + c0.Album + "' ";
@@ -89,7 +89,7 @@ const initAlbum1P1Fun1 = (c0) => {
 	let alb7 = alb6 + "</a></li></ul></div><div class='albsongList'><ul id='albsongUL" + c0.AlbumId + "' ";
 	return alb7 + "class='albsongUL' data-role='listview' data-inset='true' data-split-icon='gear'>";
 };
-const initAlbum1P1Fun2 = (c1) => {
+const initAlbum1P1Fun2 = function(c1) {
 	let albab = "<li class='albsongsLI'><a href='#' class='albsongsA' data-song='" + c1[0] + "' ";
 	let albab1 = albab + "data-songid='" + c1[1] + "'>" + c1[0] + "</a><a href='#albumselectplpage' ";
 	let albab2 = albab1 + "class='addToPlaylist' data-pageid='albums' data-song='" + c1[0] + "' ";
@@ -113,7 +113,7 @@ const initAlbum1P1 = function() {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const initSong1P1Fun1 = (e1) => {
+const initSong1P1Fun1 = function(e1) {
 	let s1 = "<li class='songs_li'><a class='songname' href='#' data-songid='" + e1.SongId + "'>";
 	let s2 = s1 + "<h2>" + e1.Song + "</h2><h6>" + e1.Artist + "</h6></a><a href='#selectplpage' ";
 	let s3 = s2 + "data-pageid='songs' data-song='" + e1.Song + "' data-songid='" + e1.SongId + "' ";
@@ -130,25 +130,25 @@ const initSong1P1 = function() {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const initGetAllPlaylistsFun1 = (f0) => {
+const initGetAllPlaylistsFun1 = function(f0) {
 	let pl1 = "<li class='playlistLi'><a href='#' class='plplay ui-btn ui-mini ui-icon-bullets ";
 	return pl1 + "ui-btn-icon-right' data-playlistid='" + f0[1] + "'>" + f0[0] + "</a></li>";
 };
-const initGetAllPlaylistsFun2 = (f1) => {
+const initGetAllPlaylistsFun2 = function(f1) {
 	let pl3 = "<li class='playlistLi'><a href='#' class='plplay ui-btn ui-mini ui-icon-bullets ";
 	return pl3 + "ui-btn-icon-right'>" + f1 + "</a></li>";
 };
-const initGetAllPlaylistsFun3 = (f2) => {
+const initGetAllPlaylistsFun3 = function(f2) {
 	let spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ui-icon-bullets ";
 	let spl2 = spl1 + "ui-btn-icon-right ui-corner-all' data-textonly='false' data-textvisible='false' ";
 	return spl2 + "data-msgtext=''>" + f2 + "</a></li>";
 };
-const initGetAllPlaylistsFun4 = (f3) => {
+const initGetAllPlaylistsFun4 = function(f3) {
 	let albspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg";
 	let albspl2 = albspl1 + " ui-btn ui-btn-mini ui-icon-bullets ui-btn-icon-right ui-corner-all'";
 	return albspl2 + " data-textonly='false' data-textvisible='false' data-msgtext=''>" + f3 + "</a></li>";
 };
-const initGetAllPlaylistsFun5 = (f4) => {
+const initGetAllPlaylistsFun5 = function(f4) {
 	let artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg";
 	let artspl2 = artspl1 + " ui-btn ui-btn-mini ui-icon-bullets ui-btn-icon-right ui-corner-all'";
 	return artspl2 + " data-textonly='false' data-textvisible='false' data-msgtext=''>" + f4 + "</a></li>";
@@ -193,7 +193,7 @@ const initGetAllPlaylists = function() {
 const initAddOne = function(g1) {
 	return g1 + 1
 };
-const initGetArtistAlphaFun2 = (g2, g3) => {
+const initGetArtistAlphaFun2 = function(g2, g3) {
 	let w1 = "<span id='artistOF" + g2 + "' "
 	let w2 = w1 + "class='artOF show-page-loading-msg ui-btn ui-btn-mini ui-btn-inline ui-corner-all' ";
 	return w2 + "data-textonly='false' data-textvisibility='false' data-msgtext=''>" + g3 + "</span>";

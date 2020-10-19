@@ -20,19 +20,19 @@
 ###############################################################################
 */
 ///////////////////////////////////////////////////////////////////////////////
-const oc_artOF1 = (xx) => {
+const oc_artOF1 = function(xx) {
 	let soupArtOne = "<div><img class='artistimgS' src='" + xx + "'></img>";
 	let soupArtTwo = soupArtOne + "</div><div class='art1divS'><ul class='artistSongULS' ";
 	return soupArtTwo + "data-role='listview' data-inset='true' data-split-icon='gear'>";
 };
-const oc_artOF2 = (vv) => {
+const oc_artOF2 = function(vv) {
 	let soupArt1 = "<li class='artSongLIS'><a href='#' class='artsongA1' ";
 	let soupArt2 = soupArt1 + "data-songid='" + vv[1] + "'>" + vv[0] + "</a>";
 	let soupArt3 = soupArt2 + "<a href='#artistselectplpage' class='artToPlaylistBtn' ";
 	let soupArt4 = soupArt3 + "data-song='" + vv[0] + "' data-songid='" + vv[1] + "' ";
 	return soupArt4 + "data-transition='slidefade'></a></li>";
 };
-const oc_artOF3 = (v) => {
+const oc_artOF3 = function(v) {
 	let a = "<div class='artistPageDiv' data-role='collapsible'><h4>" + v.Artist + "</h4><div>";
 	let a11 = a + "<form id='" + v.ArtistId + "' class='artistForm'><div class='ui-field-contain'>";
 	return a11 + "<select name='" + v.Artist + "' id='" + v.ArtistId + "' class='artistselect'>";
@@ -40,12 +40,12 @@ const oc_artOF3 = (v) => {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const och_artistselect1 = (d) => {
+const och_artistselect1 = function(d) {
 	let aone = "<div id='songimglist'><img class='artistimg' src='" + d.getimgsonalb.thumbnail + "'></img>";
 	let atwo = aone + "<div class='art1div'><ul id='artistSongUL' data-role='listview' data-inset='true' ";
 	return atwo + "data-split-icon='gear'>";
 };
-const och_artistselect2 = (v1) => {
+const och_artistselect2 = function(v1) {
 	let four = "<li class='artsongLI'><a href='#' class='artsongA1' ";
 	let four1 = four + "data-songid='" + v1[1] + "'>" + v1[0] + "</a><a href='#artistselectplpage' ";
 	let four2 = four1 + "class='artToPlaylistBtn' data-song='" + v1[0] + "' data-songid='" + v1[1] + "' ";
@@ -54,7 +54,7 @@ const och_artistselect2 = (v1) => {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const oc_albumOF1 = (va) => {
+const oc_albumOF1 = function(va) {
 	let alb1 = "<div class='albumDIV'><ul class='albumUL' data-role='listview' data-inset='true'>";
 	let alb2 = alb1 + "<li class='albumLI'><a href='#' class='albumA1' data-artist='" + va.Artist + "' ";
 	let alb3 = alb2 + "data-artistid='" + va.ArtistId + "' data-album='" + va.Album + "' ";
@@ -64,7 +64,7 @@ const oc_albumOF1 = (va) => {
 	let alb7 = alb6 + "</a></li></ul></div><div class='albsongList'><ul id='albsongUL" + va.AlbumId + "' ";
 	return alb7 + "class='albsongUL' data-role='listview' data-inset='true' data-split-icon='gear'>";
 };
-const oc_albumOF2 = (b) => {
+const oc_albumOF2 = function(b) {
 	let albab = "<li class='albsongsLI'><a href='#' class='albsongsA' data-song='" + b[0] + "' ";
 	let albab1 = albab + "data-songid='" + b[1] + "'>" + b[0] + "</a><a href='#albumselectplpage' ";
 	let albab2 = albab1 + "class='addToPlaylist' data-pageid='albums' data-song='" + b[0] + "' ";
@@ -73,43 +73,43 @@ const oc_albumOF2 = (b) => {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const oc_addtoplaylist1 = (va) => {
+const oc_addtoplaylist1 = function(va) {
 	let pll1 = "<li class='playlistLi' data-playlistid='" + va[1] + "'><a href='#' class='plplay ui-btn ";
 	let pll2 = pll1 + "ui-mini ui-icon-bullets ui-btn-icon-right' ";
 	return pll2 + "data-playlistid='" + va[1] + "'>" + va[0] + "</a></li>";
 };
-const oc_addtoplaylist2 = (va) => {
+const oc_addtoplaylist2 = function(va) {
 	let spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	let spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + va[1] + "' ";
 	return spl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + va[0] + "</a></li>";
 };	
-const oc_addtoplaylist3 = (va) => {
+const oc_addtoplaylist3 = function(va) {
 	let ablspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	let ablspl2 = ablspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
 	let ablspl3 = ablspl2 + "data-playlistid='" + va[1] + "' data-textonly='false' data-textvisible='false' ";
 	return ablspl3 + "data-msgtext=''>" + va[0] + "</a></li>";
 };	
-const oc_addtoplaylist4 = (va) => {
+const oc_addtoplaylist4 = function(va) {
 	let artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	let artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
 	let artspl3 = artspl2 + "data-playlistid='" + va[1] + "' data-textonly='false' data-textvisible='false' ";
 	return artspl3 + "data-msgtext=''>" + va[0] + "</a></li>";
 };
-const oc_addtoplaylist5 = (p) => {
+const oc_addtoplaylist5 = function(p) {
 	let pll1 = "<li class='playlistLi'><a href='#' class='plplay ui-btn ui-mini ui-icon-bullets ";
 	return pll1 + "ui-btn-icon-right'>" + p + "</a></li>";
 };
-const oc_addtoplaylist6 = (p) => {
+const oc_addtoplaylist6 = function(p) {
 	let spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	let spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
 	return spl2 + "data-textvisible='false' data-msgtext=''>" + p + "</a></li>";
 };
-const oc_addtoplaylist7 = (p) => {
+const oc_addtoplaylist7 = function(p) {
 	let albspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	let albspl2 = albspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
 	return albspl2 + "data-textvisible='false' data-msgtext=''>" + p + "</a></li>";
 };
-const oc_addtoplaylist8 = (p) => {
+const oc_addtoplaylist8 = function(p) {
 	let artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	let artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
 	return artspl2 + "data-textvisible='false' data-msgtext=''>" + p + "</a></li>";
@@ -117,23 +117,23 @@ const oc_addtoplaylist8 = (p) => {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const oc_artToPlaylistBtn1 = (v) => {
+const oc_artToPlaylistBtn1 = function(v) {
 	let pll1 = "<li class='playlistLi' data-playlistid='" + v[1] + "'><a href='#' class='plplay ui-btn ";
 	let pll2 = pll1 + "ui-mini ui-icon-bullets ui-btn-icon-right' ";
 	return pll2 + "data-playlistid='" + v[1] + "'>" + v[0] + "</a></li>";
 };
-const oc_artToPlaylistBtn2 = (v) => {
+const oc_artToPlaylistBtn2 = function(v) {
 	let spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	let spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
 	let spl3 = spl2 + "data-playlistid='" + v[1] + "' data-textonly='false' data-textvisible='false' ";
 	return spl3 + "data-msgtext=''>" + v[0] + "</a></li>";
 };
-const oc_artToPlaylistBtn3 = (v) => {
+const oc_artToPlaylistBtn3 = function(v) {
 	let albspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	let albspl2 = albspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
 	return albspl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
 };
-const oc_artToPlaylistBtn4 = (v) => {
+const oc_artToPlaylistBtn4 = function(v) {
 	let artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	let artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
 	return artspl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
@@ -141,41 +141,41 @@ const oc_artToPlaylistBtn4 = (v) => {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const oc_addToPlaylist1 = (v) => {
+const oc_addToPlaylist1 = function(v) {
 	let pl1 = "<li class='playlistLi' data-playlistid='" + v[1] + "'><a href='#' class='plplay ui-btn ";
 	let pl2 = pl1 + "ui-mini ui-icon-bullets ui-btn-icon-right' ";
 	return pl2 + "data-playlistid='" + v[1] + "'>" + v[0] + "</a></li>";
 };
-const oc_addToPlaylist2 = (v) => {
+const oc_addToPlaylist2 = function(v) {
 	let spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	let spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
 	return spl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
 };
-const oc_addToPlaylist3 = (v) => {
+const oc_addToPlaylist3 = function(v) {
 	let albspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	let albspl2 = albspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
 	return albspl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
 };
-const oc_addToPlaylist4 = (v) => {
+const oc_addToPlaylist4 = function(v) {
 	let artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	let artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
 	return artspl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
 };
-const oc_addToPlaylist5 = (f) => {
+const oc_addToPlaylist5 = function(f) {
 	let p1 = "<li class='playlistLi'><a href='#' class='plplay ui-btn ui-mini ui-icon-bullets ";
 	return p1 + "ui-btn-icon-right'>" + f + "</a></li>";
 };
-const oc_addToPlaylist6 = (f) => {
+const oc_addToPlaylist6 = function(f) {
 	let spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	let spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
 	return spl2 + "data-textvisible='false' data-msgtext=''>" + f + "</a></li>";
 };
-const oc_addToPlaylist7 = (f) => {
+const oc_addToPlaylist7 = function(f) {
 	let albspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	let albspl2 = albspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
 	return albspl2 + "data-textvisible='false' data-msgtext=''>" + f + "</a></li>";
 };
-const oc_addToPlaylist8 = (f) => {
+const oc_addToPlaylist8 = function(f) {
 	let artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	let artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
 	return artspl2 + "data-textvisible='false' data-msgtext=''>" + f + "</a></li>";
@@ -183,7 +183,7 @@ const oc_addToPlaylist8 = (f) => {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const oc_searchBut = (v) => {
+const oc_searchBut = function(v) {
 	let s1 = "<li class='songs_li'><a class='songnameS' href='#' data-songid='" + v.songid + "' ";
 	let s2 = s1 + "data-song='" + v.song + "'><h2>" + v.song + "</h2><h6>" + v.artist + "</h6></a>"
 	let s3 = s2 + "<a href='#selectplpage' data-pageid='songs' data-songid='" + v.songid + "' ";
@@ -192,7 +192,7 @@ const oc_searchBut = (v) => {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const oc_albsearchBut1 = (f) => {
+const oc_albsearchBut1 = function(f) {
 	let alb1 = "<div class='albumDIV'><ul class='albumUL' data-role='listview' data-inset='true'>";
 	let alb2 = alb1 + "<li class='albumLI'><a href='#' class='albumA1' data-artist='" + f.artist + "' ";
 	let alb3 = alb2 + "data-artistid='" + f.artistid + "' data-album='" + f.album + "' ";
@@ -202,7 +202,7 @@ const oc_albsearchBut1 = (f) => {
 	let alb7 = alb6 + "<div class='albsongList'><ul id='albsongUL" + f.albumid + "' class='albsongUL' ";
 	return alb7 + "data-role='listview' data-inset='true' data-split-icon='gear'>";
 };
-const oc_albsearchBut2 = (v) => {
+const oc_albsearchBut2 = function(v) {
 	let albab1 = "<li class='albsongsLI'><a href='#' class='albsongsA' data-song='" + v[0] + "' ";
 	let albab2 = albab1 + "data-songid='" + v[1] + "'>" + v[0] + "</a><a href='#albumselectplpage' ";
 	let albab3 = albab2 + "class='addToPlaylist' data-pageid='albums' data-song='" + v[0] + "' ";
@@ -211,18 +211,18 @@ const oc_albsearchBut2 = (v) => {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const oc_artsearchBut1 = (m) => {
+const oc_artsearchBut1 = function(m) {
 	let a1 = "<div><img class='artistimgS' src='" + m + "'></img></div>";
 	let a2 = a1 + "<div class='art1divS'><ul class='artistSongULS' data-role='listview' ";
 	return a2 + "data-inset='true' data-split-icon='gear'>";
 };
-const oc_artsearchBut2 = (n) => {
+const oc_artsearchBut2 = function(n) {
 	let art31 = "<li class='artSongLIS'><a href='#' class='artsongA1' ";
 	let art32 = art31 + "data-songid='" + n[1] + "'>" + n[0] + "</a>";
 	let art33 = art32 + "<a href='#artistselectplpage' class='artToPlaylistBtn' ";
 	return art33 + "data-songid='" + n[1] + "' data-transition='slidefade'></a></li>";
 };
-const oc_artsearchBut3 = (n) => {
+const oc_artsearchBut3 = function(n) {
 	let artA1 = "<div class='artistPageDivSearch' data-role='collapsible'><h4>" + n.artist + "</h4>";
 	let artA2 = artA1 + "<div><form id='" + n.artistid + "' class='artistForm'><div ";
 	let artA3 = artA2 + "class='ui-field-contain'><select ";
@@ -231,7 +231,7 @@ const oc_artsearchBut3 = (n) => {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const oc_homeBTN_fraz1 = (b) => {
+const oc_homeBTN_fraz1 = function(b) {
 	let b1 = "<div class='ui-block-a' data-theme='a'><a href='#popup1' data-rel='popup' data-transition='pop'>";
 	let b2 = b1 + "<img src='" + b.rsamp[0].thumbnail + "' class='PicGrid'></img></a></div>";
 	let b3 = b2 + "<div class='ui-block-b' data-theme='a'><a href='#popup2' data-rel='popup' data-transition='pop'>";
@@ -243,10 +243,10 @@ const oc_homeBTN_fraz1 = (b) => {
 	let b9 = b8 + "<div class='ui-block-e' data-theme='a'><a href='#popup5' data-rel='popup' data-transition='pop'>";
 	return b9 + "<img src='" + b.rsamp[4].thumbnail + "' class='PicGrid'></img></a></div>";
 };
-const oc_homeBTN_fraz2 = (b) => {
+const oc_homeBTN_fraz2 = function(b) {
 	let pu11 = "<ul id='pop1' data-role='listview' class='ui-content' data-insert='true'>"
 	let pu12 = '';
-	$.each(b.rsamp[0].songs, (key, val) => {
+	$.each(b.rsamp[0].songs, function(key, val) {
 		let s11 = "<li><a href='#' class='rart1' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
 		return pu12 + s11
 	})
@@ -255,10 +255,10 @@ const oc_homeBTN_fraz2 = (b) => {
 	$('#pop1').listview().trigger('refresh');
 	$('#popup1').popup().trigger('create');
 };
-const oc_homeBTN_fraz3 = (b) => {
+const oc_homeBTN_fraz3 = function(b) {
 	let pu21 = "<ul id='pop2' data-role='listview' class='ui-content' data-insert='true'>";
 	let pu22 = '';
-	$.each(b.rsamp[1].songs, (key, val) => {
+	$.each(b.rsamp[1].songs, function(key, val) {
 		let s22 = "<li><a href='#' class='rart2' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
 		return pu22 + s22;
 	})
@@ -267,10 +267,10 @@ const oc_homeBTN_fraz3 = (b) => {
 	$('#pop2').listview().trigger('refresh');
 	$('#popup2').popup().trigger('create');
 };
-const oc_homeBTN_fraz4 = (b) => {
+const oc_homeBTN_fraz4 = function(b) {
 	let pu31 = "<ul id='pop3' data-role='listview' class='ui-content' data-insert='true'>";
 	let pu32 = '';
-	$.each(b.rsamp[2].songs, (key, val) => {
+	$.each(b.rsamp[2].songs, function(key, val) {
 		let s31 = "<li><a href='#' class='rart3' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
 		return pu32 + s31;
 	})
@@ -279,10 +279,10 @@ const oc_homeBTN_fraz4 = (b) => {
 	$('#pop3').listview().trigger('refresh');
 	$('#popup3').popup().trigger('create');
 };
-const oc_homeBTN_fraz5 = (b) => {
+const oc_homeBTN_fraz5 = function(b) {
 	let pu41 = "<ul id='pop4' data-role='listview' class='ui-content' data-insert='true'>";
 	let pu42 = '';
-	$.each(b.rsamp[3].songs, (key, val) => {
+	$.each(b.rsamp[3].songs, function(key, val) {
 		let s41 = "<li><a href='#' class='rart4' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
 		pu42 = pu42 + s41
 	})
@@ -291,10 +291,10 @@ const oc_homeBTN_fraz5 = (b) => {
 	$('#pop4').listview().trigger('refresh');
 	$('#popup4').popup().trigger('create');
 };
-const oc_homeBTN_fraz6 = (b) => {
+const oc_homeBTN_fraz6 = function(b) {
 	let pu51 = "<ul id='pop5' data-role='listview' class='ui-content' data-insert='true'>";	
 	let pu52 = '';
-	$.each(b.rsamp[4].songs, (key, val) => {
+	$.each(b.rsamp[4].songs, function(key, val) {
 		let s51 = "<li><a href='#' class='rart5' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
 		pu52 = pu52 + s51
 	})
@@ -316,7 +316,7 @@ const singPlayer1(d) {
 	$('#pictext2').text(d.soho['Album']);
 	audio25 = $('#audio2');
 	audio25.attr('src', d.soho['HttpMusicPath']);
-	audio25.on('loadedmetadata', () => {
+	audio25.on('loadedmetadata', function() {
 		var dur = audio25[0].duration;
 		var cd = calcDuration(dur);
 		$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
@@ -329,24 +329,24 @@ const singPlayer1(d) {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const oc_butsub1 = (v) => {
+const oc_butsub1 = function(v) {
 	var npl1 = "<li class='playlistLi' data-playlistid='" + v.playlistid + "'><a href='#' ";
 	var npl2 = npl1 + "class='plplay ui-btn ui-mini ui-icon-bullets ui-btn-icon-right' ";
 	return npl2 + "data-playlistid='" + v.playlistid + "'>" + v.playlistname + "</a></li>"
 };
-const oc_butsub2 = (v) => {
+const oc_butsub2 = function(v) {
 	var npl21 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	var npl22 = npl21 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
 	var npl23 = npl22 + "data-playlistid='" + v.playlistid + "' data-textonly='false' ";
 	return npl23 + "data-textvisible='false' data-msgtext=''>" + v.playlistname + "</a></li>"
 };
-const oc_butsub3 = (v) => {
+const oc_butsub3 = function(v) {
 	var npl31 = "<li><a href='#artists' class='artSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	var npl32 = npl31 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
 	var npl33 = npl32 + "data-playlistid='" + v.playlistid + "' data-textonly='false' data-textvisible='false' ";
 	return npl33 + "data-msgtext=''>" + v.playlistname + "</a></li>"
 };
-const oc_butsub4 = (v) => {
+const oc_butsub4 = function(v) {
 	var npl41 = "<li><a href='#albumssongs' class='albSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	var npl42 = npl41 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v.playlistid + "' ";
 	return npl42 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v.playlistname + "</a></li>"
@@ -354,23 +354,23 @@ const oc_butsub4 = (v) => {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const oc_randomInput1 = (v) => {
+const oc_randomInput1 = function(v) {
 	let p1 = "<li class='playlistLi' data-playlistid='" + v.playlistid + "'><a href='#' class='plplay ui-btn ";
 	let p2 = p1 + "ui-mini ui-icon-bullets ui-btn-icon-right' ";
 	return p2 + "data-playlistid='" + v.playlistid + "'>" + v.playlistname + "</a></li>"
 };
-const oc_randomInput2 = (v) => {
+const oc_randomInput2 = function(v) {
 	let spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ui-icon-bullets ";
 	let spl2 = spl1 + "ui-btn-icon-right ui-corner-all' data-playlistid='" + v.playlistid + "' ";
 	return spl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v.playlistname + "</a></li>"
 };
-const oc_randomInput3 = (v) => {
+const oc_randomInput3 = function(v) {
 	let alpl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	let alpl2 = alpl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
 	let alpl3 = alpl2 + "data-playlistid='" + v.playlistid + "' data-textonly='false' data-textvisible='false' ";
 	return alpl3 + "data-msgtext=''>" + v.playlistname + "</a></li>"
 };	
-const oc_randomInput4 = (v) => {
+const oc_randomInput4 = function(v) {
 	let arpl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	let arpl2 = arpl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
 	let arpl3 = arpl2 + "data-playlistid='" + v.playlistid + "' data-textonly='false' data-textvisible='false' ";
@@ -387,11 +387,11 @@ const albumSearchFunc = function() {
 	},
 	function(data) {
 		$('#albListViewDIV2').empty();
-		$.each(data.ysearch, ( ke, va) => {
+		$.each(data.ysearch, function( ke, va) {
 			let alb8 = oc_albsearchBut1(va);
 			let alba33 = '';
-			$.each(va.songs, (k, v) => {
-				$.each(v, (kk, vv) => {
+			$.each(va.songs, function(k, v) {
+				$.each(v, function(kk, vv) {
 					return alba33 + oc_albsearchBut2(vv);
 				});
 			});
@@ -412,8 +412,8 @@ $(document).on('click', '.artOF', function() {
 	{
 		'selected': artass
 	},
-	(data) => {
-		$.each(data.arts, ( key, val ) => {
+	function(data) {
+		$.each(data.arts, function( key, val ) {
 			let alblength = val.Albums.length;
 			let abc = "<div class='artistPageDivS' data-role='collapsible'><h4>" + val.Artist + "</h4>";
 			let selected = val.Albums[0][1];
@@ -422,7 +422,7 @@ $(document).on('click', '.artOF', function() {
 				{
 					'selected' : selected
 				}, 
-				(data) => {
+				function(data) {
 					let soupArtThree = oc_artOF1(data.getimgsonalb.thumbnail);
 					let artSoupLI = '';
 					$.each(data.getimgsonalb.songs, (kk, vv) =>{
@@ -439,7 +439,7 @@ $(document).on('click', '.artOF', function() {
 				let a2 = '';
 				let a3 = '';
 				let aa1 = "<option class='artop0' value='Choose Album'>Choose Album</option>";
-				$.each(val.Albums, (k, v) => {
+				$.each(val.Albums, function(k, v) {
 					let a1 = "<option class='artop1' value='" + v[1] + "'>" + v[0] + "</option>";
 					a2 = a2 + a1;
 					a3 = aa1 + a2;
@@ -512,7 +512,7 @@ $(document).on('click', '.artOF', function() {
 			{
 				'filetodelete': data.httpmusicpath,
 			},
-			(data) => {
+			function(data) {
 				console.log(data.cleared);
 			});
 		});*/iArtist1P1Fun2
@@ -582,7 +582,7 @@ $(document).on('click', '.artOF', function() {
 		$.each(data.albs, function( key, val) {
 			let alb8 = oc_albumOF1(val);
 			let alba33 = '';
-			$.each(val.Songs, (ka, val) => {
+			$.each(val.Songs, function(ka, val) {
 				alba33 = alba33 + oc_albumOF2(val);
 				return alba33
 			});
@@ -619,12 +619,12 @@ $(document).on('click', '.artOF', function() {
 			$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
 			$('.PlayBtn').css('background-color', 'green').css("color", "white");
 		});
-/*		audio23.on('ended', () => {
+/*		audio23.on('ended', function() {
 			$.get('ClearTemp',
 			{
 				'filetodelete': data.httpmusicpath,
 			},
-			(data) => {
+			function(data) {
 				console.log(data.cleared);
 			});
 		});*/
@@ -685,12 +685,12 @@ $(document).on('click', '.artOF', function() {
 			var cd = calcDuration(dur);
 			$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
 		});
-/*		audio2.on('ended', () => {
+/*		audio2.on('ended', function() {
 			$.get('ClearTemp',
 			{
 				'filetodelete': data.httpmusicpath,
 			},
-			(data) => {
+			function(data) {
 				console.log(data.cleared);
 			});
 		});*/
@@ -709,7 +709,7 @@ $(document).on('click', '.artOF', function() {
 	function(data) {
 		if ( data.plnames != 'Please create a playlist' ) {
 			localStorage.setItem('playlists', JSON.stringify(data));
-			$.each(data.plnames, (k, va) => {
+			$.each(data.plnames, function(k, va) {
 				$('#playPlaylistUL').append(oc_addtoplaylist1(va));
 				$('#splUL').append(oc_addtoplaylist2(va));
 				$('#albsplUL').append(oc_addtoplaylist3(va));
@@ -759,7 +759,7 @@ $(document).on('click', '.artOF', function() {
 		localStorage.setItem('playlists', JSON.stringify(data));
 		$('#playPlaylistUL, #splUL, #albsplUL, #artsplUL').empty();
 		if ( data.plnames != 'Please create a playlist' ) {
-			$.each(data.plnames, (k, v) => {
+			$.each(data.plnames, function(k, v) {
 				$('#playPlaylistUL').append(oc_addToPlaylist1(v));
 				$('#splUL').append(oc_addToPlaylist2(v));
 				$('#albsplUL').append(oc_addToPlaylist3(v));
@@ -818,7 +818,7 @@ $(document).on('click', '.artOF', function() {
 	},
 	function(data) {
 		$('#songs_view, #songs_view2').empty();
-		$.each(data.xsearch, ( k, v) => {
+		$.each(data.xsearch, function( k, v) {
 			let s4 = oc_searchBut(v);
 			$("#songs_view2").append(s4);
 		});
@@ -886,7 +886,7 @@ $(document).on('click', '.artOF', function() {
 						function(data) {
 							let a3 = oc_artsearchBut1(data.getimgsonalb.thumbnail);							
 							liString = '';
-							$.each(data.getimgsonalb.songs, (kk, vv) => {
+							$.each(data.getimgsonalb.songs, function(kk, vv) {
 								let art34 = oc_artsearchBut2(vv);
 								liString = liString + art34;
 								return liString;
@@ -899,7 +899,7 @@ $(document).on('click', '.artOF', function() {
 					let artA4 = oc_artsearchBut3(va);
 					let a2 = ''
 					let aa1 = "<option class='artop0' value='Choose Album'>Choose Album</option>";
-					$.each(va.albums, (k, v) => {
+					$.each(va.albums, function(k, v) {
 						let a1 = "<option class='artop1' value='" + v[1] + "'>" + v[0] + "</option>";
 						a2 = a2 + a1;
 						a3 = aa1 + a2;
@@ -973,7 +973,7 @@ $.mobile.loader.prototype.options.textVisible,
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////// PLAYLIST PAGE STUFF //////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-//$(document).on('click', '.playlistLi', () => {
+//$(document).on('click', '.playlistLi', function() {
 .on('click', '.playlistLi', function() {
 	$('#controlGrid').fadeToggle('fast');
 	$('#playlistcollapsible').collapsible('collapse');
@@ -1090,7 +1090,7 @@ $.mobile.loader.prototype.options.textVisible,
 	{
 		"playlistname" : pln.playlist, 'delsongid' : snID.dsongid
 	},
-	(data) => {
+	function(data) {
 		let s3 = "";
 		$.each(data, function(key, valu) {
 			$.each(valu, function(key, val) {
@@ -1146,7 +1146,7 @@ $.mobile.loader.prototype.options.textVisible,
 			 'playlistname' : t2, 'playlistcount' : t3
 		},
 		function(data) {
-			$.each(data.plists, (k, v) => {
+			$.each(data.plists, function(k, v) {
 				$('#playPlaylistUL').append(oc_randomInput1(v));
 				$('#splUL').append(oc_randomInput2(v));
 				$('#albsplUL').append(oc_randomInput3(v));
