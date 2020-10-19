@@ -551,7 +551,7 @@ $(document).on('click', '.artOF', () => {
 	$('.art1div').empty();
 })
 //This gets playlist selection and adds song to playlistdb for the artist page
-.on('click', '.artistSelBtn', () => {
+.on('click', '.artistSelBtn', function() {
 	let selectedPlayList = {'playlist': $(this).text(), 'playlistid': $(this).attr('data-playlistid')};
 	localStorage.setItem('currentSelected_PLAYLIST_PLAYLISTID', JSON.stringify(selectedPlayList));
 	var name = JSON.parse(localStorage.getItem("artistPageSelected_SONG_SONGID"));
@@ -570,7 +570,7 @@ $(document).on('click', '.artOF', () => {
 	bebe = "#albsongUL" + $(this).attr('data-albumid');
 	$(bebe).fadeToggle('fast');
 })
-.on('click', '.albumOF', () => {
+.on('click', '.albumOF', function() {
 	let albass = $(this).text();
 	$('#albumOFC').collapsible("collapse");
 	$('#alblist').empty();
@@ -595,7 +595,7 @@ $(document).on('click', '.artOF', () => {
 	});
 })
 //This get the selected song on the albums page and sends it to the player
-.on('click', '.albsongsA', () => {
+.on('click', '.albsongsA', function() {
 	var  audio23 = $('#audio2');
 	audio23.attr('src', '');
 	$('.duration').text('00:00');
@@ -660,7 +660,7 @@ $(document).on('click', '.artOF', () => {
 //This gets the selected song from the first anchor 
 //use data-song and data-songid they are set
 //this should use songid instead of songname
-.on('click', 'a.songname', () => {
+.on('click', 'a.songname', function() {
 	let audio2 = $('#audio2');
 	audio2.attr('src', '');
 	$('.duration').text('00:00');
