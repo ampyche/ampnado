@@ -98,6 +98,8 @@ const initAlbum1P1Fun2 = function(c1) {
 const initAlbum1P1 = function() {
 	$.get('InitialAlbumInfo', function(data) {
 		$.each(data.ial, function(key, val) {
+			print("THIS IS INIT ALBUMINTO VAL")
+			print(val)
 			let alb8 = initAlbum1P1Fun1(val)
 			let alba3 = '';
 			$.each(val.Songs, function(k, v) {

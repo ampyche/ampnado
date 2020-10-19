@@ -567,7 +567,7 @@ $(document).on('click', '.artOF', function() {
 })
 //This hides and shows the albums page songs listview
 .on('click', '.albumA1', function() {
-	bebe = "#albsongUL" + $(this).attr('data-albumid');
+	let bebe = "#albsongUL" + $(this).attr('data-albumid');
 	$(bebe).fadeToggle('fast');
 })
 .on('click', '.albumOF', function() {
