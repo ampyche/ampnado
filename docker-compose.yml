@@ -12,7 +12,7 @@ services:
     networks:
       - ampnado
     ports:
-      - 27017:27017
+      - 27020:27020
     # volumes:
     #   - /home/teresa/AmpnadoDockerData/mongodbData:/data/db
 
@@ -21,7 +21,7 @@ services:
     build: .
     environment:
       - AMP_PROGRAM_PATH=/usr/share/Ampnado
-      - MONGO_AMPNADO_MONGODB_ADDR=mongodb://db:27017/ampnadoDB
+      - MONGO_AMPNADO_MONGODB_ADDR=mongodb://db:27020/ampnadoDB
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=example
       - AMP_SETUP=1
