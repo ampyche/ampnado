@@ -459,9 +459,9 @@ function initLoadStats() {
 		var stattwo = "<tr><th>Total Artists</th><td>" + data.stats.total_artists + "</td></tr>";
 		var statthree = "<tr><th>Total Albums</th><td>" + data.stats.total_albums + "</td></tr>";
 		var statfour = "<tr><th>Total Songs</th><td>" + data.stats.total_songs + "</td></tr>";
-		var statnine = "<tr><th>Total Videos</th><td>" + data.stats.total_videos + "</td></tr>";
+		// var statnine = "<tr><th>Total Videos</th><td>" + data.stats.total_videos + "</td></tr>";
 		var statfive = "<tr><th>Music Lib Size</th><td>" + data.stats.total_music_size + "</td></tr>";
-		var statseven = "<tr><th>Video Lib Size</th><td>" + data.stats.total_video_size + "</td></tr>";
+		// var statseven = "<tr><th>Video Lib Size</th><td>" + data.stats.total_video_size + "</td></tr>";
 		var stateight = "<tr><th>Total Disk Size</th><td>" + data.stats.total_disk_size + "</td></tr>";
 		var stats1 = stattwo + statthree + statfour + statnine + statfive + statseven + stateight;
 		var stone = "<tr><th>Total MP3's</th><td>" + data.stats.total_mp3 + "</td></tr>";		
