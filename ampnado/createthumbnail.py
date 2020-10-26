@@ -22,7 +22,8 @@ import os, base64, glob
 from PIL import Image
 from pymongo import MongoClient, ASCENDING, DESCENDING
 
-client = MongoClient("mongodb://db:27017/ampnaodDB")
+MONGO_ADDR = os.environ["AMP_AMPDB_ADDR"]
+client = MongoClient(MONGO_ADDR)
 db = client.ampnadoDB
 viewsdb = client.ampviewsDB
 
@@ -30,6 +31,11 @@ class Thumbnails():
 
 	def get_smallthumb(self, size, location, filename):
 		try:
+			# with Image.open(filename) as im2:
+			# 	im2.load()
+			# 	im2.thumbnail(size, Image.ANTIALIAS)
+			# 	im2.save(location, "JPEG")
+
 			im2 = Image.open(filename)
 			im2.load()
 			im2.thumbnail(size, Image.ANTIALIAS)

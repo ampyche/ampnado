@@ -19,17 +19,13 @@
 ###############################################################################
 ###############################################################################
 
-import os
-import uuid
+import os, uuid
 import mutagen
-try:
-	from mutagen import File
-except ImportError:
-	from mutagenx import File
-try:
-	from mutagen.oggvorbis import OggVorbis
-except ImportError:
-	from mutagenx.oggvorbis import OggVorbis
+try: from mutagen import File
+except ImportError: from mutagenx import File
+
+try: from mutagen.oggvorbis import OggVorbis
+except ImportError: from mutagenx.oggvorbis import OggVorbis
 
 class FileMeta:
 	SongId = None
@@ -37,13 +33,10 @@ class FileMeta:
 	Size = None
 	
 	def __init__(self, fn):
-		# type(self).SongId = str(uuid.uuid4().hex)
-		# type(self).DirPath = os.path.dirname(fn)
-		# type(self).Size = os.path.getsize(fn)
+		type(self).SongId = str(uuid.uuid4().hex)
+		type(self).DirPath = os.path.dirname(fn)
+		type(self).Size = os.path.getsize(fn)
 
-		self.SongId = str(uuid.uuid4().hex)
-		self.DirPath = os.path.dirname(fn)
-		self.Size = os.path.getsize(fn)
 
 class MP3Tags:
 	Track = None
@@ -61,32 +54,24 @@ class MP3Tags:
 			pass
 
 		try:
-			# type(self).Track = self.audio['TRCK'].text[0]
-			self.Track = self.audio['TRCK'].text[0]
+			type(self).Track = self.audio['TRCK'].text[0]
 		except KeyError:
-			# type(self).Track = '50'
-			self.Track = '50'
+			type(self).Track = '50'
 	
 		try:
-			# type(self).Artist = self.audio["TPE1"].text[0]
-			self.Artist = self.audio["TPE1"].text[0]
+			type(self).Artist = self.audio["TPE1"].text[0]
 		except KeyError: 
-			# type(self).Artist = 'Fuck Artist'
-			self.Artist = 'Fuck Artist'
+			type(self).Artist = 'Fuck Artist'
 			print(''.join(("KeyError: No TPE1 tag... ", self.fn)))
 	
 		try:
-			# type(self).Album = self.audio["TALB"].text[0]
-			self.Album = self.audio["TALB"].text[0]
+			type(self).Album = self.audio["TALB"].text[0]
 		except KeyError: 
-			# type(self).Album = 'Fuck Album'
-			self.Album = 'Fuck Album'
+			type(self).Album = 'Fuck Album'
 			print(''.join(("KeyError No TALB tag ... ", self.fn)))
 			
 		try:
-			# type(self).Song = self.audio['TIT2'].text[0]
-			self.Song = self.audio['TIT2'].text[0]
+			type(self).Song = self.audio['TIT2'].text[0]
 		except KeyError: 
-			# type(self).Song = 'Fuck Song'
-			self.Song = 'Fuck Song'
+			type(self).Song = 'Fuck Song'
 			print(''.join(("KeyError: No TIT2 tag... ", self.fn)))

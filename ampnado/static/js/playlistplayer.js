@@ -22,15 +22,15 @@
 ###############################################################################
 */
 
-jQuery(function ($) {
-	$('#playlistLoadBtn, #playlistLoadBtn1').on('click', function () {
+jQuery(function($) {
+	$('#playlistLoadBtn, #playlistLoadBtn1').on('click', function() {
 		plname = JSON.parse(localStorage.getItem("currentSelected_PLAYLIST_PLAYLISTID"));
 		$.get("CreatePlayerPlaylist",
 		{
 			"playlistid": plname.playlistid
 		},
-		function (data) {
-			$.each(data, function (key, val) {
+		function(data) {
+			$.each(data, function(key, val) {
 				$.mobile.loading("hide");
 				tracks = val;
 				var supportsAudio = !!document.createElement('audio').canPlayType;
@@ -42,11 +42,11 @@ jQuery(function ($) {
 					//mediaPath = '/home/teresa/Music',
 					extension = '',
 					trackCount = tracks.length,
-					audio = $('#audio1').bind('play', function () {
+					audio = $('#audio1').bind('play', function() {
 						playing = true;
-					}).bind('pause', function () {
+					}).bind('pause', function() {
 						playing = false;
-					}).bind('ended', function () {
+					}).bind('ended', function() {
 						if ((index +1) < trackCount) {
 							index++;
 							loadTrack(index);
@@ -57,7 +57,7 @@ jQuery(function ($) {
 							loadTrack(index);
 						}
 					}).get(0),
-					btnPrev = $('.plprevButton').click(function () {
+					btnPrev = $('.plprevButton').click(function() {
 						if((index - 1) > -1) {
 							index--;
 							loadTrack(index);
@@ -70,7 +70,7 @@ jQuery(function ($) {
 							loadTrack(index);
 						} 
 					}),
-					btnNext = $('.plnextButton').click(function () {
+					btnNext = $('.plnextButton').click(function() {
 						if((index + 1) < trackCount) {
 							index++;
 							loadTrack(index);
@@ -83,7 +83,7 @@ jQuery(function ($) {
 							loadTrack(index);
 						}
 					}),
-					loadTrack = function (id) {
+					loadTrack = function(id) {
 						art = tracks[id].thumbnail;
 						$('#playlistalbart').attr('src', art);
 						$('.fraz').attr('src', art);
@@ -95,7 +95,7 @@ jQuery(function ($) {
 						//audio.src = mediaPath + tracks[id].file + extension;
 						audio.src = tracks[id].file + extension;
 					},
-					playTrack = function (id) {
+					playTrack = function(id) {
 						loadTrack(id);
 						audio.play();
 					};

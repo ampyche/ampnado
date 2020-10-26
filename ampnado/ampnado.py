@@ -18,40 +18,41 @@
 	# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 ###############################################################################
-import os, time, argparse, glob
+import os, time, argparse
+#import inputs as gp
 import functions as fun
 import findjpgs as fj
 from pymongo import MongoClient
 from pprint import pprint
 from data import Data
-from artistview import ArtistView
-from artistview import ArtistChunkIt
-from albumview import AlbumView
-from albumview import AlbumChunkIt
-from songview import SongView
 
-ampDBClient = MongoClient("mongodb://db:27017/ampnadoDB")
+MONGO_ADDR = os.environ["AMP_AMPDB_ADDR"]
+VIEWSDB_ADDR = os.environ["AMP_VIEWSDB_ADDR"]
+PICDB_ADDR = os.environ['AMP_PICDB_ADDR']
+
+
+ampDBClient = MongoClient(MONGO_ADDR)
 ampDBClient.drop_database("ampnadoDB")
 
-ampvDBClient = MongoClient("mongodb://db:27017/ampviewsDB")
+ampvDBClient = MongoClient(VIEWSDB_ADDR)
 ampvDBClient.drop_database("ampviewsDB")
+#client.drop_database("config")
 
-picDBClient = MongoClient("mongodb://db:27017/picdb")
+picDBClient = MongoClient(PICDB_ADDR)
 picDBClient.drop_database("picdb")
 
 db = ampDBClient.ampnadoDB
 
 class SetUp():
 	def __init__(self):
-		self.setup_status = os.environ["AMP_SETUP"]
 		print("SetUp HAS STARTED")
 		FUN = fun.FindMedia()
 		self.FUN = FUN
 		FUNKY = fun.Functions()
 		FUNKY.insert_user(os.environ["AMP_USERNAME"], os.environ["AMP_PASSWORD"])
 
-	def gettime(self, at):
-		return (time.time() - at)
+
+	def gettime(self, at): return (time.time() - at)
 
 	def main(self):
 		atime = time.time()
@@ -67,48 +68,61 @@ class SetUp():
 		btime = time.time()
 		maintime = btime - atime
 		print("Main DB setup time %s" % maintime)
-
-		fun.AddArtistId()
+		
+		from functions import AddArtistId
+		AddArtistId().add_artistids()
 		ctime = time.time()
 		artidtime = ctime - atime
 		print("AddArtistId time %s" % artidtime)
 
-		fun.AddAlbumId()
+		from functions import AddAlbumId
+		AddAlbumId().add_albumids()
 		dtime = time.time()
 		albidtime = dtime - atime
 		print("AddAlbumId time %s" % albidtime)
 
+		from artistview import ArtistView
+		from artistview import ArtistChunkIt
 		AV = ArtistView().main()
 		ArtistChunkIt().main(AV, os.environ["AMP_OFFSET_SIZE"])
 		etime = time.time()
 		artistviewtime = etime - atime
 		print("Artistview time %s" % artistviewtime)		
 
+		from albumview import AlbumView
+		from albumview import AlbumChunkIt
 		ALBV = AlbumView().main()
 		AlbumChunkIt().main(ALBV, os.environ["AMP_OFFSET_SIZE"])
 		ftime = time.time()
 		albviewtime = ftime - atime
 		print("Albumview time %s" % albviewtime)		
 
+		from songview import SongView
 		SongView().create_songView_db(os.environ["AMP_OFFSET_SIZE"])
 		gtime = time.time()
 		songviewtime = gtime - atime
 		print("Songview time %s" % songviewtime)
-
-		fun.Indexes().creat_db_indexes()
-		htime = time.time()
-		indextime = htime - atime
-		print("Index time %s" % indextime)
 		
-		fun.DbStats().db_stats()
-		itime = time.time()
-		statstime = itime - atime
-		print("DBStats time is %s" % statstime)
+		# from functions import Indexes
+		# Indexes().creat_db_indexes()
+		# htime = time.time()
+		# indextime = htime - atime
+		# print("Index time %s" % indextime)
+		
+		# from functions import DbStats
+		# DbStats().db_stats()
+		# itime = time.time()
+		# statstime = itime - atime
+		# print("DBStats time is %s" % statstime)
 
-		fun.RandomArtDb().create_random_art_db()
-		jtime = time.time()
-		ranarttime = jtime - atime
-		print("RandomArtDB time is %s" % ranarttime)
+		# from functions import RandomArtDb
+		# RandomArtDb().create_random_art_db()
+		# jtime = time.time()
+		# ranarttime = jtime - atime
+		# print("RandomArtDB time is %s" % ranarttime)
+
+
+
 
 #		#this is for removeuser
 #		try:
@@ -120,19 +134,9 @@ class SetUp():
 		ptime = time.time()
 		t = ptime - atime
 		print("SETUP HAS BEEN COMPLETED IN %s SECONDS" % t)
-	
-	def setup_status_check(self):
-		db_status = len(glob.glob("/data/db/*.wt"))
-		pic_status = len(glob.glob("/usr/share/Ampnado/static/images/thumbnails/*.jpg"))
-		
-		if  db_status != 0 and pic_status != 0:
-			import ampserver as app
-			app.main()
-		else:
-			self.main()
-			import ampserver as app
-			app.main()
 
 if __name__ == "__main__":
 	su = SetUp()
-	su.setup_status_check()
+	su.main()
+	import ampserver as app
+	app.main()

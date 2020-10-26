@@ -28,7 +28,8 @@ class SongView:
 
 	def rm_dups_songalpha(self, x): return list(set(x))
 	
-	def insert_songalpha(self, z): Data().viewsdb_songalpha_insert(dict(songalpha=z))
+	def insert_songalpha(self, z):
+		Data().viewsdb_songalpha_insert(dict(songalpha=z))
 	
 	def insert_songview(self, w):
 		Data().viewsdb_songview_insert(w)
@@ -36,7 +37,6 @@ class SongView:
 	def create_songView_db(self, OFC):
 		count = 0
 		page = 1
-		
 		for s in self.tags:
 			count += 1
 			if count == int(OFC):
@@ -51,6 +51,5 @@ class SongView:
 			self.songviewlist.append(x)
 		songalphaoffsetlist1 = self.rm_dups_songalpha(self.songalphaoffsetlist)
 		self.insert_songalpha(songalphaoffsetlist1)
-		self.insert_songview(self.songviewlist)       
-		
+		self.insert_songview(self.songviewlist)
 		return self.songviewlist

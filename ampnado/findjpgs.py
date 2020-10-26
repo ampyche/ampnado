@@ -10,7 +10,8 @@ try: from mutagen import File
 except ImportError: from mutagenx import File
 from PIL import Image
 
-client = MongoClient("mongodb://db:27017/ampnaodDB")
+MONGO_ADDR = os.environ["AMP_AMPDB_ADDR"]
+client = MongoClient(MONGO_ADDR)
 pdb = client.picdb
 
 class FindMissingArt:
@@ -19,7 +20,7 @@ class FindMissingArt:
 		self.thumbnail_path = os.environ["AMP_THUMBNAIL_DIR_PATH"]
 		self.http_thumbnail_path = os.environ["AMP_HTTP_THUMBNAIL_DIR_PATH"]
 		self.media_path = os.environ["AMP_MEDIA_PATH"]
-		self.ArtWork = os.environ["AMP_NO_ART_PIC_PATH"]
+		self.ArtWork = None
 		self.MP3List = []
 		self.NoArtList = []
 		self.PicDics = []

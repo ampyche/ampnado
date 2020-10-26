@@ -20,13 +20,13 @@
 ###############################################################################
 */
 
-const initAmpycheLogin = () => {
+var initAmpycheLogin = function() {
 	$('#intro_div').hide();
 };
 
 $(window).load(initAmpycheLogin)
 
-$(document).on('click', '#about', () => {
+$(document).on('click', '#about', function() {
 	$('#intro_div').fadeToggle('fast');
 });
 

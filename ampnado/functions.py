@@ -25,17 +25,19 @@ try: from mutagen import File
 except ImportError: from mutagenx import File
 import metatags as MT
 
-ampDBClient = MongoClient("mongodb://db:27017/ampnadoDB")
+MONGO_ADDR = os.environ["AMP_AMPDB_ADDR"]
+VIEWSDB_ADDR = os.environ["AMP_VIEWSDB_ADDR"]
+
+ampDBClient = MongoClient(MONGO_ADDR)
 db = ampDBClient.ampnadoDB
 
-ampVDBClient = MongoClient("mongodb://db:27017/ampviewsDB")
+ampVDBClient = MongoClient(VIEWSDB_ADDR)
 viewsdb = ampVDBClient.ampviewsDB
 
 class FindMedia:
-		
+
 	def find_music(self, ptm):
 		try:
-			mlist = []
 			for (paths, dirs, files) in os.walk(ptm, followlinks=True):
 				for filename in files:
 					print("Processing:\n %s" % filename)
@@ -59,34 +61,27 @@ class FindMedia:
 							"AlbumId": "",
 							"HttpMusicPath": "/" + fnn.split("/", 4)[4],
 						}
-						mlist.append(x)
-			db.main.insert_many(mlist)
+						db.main.insert(x)
 		except TypeError:
 			exit()
 
 class AddArtistId:
 	def __init__(self):
-
 		self.artist = Data().tags_distinct_artist()
-		# self.artlist = []
-		self.artlist = [{"Artist":a, "ArtistId": str(uuid.uuid4().hex) } for a in self.artist]
-		Data().tags_update_artistid(self.artlist)
+		self.artlist = []
 	
-	#def add_artistids(self):
-	# 	self.artlist = [{"Artist":a, "ArtistId": str(uuid.uuid4().hex) } for a in self.artist]
-	# 	Data().tags_update_artistid(self.artlist)
+	def add_artistids(self):
+		self.artlist = [{"Artist":a, "ArtistId":str(uuid.uuid4().hex)} for a in self.artist]
+		Data().tags_update_artistid(self.artlist)
 
 class AddAlbumId:
 	def __init__(self):
 		self.album = Data().tags_distinct_album()
-		# self.albumlist = []
+		self.albumlist = []
+		
+	def add_albumids(self):
 		self.albumlist = [{"Album":a, "AlbumId":str(uuid.uuid4().hex)} for a in self.album]	
 		Data().tags_update_albumid(self.albumlist)
-
-		
-	# def add_albumids(self):
-	# 	self.albumlist = [{"Album":a, "AlbumId":str(uuid.uuid4().hex)} for a in self.album]	
-	# 	Data().tags_update_albumid(self.albumlist)
 
 class Indexes:
 	def creat_db_indexes(self):

@@ -20,285 +20,322 @@
 ###############################################################################
 */
 ///////////////////////////////////////////////////////////////////////////////
-const oc_artOF1 = function(xx) {
-	let soupArtOne = "<div><img class='artistimgS' src='" + xx + "'></img>";
-	let soupArtTwo = soupArtOne + "</div><div class='art1divS'><ul class='artistSongULS' ";
-	return soupArtTwo + "data-role='listview' data-inset='true' data-split-icon='gear'>";
+function oc_artOF1(xx) {
+	var soupArtOne = "<div><img class='artistimgS' src='" + xx + "'></img>";
+	var soupArtTwo = soupArtOne + "</div><div class='art1divS'><ul class='artistSongULS' ";
+	var soupArtThree1 = soupArtTwo + "data-role='listview' data-inset='true' data-split-icon='gear'>";
+	return soupArtThree1			
 };
-const oc_artOF2 = function(vv) {
-	let soupArt1 = "<li class='artSongLIS'><a href='#' class='artsongA1' ";
-	let soupArt2 = soupArt1 + "data-songid='" + vv[1] + "'>" + vv[0] + "</a>";
-	let soupArt3 = soupArt2 + "<a href='#artistselectplpage' class='artToPlaylistBtn' ";
-	let soupArt4 = soupArt3 + "data-song='" + vv[0] + "' data-songid='" + vv[1] + "' ";
-	return soupArt4 + "data-transition='slidefade'></a></li>";
+function oc_artOF2(vv) {
+	var soupArt1 = "<li class='artSongLIS'><a href='#' class='artsongA1' ";
+	var soupArt2 = soupArt1 + "data-songid='" + vv[1] + "'>" + vv[0] + "</a>";
+	var soupArt3 = soupArt2 + "<a href='#artistselectplpage' class='artToPlaylistBtn' ";
+	var soupArt4 = soupArt3 + "data-song='" + vv[0] + "' data-songid='" + vv[1] + "' ";
+	var soupArt51 = soupArt4 + "data-transition='slidefade'></a></li>";
+	return soupArt51			
 };
-const oc_artOF3 = function(v) {
-	let a = "<div class='artistPageDiv' data-role='collapsible'><h4>" + v.Artist + "</h4><div>";
-	let a11 = a + "<form id='" + v.ArtistId + "' class='artistForm'><div class='ui-field-contain'>";
-	return a11 + "<select name='" + v.Artist + "' id='" + v.ArtistId + "' class='artistselect'>";
-};
-///////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////
-const och_artistselect1 = function(d) {
-	let aone = "<div id='songimglist'><img class='artistimg' src='" + d.getimgsonalb.thumbnail + "'></img>";
-	let atwo = aone + "<div class='art1div'><ul id='artistSongUL' data-role='listview' data-inset='true' ";
-	return atwo + "data-split-icon='gear'>";
-};
-const och_artistselect2 = function(v1) {
-	let four = "<li class='artsongLI'><a href='#' class='artsongA1' ";
-	let four1 = four + "data-songid='" + v1[1] + "'>" + v1[0] + "</a><a href='#artistselectplpage' ";
-	let four2 = four1 + "class='artToPlaylistBtn' data-song='" + v1[0] + "' data-songid='" + v1[1] + "' ";
-	return four2 + "data-transition='slidefade'></a></li>";	
+function oc_artOF3(v) {
+	var a = "<div class='artistPageDiv' data-role='collapsible'><h4>" + v.Artist + "</h4><div>";
+	var a11 = a + "<form id='" + v.ArtistId + "' class='artistForm'><div class='ui-field-contain'>";
+	var a222 = a11 + "<select name='" + v.Artist + "' id='" + v.ArtistId + "' class='artistselect'>";
+	return a222	
 };
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const oc_albumOF1 = function(va) {
-	let alb1 = "<div class='albumDIV'><ul class='albumUL' data-role='listview' data-inset='true'>";
-	let alb2 = alb1 + "<li class='albumLI'><a href='#' class='albumA1' data-artist='" + va.Artist + "' ";
-	let alb3 = alb2 + "data-artistid='" + va.ArtistId + "' data-album='" + va.Album + "' ";
-	let alb4 = alb3 + "data-albumid='" + va.AlbumId + "'><img id='" + va.AlbumId + "' ";
-	let alb5 = alb4 + "src='" + va.AlbumArtHttpPath + "'><h3 id='albH3'>" + va.Album + "</h3>";
-	let alb6 = alb5 + "<p>" + va.Artist + "</p><span class='ui-li-count'>" + va.NumSongs + "</span>";
-	let alb7 = alb6 + "</a></li></ul></div><div class='albsongList'><ul id='albsongUL" + va.AlbumId + "' ";
-	return alb7 + "class='albsongUL' data-role='listview' data-inset='true' data-split-icon='gear'>";
+function och_artistselect1(d) {
+	var aone = "<div id='songimglist'><img class='artistimg' src='" + d.getimgsonalb.thumbnail + "'></img>";
+	var atwo = aone + "<div class='art1div'><ul id='artistSongUL' data-role='listview' data-inset='true' ";
+	var athree1 = atwo + "data-split-icon='gear'>";
+	return athree1	
 };
-const oc_albumOF2 = function(b) {
-	let albab = "<li class='albsongsLI'><a href='#' class='albsongsA' data-song='" + b[0] + "' ";
-	let albab1 = albab + "data-songid='" + b[1] + "'>" + b[0] + "</a><a href='#albumselectplpage' ";
-	let albab2 = albab1 + "class='addToPlaylist' data-pageid='albums' data-song='" + b[0] + "' ";
-	return albab2 + "data-songid='" + b[1] + "' data-transition='slidefade'></a></li>";
+function och_artistselect2(v1) {
+	var four = "<li class='artsongLI'><a href='#' class='artsongA1' ";
+	var four1 = four + "data-songid='" + v1[1] + "'>" + v1[0] + "</a><a href='#artistselectplpage' ";
+	var four2 = four1 + "class='artToPlaylistBtn' data-song='" + v1[0] + "' data-songid='" + v1[1] + "' ";
+	var four31 = four2 + "data-transition='slidefade'></a></li>";
+	return four31		
 };
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const oc_addtoplaylist1 = function(va) {
-	let pll1 = "<li class='playlistLi' data-playlistid='" + va[1] + "'><a href='#' class='plplay ui-btn ";
-	let pll2 = pll1 + "ui-mini ui-icon-bullets ui-btn-icon-right' ";
-	return pll2 + "data-playlistid='" + va[1] + "'>" + va[0] + "</a></li>";
+function oc_albumOF1(va) {
+	var alb1 = "<div class='albumDIV'><ul class='albumUL' data-role='listview' data-inset='true'>";
+	var alb2 = alb1 + "<li class='albumLI'><a href='#' class='albumA1' data-artist='" + va.Artist + "' ";
+	var alb3 = alb2 + "data-artistid='" + va.ArtistId + "' data-album='" + va.Album + "' ";
+	var alb4 = alb3 + "data-albumid='" + va.AlbumId + "'><img id='" + va.AlbumId + "' ";
+	var alb5 = alb4 + "src='" + va.AlbumArtHttpPath + "'><h3 id='albH3'>" + va.Album + "</h3>";
+	var alb6 = alb5 + "<p>" + va.Artist + "</p><span class='ui-li-count'>" + va.NumSongs + "</span>";
+	var alb7 = alb6 + "</a></li></ul></div><div class='albsongList'><ul id='albsongUL" + va.AlbumId + "' ";
+	var alb81 = alb7 + "class='albsongUL' data-role='listview' data-inset='true' data-split-icon='gear'>";
+	return alb81
 };
-const oc_addtoplaylist2 = function(va) {
-	let spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-	let spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + va[1] + "' ";
-	return spl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + va[0] + "</a></li>";
+function oc_albumOF2(b) {
+	var albab = "<li class='albsongsLI'><a href='#' class='albsongsA' data-song='" + b[0] + "' ";
+	var albab1 = albab + "data-songid='" + b[1] + "'>" + b[0] + "</a><a href='#albumselectplpage' ";
+	var albab2 = albab1 + "class='addToPlaylist' data-pageid='albums' data-song='" + b[0] + "' ";
+	var albab31 = albab2 + "data-songid='" + b[1] + "' data-transition='slidefade'></a></li>";
+	return albab31			
+};
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function oc_addtoplaylist1(va) {
+	var pll1 = "<li class='playlistLi' data-playlistid='" + va[1] + "'><a href='#' class='plplay ui-btn ";
+	var pll2 = pll1 + "ui-mini ui-icon-bullets ui-btn-icon-right' ";
+	var pll31 = pll2 + "data-playlistid='" + va[1] + "'>" + va[0] + "</a></li>";
+	return pll31
+};
+function oc_addtoplaylist2(va) {
+	var spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + va[1] + "' ";
+	var spl31 = spl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + va[0] + "</a></li>";
+	return spl31
 };	
-const oc_addtoplaylist3 = function(va) {
-	let ablspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-	let ablspl2 = ablspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
-	let ablspl3 = ablspl2 + "data-playlistid='" + va[1] + "' data-textonly='false' data-textvisible='false' ";
-	return ablspl3 + "data-msgtext=''>" + va[0] + "</a></li>";
+function oc_addtoplaylist3(va) {	
+	var ablspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var ablspl2 = ablspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
+	var ablspl3 = ablspl2 + "data-playlistid='" + va[1] + "' data-textonly='false' data-textvisible='false' ";
+	var ablspl41 = ablspl3 + "data-msgtext=''>" + va[0] + "</a></li>";
+	return ablspl41
 };	
-const oc_addtoplaylist4 = function(va) {
-	let artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-	let artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
-	let artspl3 = artspl2 + "data-playlistid='" + va[1] + "' data-textonly='false' data-textvisible='false' ";
-	return artspl3 + "data-msgtext=''>" + va[0] + "</a></li>";
+function oc_addtoplaylist4(va) {	
+	var artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
+	var artspl3 = artspl2 + "data-playlistid='" + va[1] + "' data-textonly='false' data-textvisible='false' ";
+	var artspl41 = artspl3 + "data-msgtext=''>" + va[0] + "</a></li>";
+	return artspl41
 };
-const oc_addtoplaylist5 = function(p) {
-	let pll1 = "<li class='playlistLi'><a href='#' class='plplay ui-btn ui-mini ui-icon-bullets ";
-	return pll1 + "ui-btn-icon-right'>" + p + "</a></li>";
+function oc_addtoplaylist5(p) {	
+	var pll1 = "<li class='playlistLi'><a href='#' class='plplay ui-btn ui-mini ui-icon-bullets ";
+	var pll21 = pll1 + "ui-btn-icon-right'>" + p + "</a></li>";
+	return pll21
 };
-const oc_addtoplaylist6 = function(p) {
-	let spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-	let spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
-	return spl2 + "data-textvisible='false' data-msgtext=''>" + p + "</a></li>";
+function oc_addtoplaylist6(p) {	
+	var spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
+	var spl31 = spl2 + "data-textvisible='false' data-msgtext=''>" + p + "</a></li>";
+	return spl31	
 };
-const oc_addtoplaylist7 = function(p) {
-	let albspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-	let albspl2 = albspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
-	return albspl2 + "data-textvisible='false' data-msgtext=''>" + p + "</a></li>";
+function oc_addtoplaylist7(p) {	
+	var albspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var albspl2 = albspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
+	var albspl31 = albspl2 + "data-textvisible='false' data-msgtext=''>" + p + "</a></li>";
+	return albspl31		
 };
-const oc_addtoplaylist8 = function(p) {
-	let artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-	let artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
-	return artspl2 + "data-textvisible='false' data-msgtext=''>" + p + "</a></li>";
+function oc_addtoplaylist8(p) {	
+	var artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
+	var artspl31 = artspl2 + "data-textvisible='false' data-msgtext=''>" + p + "</a></li>";
+	return artspl31		
 };
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const oc_artToPlaylistBtn1 = function(v) {
-	let pll1 = "<li class='playlistLi' data-playlistid='" + v[1] + "'><a href='#' class='plplay ui-btn ";
-	let pll2 = pll1 + "ui-mini ui-icon-bullets ui-btn-icon-right' ";
-	return pll2 + "data-playlistid='" + v[1] + "'>" + v[0] + "</a></li>";
+function oc_artToPlaylistBtn1(v) {
+	var pll1 = "<li class='playlistLi' data-playlistid='" + v[1] + "'><a href='#' class='plplay ui-btn ";
+	var pll2 = pll1 + "ui-mini ui-icon-bullets ui-btn-icon-right' ";
+	var pll31 = pll2 + "data-playlistid='" + v[1] + "'>" + v[0] + "</a></li>";
+	return pll31
 };
-const oc_artToPlaylistBtn2 = function(v) {
-	let spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-	let spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
-	let spl3 = spl2 + "data-playlistid='" + v[1] + "' data-textonly='false' data-textvisible='false' ";
-	return spl3 + "data-msgtext=''>" + v[0] + "</a></li>";
+function oc_artToPlaylistBtn2(v) {
+	var spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
+	var spl3 = spl2 + "data-playlistid='" + v[1] + "' data-textonly='false' data-textvisible='false' ";
+	var spl41 = spl3 + "data-msgtext=''>" + v[0] + "</a></li>";
+	return spl41
 };
-const oc_artToPlaylistBtn3 = function(v) {
-	let albspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-	let albspl2 = albspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
-	return albspl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
+function oc_artToPlaylistBtn3(v) {
+	var albspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var albspl2 = albspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
+	var albspl31 = albspl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
+	return albspl31	
 };
-const oc_artToPlaylistBtn4 = function(v) {
-	let artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-	let artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
-	return artspl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
+function oc_artToPlaylistBtn4(v) {
+	var artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
+	var artspl31 = artspl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
+	return artspl31
 };		
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const oc_addToPlaylist1 = function(v) {
-	let pl1 = "<li class='playlistLi' data-playlistid='" + v[1] + "'><a href='#' class='plplay ui-btn ";
-	let pl2 = pl1 + "ui-mini ui-icon-bullets ui-btn-icon-right' ";
-	return pl2 + "data-playlistid='" + v[1] + "'>" + v[0] + "</a></li>";
+function oc_addToPlaylist1(v) {
+	var pl1 = "<li class='playlistLi' data-playlistid='" + v[1] + "'><a href='#' class='plplay ui-btn ";
+	var pl2 = pl1 + "ui-mini ui-icon-bullets ui-btn-icon-right' ";
+	var pl31 = pl2 + "data-playlistid='" + v[1] + "'>" + v[0] + "</a></li>";
+	return pl31
 };
-const oc_addToPlaylist2 = function(v) {
-	let spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-	let spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
-	return spl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
+function oc_addToPlaylist2(v) {
+	var spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
+	var spl31 = spl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
+	return spl31
 };
-const oc_addToPlaylist3 = function(v) {
-	let albspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-	let albspl2 = albspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
-	return albspl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
+function oc_addToPlaylist3(v) {
+	var albspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var albspl2 = albspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
+	var albspl31 = albspl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
+	return albspl31
 };
-const oc_addToPlaylist4 = function(v) {
-	let artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-	let artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
-	return artspl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
+function oc_addToPlaylist4(v) {
+	var artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v[1] + "' ";
+	var artspl31 = artspl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v[0] + "</a></li>";
+	return artspl31
 };
-const oc_addToPlaylist5 = function(f) {
-	let p1 = "<li class='playlistLi'><a href='#' class='plplay ui-btn ui-mini ui-icon-bullets ";
-	return p1 + "ui-btn-icon-right'>" + f + "</a></li>";
+function oc_addToPlaylist5(f) {
+	var p1 = "<li class='playlistLi'><a href='#' class='plplay ui-btn ui-mini ui-icon-bullets ";
+	var p22 = p1 + "ui-btn-icon-right'>" + f + "</a></li>";
+	return p22
 };
-const oc_addToPlaylist6 = function(f) {
-	let spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-	let spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
-	return spl2 + "data-textvisible='false' data-msgtext=''>" + f + "</a></li>";
+function oc_addToPlaylist6(f) {
+	var spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var spl2 = spl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
+	var spl32 = spl2 + "data-textvisible='false' data-msgtext=''>" + f + "</a></li>";
+	return spl32
 };
-const oc_addToPlaylist7 = function(f) {
-	let albspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-	let albspl2 = albspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
-	return albspl2 + "data-textvisible='false' data-msgtext=''>" + f + "</a></li>";
+function oc_addToPlaylist7(f) {
+	var albspl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var albspl2 = albspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
+	var albspl33 = albspl2 + "data-textvisible='false' data-msgtext=''>" + f + "</a></li>";
+	return albspl33
 };
-const oc_addToPlaylist8 = function(f) {
-	let artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-	let artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
-	return artspl2 + "data-textvisible='false' data-msgtext=''>" + f + "</a></li>";
-};
-///////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////
-const oc_searchBut = function(v) {
-	let s1 = "<li class='songs_li'><a class='songnameS' href='#' data-songid='" + v.songid + "' ";
-	let s2 = s1 + "data-song='" + v.song + "'><h2>" + v.song + "</h2><h6>" + v.artist + "</h6></a>"
-	let s3 = s2 + "<a href='#selectplpage' data-pageid='songs' data-songid='" + v.songid + "' ";
-	return s3 + "data-song='" + v.song + "' class='addtoplaylist' data-transition='slidefade'></a></li>";
-};
-///////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////
-const oc_albsearchBut1 = function(f) {
-	let alb1 = "<div class='albumDIV'><ul class='albumUL' data-role='listview' data-inset='true'>";
-	let alb2 = alb1 + "<li class='albumLI'><a href='#' class='albumA1' data-artist='" + f.artist + "' ";
-	let alb3 = alb2 + "data-artistid='" + f.artistid + "' data-album='" + f.album + "' ";
-	let alb4 = alb3 + "data-albumid='" + f.albumid + "'><img id='" + f.albumid + "' src='" + f.thumbnail + "'>";
-	let alb5 = alb4 + "<h3 id='albH3'>" + f.album + "</h3><p>" + f.artist + "</p>";
-	let alb6 = alb5 + "<span class='ui-li-count'>" + f.numsongs + "</span></a></li></ul></div>";
-	let alb7 = alb6 + "<div class='albsongList'><ul id='albsongUL" + f.albumid + "' class='albsongUL' ";
-	return alb7 + "data-role='listview' data-inset='true' data-split-icon='gear'>";
-};
-const oc_albsearchBut2 = function(v) {
-	let albab1 = "<li class='albsongsLI'><a href='#' class='albsongsA' data-song='" + v[0] + "' ";
-	let albab2 = albab1 + "data-songid='" + v[1] + "'>" + v[0] + "</a><a href='#albumselectplpage' ";
-	let albab3 = albab2 + "class='addToPlaylist' data-pageid='albums' data-song='" + v[0] + "' ";
-	return albab3 + "data-songid='" + v[1] + "' data-transition='slidefade'></a></li>";
+function oc_addToPlaylist8(f) {
+	var artspl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var artspl2 = artspl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-textonly='false' ";
+	var artspl33 = artspl2 + "data-textvisible='false' data-msgtext=''>" + f + "</a></li>";
+	return artspl33	
 };
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const oc_artsearchBut1 = function(m) {
-	let a1 = "<div><img class='artistimgS' src='" + m + "'></img></div>";
-	let a2 = a1 + "<div class='art1divS'><ul class='artistSongULS' data-role='listview' ";
-	return a2 + "data-inset='true' data-split-icon='gear'>";
-};
-const oc_artsearchBut2 = function(n) {
-	let art31 = "<li class='artSongLIS'><a href='#' class='artsongA1' ";
-	let art32 = art31 + "data-songid='" + n[1] + "'>" + n[0] + "</a>";
-	let art33 = art32 + "<a href='#artistselectplpage' class='artToPlaylistBtn' ";
-	return art33 + "data-songid='" + n[1] + "' data-transition='slidefade'></a></li>";
-};
-const oc_artsearchBut3 = function(n) {
-	let artA1 = "<div class='artistPageDivSearch' data-role='collapsible'><h4>" + n.artist + "</h4>";
-	let artA2 = artA1 + "<div><form id='" + n.artistid + "' class='artistForm'><div ";
-	let artA3 = artA2 + "class='ui-field-contain'><select ";
-	return artA3 + "name='" + n.artist + "' id='" + n.artistid + "' class='artistselect'>";
+function oc_searchBut(v) {
+	var s1 = "<li class='songs_li'><a class='songnameS' href='#' data-songid='" + v.songid + "' ";
+	var s2 = s1 + "data-song='" + v.song + "'><h2>" + v.song + "</h2><h6>" + v.artist + "</h6></a>"
+	var s3 = s2 + "<a href='#selectplpage' data-pageid='songs' data-songid='" + v.songid + "' ";
+	var s41 = s3 + "data-song='" + v.song + "' class='addtoplaylist' data-transition='slidefade'></a></li>";
+	return s41		
 };
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const oc_homeBTN_fraz1 = function(b) {
-	let b1 = "<div class='ui-block-a' data-theme='a'><a href='#popup1' data-rel='popup' data-transition='pop'>";
-	let b2 = b1 + "<img src='" + b.rsamp[0].thumbnail + "' class='PicGrid'></img></a></div>";
-	let b3 = b2 + "<div class='ui-block-b' data-theme='a'><a href='#popup2' data-rel='popup' data-transition='pop'>";
-	let b4 = b3 + "<img src='" + b.rsamp[1].thumbnail + "' class='PicGrid'></img></a></div>";
-	let b5 = b4 + "<div class='ui-block-c' data-theme='a'><a href='#popup3' data-rel='popup' data-transition='pop'>";
-	let b6 = b5 + "<img src='" + b.rsamp[2].thumbnail + "' class='PicGrid'></img></a></div>";
-	let b7 = b6 + "<div class='ui-block-d' data-theme='a'><a href='#popup4' data-rel='popup' data-transition='pop'>";
-	let b8 = b7 + "<img src='" + b.rsamp[3].thumbnail + "' class='PicGrid'></img></a></div>";
-	let b9 = b8 + "<div class='ui-block-e' data-theme='a'><a href='#popup5' data-rel='popup' data-transition='pop'>";
-	return b9 + "<img src='" + b.rsamp[4].thumbnail + "' class='PicGrid'></img></a></div>";
+function oc_albsearchBut1(f) {
+	var alb1 = "<div class='albumDIV'><ul class='albumUL' data-role='listview' data-inset='true'>";
+	var alb2 = alb1 + "<li class='albumLI'><a href='#' class='albumA1' data-artist='" + f.artist + "' ";
+	var alb3 = alb2 + "data-artistid='" + f.artistid + "' data-album='" + f.album + "' ";
+	var alb4 = alb3 + "data-albumid='" + f.albumid + "'><img id='" + f.albumid + "' src='" + f.thumbnail + "'>";
+	var alb5 = alb4 + "<h3 id='albH3'>" + f.album + "</h3><p>" + f.artist + "</p>";
+	var alb6 = alb5 + "<span class='ui-li-count'>" + f.numsongs + "</span></a></li></ul></div>";
+	var alb7 = alb6 + "<div class='albsongList'><ul id='albsongUL" + f.albumid + "' class='albsongUL' ";
+	var alb81 = alb7 + "data-role='listview' data-inset='true' data-split-icon='gear'>";
+	return alb81
 };
-const oc_homeBTN_fraz2 = function(b) {
-	let pu11 = "<ul id='pop1' data-role='listview' class='ui-content' data-insert='true'>"
-	let pu12 = '';
+function oc_albsearchBut2(v) {
+	var albab1 = "<li class='albsongsLI'><a href='#' class='albsongsA' data-song='" + v[0] + "' ";
+	var albab2 = albab1 + "data-songid='" + v[1] + "'>" + v[0] + "</a><a href='#albumselectplpage' ";
+	var albab3 = albab2 + "class='addToPlaylist' data-pageid='albums' data-song='" + v[0] + "' ";
+	var albab44 = albab3 + "data-songid='" + v[1] + "' data-transition='slidefade'></a></li>";
+	return albab44
+};
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function oc_artsearchBut1(m) {
+	var a1 = "<div><img class='artistimgS' src='" + m + "'></img></div>";
+	var a2 = a1 + "<div class='art1divS'><ul class='artistSongULS' data-role='listview' ";
+	var a37 = a2 + "data-inset='true' data-split-icon='gear'>";
+	return a37
+};
+function oc_artsearchBut2(n) {
+	var art31 = "<li class='artSongLIS'><a href='#' class='artsongA1' ";
+	var art32 = art31 + "data-songid='" + n[1] + "'>" + n[0] + "</a>";
+	var art33 = art32 + "<a href='#artistselectplpage' class='artToPlaylistBtn' ";
+	var art342 = art33 + "data-songid='" + n[1] + "' data-transition='slidefade'></a></li>";
+	return art342
+};
+function oc_artsearchBut3(n) {
+	var artA1 = "<div class='artistPageDivSearch' data-role='collapsible'><h4>" + n.artist + "</h4>";
+	var artA2 = artA1 + "<div><form id='" + n.artistid + "' class='artistForm'><div ";
+	var artA3 = artA2 + "class='ui-field-contain'><select ";
+	var artA46 = artA3 + "name='" + n.artist + "' id='" + n.artistid + "' class='artistselect'>";
+	return artA46
+};
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+function oc_homeBTN_fraz1(b) {
+	var b1 = "<div class='ui-block-a' data-theme='a'><a href='#popup1' data-rel='popup' data-transition='pop'>";
+	var b2 = b1 + "<img src='" + b.rsamp[0].thumbnail + "' class='PicGrid'></img></a></div>";
+	var b3 = b2 + "<div class='ui-block-b' data-theme='a'><a href='#popup2' data-rel='popup' data-transition='pop'>";
+	var b4 = b3 + "<img src='" + b.rsamp[1].thumbnail + "' class='PicGrid'></img></a></div>";
+	var b5 = b4 + "<div class='ui-block-c' data-theme='a'><a href='#popup3' data-rel='popup' data-transition='pop'>";
+	var b6 = b5 + "<img src='" + b.rsamp[2].thumbnail + "' class='PicGrid'></img></a></div>";
+	var b7 = b6 + "<div class='ui-block-d' data-theme='a'><a href='#popup4' data-rel='popup' data-transition='pop'>";
+	var b8 = b7 + "<img src='" + b.rsamp[3].thumbnail + "' class='PicGrid'></img></a></div>";
+	var b9 = b8 + "<div class='ui-block-e' data-theme='a'><a href='#popup5' data-rel='popup' data-transition='pop'>";
+	var result12 = b9 + "<img src='" + b.rsamp[4].thumbnail + "' class='PicGrid'></img></a></div>";
+	return result12
+};
+function oc_homeBTN_fraz2(b) {
+	var pu11 = "<ul id='pop1' data-role='listview' class='ui-content' data-insert='true'>"
+	var pu12 = '';
 	$.each(b.rsamp[0].songs, function(key, val) {
-		let s11 = "<li><a href='#' class='rart1' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
-		return pu12 + s11
+		var s11 = "<li><a href='#' class='rart1' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
+		pu12 = pu12 + s11;
+		return pu12
 	})
-	let pu111 = pu11 + pu12 + "</ul>";
+	var pu111 = pu11 + pu12 + "</ul>";
 	$('#popup1').append(pu111);
 	$('#pop1').listview().trigger('refresh');
 	$('#popup1').popup().trigger('create');
 };
-const oc_homeBTN_fraz3 = function(b) {
-	let pu21 = "<ul id='pop2' data-role='listview' class='ui-content' data-insert='true'>";
-	let pu22 = '';
+function oc_homeBTN_fraz3(b) {
+	var pu21 = "<ul id='pop2' data-role='listview' class='ui-content' data-insert='true'>";
+	var pu22 = '';
 	$.each(b.rsamp[1].songs, function(key, val) {
-		let s22 = "<li><a href='#' class='rart2' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
-		return pu22 + s22;
+		var s22 = "<li><a href='#' class='rart2' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
+		pu22 = pu22 + s22;
+		return pu22
 	})
-	let pu211 = pu21 + pu22 + "</ul>";
+	var pu211 = pu21 + pu22 + "</ul>";
 	$('#popup2').append(pu211);
 	$('#pop2').listview().trigger('refresh');
 	$('#popup2').popup().trigger('create');
 };
-const oc_homeBTN_fraz4 = function(b) {
-	let pu31 = "<ul id='pop3' data-role='listview' class='ui-content' data-insert='true'>";
-	let pu32 = '';
-	$.each(b.rsamp[2].songs, function(key, val) {
-		let s31 = "<li><a href='#' class='rart3' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
-		return pu32 + s31;
+function oc_homeBTN_fraz4(b) {
+	var pu31 = "<ul id='pop3' data-role='listview' class='ui-content' data-insert='true'>";
+	var pu32 = '';
+	$.each(b.rsamp[2].songs, function(key, val) {	
+		var s31 = "<li><a href='#' class='rart3' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
+		pu32 = pu32 + s31;
+		return pu32
 	})
-	let pu311 = pu31 + pu32 + "</ul>";
+	var pu311 = pu31 + pu32 + "</ul>";
 	$('#popup3').append(pu311);
 	$('#pop3').listview().trigger('refresh');
 	$('#popup3').popup().trigger('create');
 };
-const oc_homeBTN_fraz5 = function(b) {
-	let pu41 = "<ul id='pop4' data-role='listview' class='ui-content' data-insert='true'>";
-	let pu42 = '';
-	$.each(b.rsamp[3].songs, function(key, val) {
-		let s41 = "<li><a href='#' class='rart4' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
+function oc_homeBTN_fraz5(b) {
+	var pu41 = "<ul id='pop4' data-role='listview' class='ui-content' data-insert='true'>";
+	var pu42 = '';
+	$.each(b.rsamp[3].songs, function(key, val) {	
+		var s41 = "<li><a href='#' class='rart4' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
 		pu42 = pu42 + s41
 	})
-	let pu411 = pu41 + pu42 + "</ul>";
+	var pu411 = pu41 + pu42 + "</ul>";
 	$('#popup4').append(pu411);
 	$('#pop4').listview().trigger('refresh');
 	$('#popup4').popup().trigger('create');
 };
-const oc_homeBTN_fraz6 = function(b) {
-	let pu51 = "<ul id='pop5' data-role='listview' class='ui-content' data-insert='true'>";	
-	let pu52 = '';
+function oc_homeBTN_fraz6(b) {
+	var pu51 = "<ul id='pop5' data-role='listview' class='ui-content' data-insert='true'>";	
+	var pu52 = '';
 	$.each(b.rsamp[4].songs, function(key, val) {
-		let s51 = "<li><a href='#' class='rart5' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
+		var s51 = "<li><a href='#' class='rart5' data-songid='" + val[1] + "'>" + val[0] + "</a></li>";
 		pu52 = pu52 + s51
 	})
-	let pu511 = pu51 + pu52 + "</ul>";
+	var pu511 = pu51 + pu52 + "</ul>";
 	$('#popup5').append(pu511);
 	$('#pop5').listview().trigger('refresh');
 	$('#popup5').popup().trigger('create');
@@ -308,7 +345,7 @@ const oc_homeBTN_fraz6 = function(b) {
 ///////////////////////////////////////////////////////////////////////////////
 
 /*
-const singPlayer1(d) {
+function singPlayer1(d) {
 	console.log(d.soho);
 	$('#introimg').attr('src', d.soho['AlbumArtHttpPath']);
 	$('#playlistalbart').attr('src', d.soho['AlbumArtHttpPath']);
@@ -329,55 +366,63 @@ const singPlayer1(d) {
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const oc_butsub1 = function(v) {
+function oc_butsub1(v) {
 	var npl1 = "<li class='playlistLi' data-playlistid='" + v.playlistid + "'><a href='#' ";
 	var npl2 = npl1 + "class='plplay ui-btn ui-mini ui-icon-bullets ui-btn-icon-right' ";
-	return npl2 + "data-playlistid='" + v.playlistid + "'>" + v.playlistname + "</a></li>"
+	var npl31 = npl2 + "data-playlistid='" + v.playlistid + "'>" + v.playlistname + "</a></li>"
+	return npl31
 };
-const oc_butsub2 = function(v) {
+function oc_butsub2(v) {
 	var npl21 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	var npl22 = npl21 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
 	var npl23 = npl22 + "data-playlistid='" + v.playlistid + "' data-textonly='false' ";
-	return npl23 + "data-textvisible='false' data-msgtext=''>" + v.playlistname + "</a></li>"
+	var npl242 = npl23 + "data-textvisible='false' data-msgtext=''>" + v.playlistname + "</a></li>";
+	return npl242
 };
-const oc_butsub3 = function(v) {
+function oc_butsub3(v) {
 	var npl31 = "<li><a href='#artists' class='artSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	var npl32 = npl31 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
 	var npl33 = npl32 + "data-playlistid='" + v.playlistid + "' data-textonly='false' data-textvisible='false' ";
-	return npl33 + "data-msgtext=''>" + v.playlistname + "</a></li>"
+	var npl344 = npl33 + "data-msgtext=''>" + v.playlistname + "</a></li>";
+	return npl344
 };
-const oc_butsub4 = function(v) {
+function oc_butsub4(v) {
 	var npl41 = "<li><a href='#albumssongs' class='albSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
 	var npl42 = npl41 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' data-playlistid='" + v.playlistid + "' ";
-	return npl42 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v.playlistname + "</a></li>"
+	var npl437 = npl42 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v.playlistname + "</a></li>";
+	return npl437
 };
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-const oc_randomInput1 = function(v) {
-	let p1 = "<li class='playlistLi' data-playlistid='" + v.playlistid + "'><a href='#' class='plplay ui-btn ";
-	let p2 = p1 + "ui-mini ui-icon-bullets ui-btn-icon-right' ";
-	return p2 + "data-playlistid='" + v.playlistid + "'>" + v.playlistname + "</a></li>"
+function oc_randomInput1(v) {
+	var p1 = "<li class='playlistLi' data-playlistid='" + v.playlistid + "'><a href='#' class='plplay ui-btn ";
+	var p2 = p1 + "ui-mini ui-icon-bullets ui-btn-icon-right' ";
+	var p36 = p2 + "data-playlistid='" + v.playlistid + "'>" + v.playlistname + "</a></li>";
+	return p36
 };
-const oc_randomInput2 = function(v) {
-	let spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ui-icon-bullets ";
-	let spl2 = spl1 + "ui-btn-icon-right ui-corner-all' data-playlistid='" + v.playlistid + "' ";
-	return spl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v.playlistname + "</a></li>"
+function oc_randomInput2(v) {
+	var spl1 = "<li><a href='#songs' class='songSelBtn show-page-loading-msg ui-btn ui-btn-mini ui-icon-bullets ";
+	var spl2 = spl1 + "ui-btn-icon-right ui-corner-all' data-playlistid='" + v.playlistid + "' ";
+	var spl35 = spl2 + "data-textonly='false' data-textvisible='false' data-msgtext=''>" + v.playlistname + "</a></li>";
+	return spl35
 };
-const oc_randomInput3 = function(v) {
-	let alpl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-	let alpl2 = alpl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
-	let alpl3 = alpl2 + "data-playlistid='" + v.playlistid + "' data-textonly='false' data-textvisible='false' ";
-	return alpl3 + "data-msgtext=''>" + v.playlistname + "</a></li>"
+function oc_randomInput3(v) {
+	var alpl1 = "<li><a href='#albums' class='albumSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var alpl2 = alpl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
+	var alpl3 = alpl2 + "data-playlistid='" + v.playlistid + "' data-textonly='false' data-textvisible='false' ";
+	var alpl43 = alpl3 + "data-msgtext=''>" + v.playlistname + "</a></li>";
+	return alpl43
 };	
-const oc_randomInput4 = function(v) {
-	let arpl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
-	let arpl2 = arpl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
-	let arpl3 = arpl2 + "data-playlistid='" + v.playlistid + "' data-textonly='false' data-textvisible='false' ";
-	return arpl3 + "data-msgtext=''>" + v.playlistname + "</a></li>"
+function oc_randomInput4(v) {	
+	var arpl1 = "<li><a href='#artists' class='artistSelBtn show-page-loading-msg ui-btn ui-btn-mini ";
+	var arpl2 = arpl1 + "ui-icon-bullets ui-btn-icon-right ui-corner-all' ";
+	var arpl3 = arpl2 + "data-playlistid='" + v.playlistid + "' data-textonly='false' data-textvisible='false' ";
+	var arpl49 = arpl3 + "data-msgtext=''>" + v.playlistname + "</a></li>";
+	return arpl49
 };
 
-const albumSearchFunc = function() {
+function albumSearchFunc() {
 	$('.albumDIV, .albsongList').empty();
 	$('#albsearch-basic').textinput({preventFocusZoom: true});
 	albsearchVal = $("#albsearch-basic").val();
@@ -388,14 +433,15 @@ const albumSearchFunc = function() {
 	function(data) {
 		$('#albListViewDIV2').empty();
 		$.each(data.ysearch, function( ke, va) {
-			let alb8 = oc_albsearchBut1(va);
-			let alba33 = '';
+			var alb8 = oc_albsearchBut1(va);
+			var alba33 = '';
 			$.each(va.songs, function(k, v) {
 				$.each(v, function(kk, vv) {
-					return alba33 + oc_albsearchBut2(vv);
+					alba33 = alba33 + oc_albsearchBut2(vv);
+					return alba33
 				});
 			});
-			let result = alb8 + alba33 + "</ul></div>";
+			var result = alb8 + alba33 + "</ul></div>";
 			$('#albListViewDIV2').append(result);
 			$('.albumUL, .albsongUL').listview().trigger('refresh');
 			$('.albsongUL').hide();
@@ -403,9 +449,36 @@ const albumSearchFunc = function() {
 		});
 	});
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //This makes Artist soup
 $(document).on('click', '.artOF', function() {
-	let artass = $(this).text();
+	var artass = $(this).text();
 	$('#artistOFC').collapsible("collapse");
 	$('#artistmain').empty();
 	$.get('ArtistInfo', 
@@ -414,20 +487,21 @@ $(document).on('click', '.artOF', function() {
 	},
 	function(data) {
 		$.each(data.arts, function( key, val ) {
-			let alblength = val.Albums.length;
-			let abc = "<div class='artistPageDivS' data-role='collapsible'><h4>" + val.Artist + "</h4>";
-			let selected = val.Albums[0][1];
+			var alblength = val.Albums.length;
+			var abc = "<div class='artistPageDivS' data-role='collapsible'><h4>" + val.Artist + "</h4>";
+			var selected = val.Albums[0][1];
 			if ( alblength === 1 ) {
 				$.get('ImageSongsForAlbum', 
 				{
 					'selected' : selected
 				}, 
 				function(data) {
-					let soupArtThree = oc_artOF1(data.getimgsonalb.thumbnail);
-					let artSoupLI = '';
-					$.each(data.getimgsonalb.songs, (kk, vv) =>{
-						let soupArt5 = oc_artOF2(vv);
-						return artSoupLI + soupArt5
+					var soupArtThree = oc_artOF1(data.getimgsonalb.thumbnail);
+					var artSoupLI = '';
+					$.each(data.getimgsonalb.songs, function(kk, vv) {
+						var soupArt5 = oc_artOF2(vv);
+						artSoupLI = artSoupLI + soupArt5;
+						return artSoupLI;
 					})
 					var result2 = abc + soupArtThree + artSoupLI + "</ul></div>";
 					$('#artistmain').append(result2);
@@ -435,12 +509,12 @@ $(document).on('click', '.artOF', function() {
 				})
 				
 			} else {
-				let a22 = oc_artOF3(val);
-				let a2 = '';
-				let a3 = '';
-				let aa1 = "<option class='artop0' value='Choose Album'>Choose Album</option>";
+				var a22 = oc_artOF3(val);
+				var a2 = '';
+				var a3 = '';
+				var aa1 = "<option class='artop0' value='Choose Album'>Choose Album</option>";
 				$.each(val.Albums, function(k, v) {
-					let a1 = "<option class='artop1' value='" + v[1] + "'>" + v[0] + "</option>";
+					var a1 = "<option class='artop1' value='" + v[1] + "'>" + v[0] + "</option>";
 					a2 = a2 + a1;
 					a3 = aa1 + a2;
 					return a3
@@ -454,8 +528,8 @@ $(document).on('click', '.artOF', function() {
 	});
 })
 .on('click', 'a.songnameS', function() {
-	let selected_song = $(this).attr('data-songid');
-	let audio2 = $('#audio2');
+	var selected_song = $(this).attr('data-songid');
+	var audio2 = $('#audio2');
 	audio2.attr('src', '');
 	$('.duration').text('00:00');
 	var trancSS = localStorage.getItem('TransCode');
@@ -469,7 +543,7 @@ $(document).on('click', '.artOF', function() {
 		$('#playlistalbart').attr('src', data.lthumbnail);
 		$('#pictext').text(data.song);
 		$('#pictext2').text(data.album);
-		let boob = {'song': data.song, 'songid': data.songid};
+		var boob = {'song': data.song, 'songid': data.songid};
 		localStorage.setItem('songPageGetPathArt', JSON.stringify(data));
 		localStorage.setItem("songPageSelected_SONG_SONGID", JSON.stringify(boob));
 	});
@@ -483,7 +557,8 @@ $(document).on('click', '.artOF', function() {
 //This get selected song from artist page and sends it to the player
 .on('click', '.artsongA1', function() {
 	var  audio24 = $('#audio2');
-	let booty = {'song': $(this).text(), 'songid': $(this).attr('data-songid')}
+	var booty = {'song': $(this).text(), 'songid': $(this).attr('data-songid')}
+
 	localStorage.setItem('artistPageSelected_SONG_SONGID', JSON.stringify(booty));
 	$.get("PathArt",
 	{
@@ -502,7 +577,7 @@ $(document).on('click', '.artOF', function() {
 //			$('.duration').text(cd[0] + ':' + cd[1]).css('background-color', 'purple');
 			$('.PlayBtn').text("Play 00:00").css('background-color', 'grey').css('color', 'black');
 			$('.StopBtn').text("Stop " + cd[0] + ':' + cd[1]).css('background-color', 'grey').css('color', 'black');
-			let ftxt = data.Song + " " + data.Artist;
+			var ftxt = data.Song + " " + data.Artist;
 			$('.footerSong').text(data.Song);
 			$('.footerArtist').text(data.Artist);
 			
@@ -530,10 +605,10 @@ $(document).on('click', '.artOF', function() {
 			'selected' : selected //this is albumid	
 		},
 		function(data) {
-			let athree = och_artistselect1(data);
-			let artLIString = ''
+			var athree = och_artistselect1(data);
+			var artLIString = ''
 			$.each(data.getimgsonalb.songs, function(k, v) {
-				let four3 = och_artistselect2(v);
+				var four3 = och_artistselect2(v);
 				artLIString = artLIString + four3;
 				return artLIString
 			})
@@ -552,7 +627,7 @@ $(document).on('click', '.artOF', function() {
 })
 //This gets playlist selection and adds song to playlistdb for the artist page
 .on('click', '.artistSelBtn', function() {
-	let selectedPlayList = {'playlist': $(this).text(), 'playlistid': $(this).attr('data-playlistid')};
+	var selectedPlayList = {'playlist': $(this).text(), 'playlistid': $(this).attr('data-playlistid')};
 	localStorage.setItem('currentSelected_PLAYLIST_PLAYLISTID', JSON.stringify(selectedPlayList));
 	var name = JSON.parse(localStorage.getItem("artistPageSelected_SONG_SONGID"));
 	$.get('AddSongsToPlistDB', 
@@ -565,13 +640,17 @@ $(document).on('click', '.artOF', function() {
 		}
 	});
 })
+
+
+
+
 //This hides and shows the albums page songs listview
 .on('click', '.albumA1', function() {
-	let bebe = "#albsongUL" + $(this).attr('data-albumid');
+	bebe = "#albsongUL" + $(this).attr('data-albumid');
 	$(bebe).fadeToggle('fast');
 })
 .on('click', '.albumOF', function() {
-	let albass = $(this).text();
+	var albass = $(this).text();
 	$('#albumOFC').collapsible("collapse");
 	$('#alblist').empty();
 	$.get('AlbumInfo', 
@@ -580,8 +659,8 @@ $(document).on('click', '.artOF', function() {
 	},
 	function(data) {
 		$.each(data.albs, function( key, val) {
-			let alb8 = oc_albumOF1(val);
-			let alba33 = '';
+			var alb8 = oc_albumOF1(val);
+			var alba33 = '';
 			$.each(val.Songs, function(ka, val) {
 				alba33 = alba33 + oc_albumOF2(val);
 				return alba33
@@ -599,13 +678,13 @@ $(document).on('click', '.artOF', function() {
 	var  audio23 = $('#audio2');
 	audio23.attr('src', '');
 	$('.duration').text('00:00');
-	let selSong = $(this).attr('data-songid');
+	var selSong = $(this).attr('data-songid');
 	$.get("PathArt",
 	{
 		"selected": selSong,
 	},
 	function(data){
-		let foobar10 = {'song': data.Song, 'songid': selSong};
+		var foobar10 = {'song': data.Song, 'songid': selSong};
 		audio23.attr('src', data.HttpMusicPath);
 		$('#introimg').attr('src', data.AlbumArtHttpPath);
 		$('#playlistalbart').attr('src', data.AlbumArtHttpPath);
@@ -631,14 +710,31 @@ $(document).on('click', '.artOF', function() {
 	});
 	$('.albsongUL').hide();
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //This adds the song and songid to localstorage 
 .on('click', '.addToPlaylist', function() {
-	let albssid = {'song': $(this).attr('data-song'), 'songid': $(this).attr('data-songid')}	
+	var albssid = {'song': $(this).attr('data-song'), 'songid': $(this).attr('data-songid')}	
 	localStorage.setItem('albumPageSelected_SONG_SONGID', JSON.stringify(albssid));
 })
 //This gets the songs for the selected Alpha selecter
 .on('click', '.songOF', function() {
-	let ss = $(this).text();
+	var ss = $(this).text();
 	$('#songOFC').collapsible("collapse");
 	$("#songs_view").empty();
 	$.get('SongInfo',
@@ -647,10 +743,10 @@ $(document).on('click', '.artOF', function() {
 	},
 	function(data) {
 		$.each(data.song, function( key, val) {
-			let ss1 = "<li class='songs_li'><a class='songname' href='#' data-songid='" + val.SongId + "'>";
-			let ss2 = ss1 + "<h2>" + val.Song + "</h2><h6>" + val.Artist + "</h6></a><a href='#selectplpage' ";
-			let ss3 = ss2 + "data-song='" + val.Song + "' data-songid='" + val.SongId + "' class='addtoplaylist' ";
-			let ss4 = ss3 + "data-transition='slidefade'></a></li>";
+			var ss1 = "<li class='songs_li'><a class='songname' href='#' data-songid='" + val.SongId + "'>";
+			var ss2 = ss1 + "<h2>" + val.Song + "</h2><h6>" + val.Artist + "</h6></a><a href='#selectplpage' ";
+			var ss3 = ss2 + "data-song='" + val.Song + "' data-songid='" + val.SongId + "' class='addtoplaylist' ";
+			var ss4 = ss3 + "data-transition='slidefade'></a></li>";
 			$("#songs_view").append(ss4);
 		});
 		$('#songs_view').listview('refresh');
@@ -661,12 +757,11 @@ $(document).on('click', '.artOF', function() {
 //use data-song and data-songid they are set
 //this should use songid instead of songname
 .on('click', 'a.songname', function() {
-	let audio2 = $('#audio2');
+	var audio2 = $('#audio2');
 	audio2.attr('src', '');
 	$('.duration').text('00:00');
-	let selected_songid = $(this).attr('data-songid');
-	console.log("THIS IS ASONG FOR PATHART")
-	console.log(selected_songid);
+	var selected_songid = $(this).attr('data-songid');
+
 	$.get("PathArt",
 	{
 		"selected": selected_songid
@@ -677,7 +772,7 @@ $(document).on('click', '.artOF', function() {
 		$('#playlistalbart').attr('src', data.AlbumArtHttpPath);
 		$('#pictext').text(data.Song);
 		$('#pictext2').text(data.Album);
-		let booob = {'song': data.Song, 'songid': data.SongId};
+		var booob = {'song': data.Song, 'songid': data.SongId};
 		localStorage.setItem('songPageGetPathArt', JSON.stringify(data));
 		localStorage.setItem("songPageSelected_SONG_SONGID", JSON.stringify(booob));
 		audio2.on('loadedmetadata', function() {
@@ -699,7 +794,7 @@ $(document).on('click', '.artOF', function() {
 //This sets the selectedSONG and selectedSONGid in the browser localstorage
 //for the add to playlist button on the songs page.
 .on('click', '.addtoplaylist', function() {
-	let sname = {'song': $(this).attr('data-song'), 'songid': $(this).attr('data-songid')}
+	var sname = {'song': $(this).attr('data-song'), 'songid': $(this).attr('data-songid')}
 	localStorage.setItem('songPageSelected_SONG_SONGID', JSON.stringify(sname));
 	$('#playPlaylistUL, #splUL, #albsplUL, #artsplUL').empty();
 	$.get("AllPlaylists",
@@ -716,7 +811,7 @@ $(document).on('click', '.artOF', function() {
 				$('#artsplUL').append(oc_addtoplaylist4(va));	
 			});
 		} else {
-			let pln = 'Please create a playlist';
+			var pln = 'Please create a playlist';
 			$('#playPlaylistUL').append(oc_addtoplaylist5(pln));
 			$('#splUL').append(oc_addtoplaylist6(pln));
 			$('#albsplUL').append(oc_addtoplaylist7(pln));
@@ -728,7 +823,7 @@ $(document).on('click', '.artOF', function() {
 })
 //This is the artists page
 .on('click', '.artToPlaylistBtn', function() {
-	let arr = {'song': $(this).attr('data-song'), 'songid': $(this).attr('data-songid')};
+	var arr = {'song': $(this).attr('data-song'), 'songid': $(this).attr('data-songid')};
 	localStorage.setItem("artistPageSelected_SONG_SONGID", JSON.stringify(arr));
 	$('#playPlaylistUL, #artsplUL, #albsplUL, #splUL').empty();
 	$.get("AllPlaylists",
@@ -749,7 +844,7 @@ $(document).on('click', '.artOF', function() {
 })
 //this is the albums page
 .on('click', '.addToPlaylist', function() {
-	let sname2 = {'song': $(this).attr('data-song'), 'songid': $(this).attr('data-songid')};
+	var sname2 = {'song': $(this).attr('data-song'), 'songid': $(this).attr('data-songid')};
 	localStorage.setItem("albumPageSelected_SONG_SONGID", JSON.stringify(sname2));
 	$.get("AllPlaylists",
 	{
@@ -766,7 +861,7 @@ $(document).on('click', '.artOF', function() {
 				$('#artsplUL').append(oc_addToPlaylist4(v));
 			});
 		} else {
-			let plnln = 'Please create a playlist';
+			var plnln = 'Please create a playlist';
 			$('#playPlaylistUL').append(oc_addToPlaylist5(plnln));
 			$('#splUL').append(oc_addToPlaylist6(plnln));
 			$('#albsplUL').append(oc_addToPlaylist7(v));
@@ -778,7 +873,7 @@ $(document).on('click', '.artOF', function() {
 })
 //This gets playlist selection and adds song to playlistdb for the albums page
 .on('click', '.albumSelBtn', function() {
-	let selectedPlaylist1 = {'playlist': $(this).text(), 'playlistid': $(this).attr('data-playlistid')};
+	var selectedPlaylist1 = {'playlist': $(this).text(), 'playlistid': $(this).attr('data-playlistid')};
 	localStorage.setItem("currentSelected_PLAYLIST_PLAYLISTID", JSON.stringify(selectedPlaylist1));
 	var name1 = JSON.parse(localStorage.getItem("albumPageSelected_SONG_SONGID"));
 	$.get('AddSongsToPlistDB',
@@ -793,7 +888,7 @@ $(document).on('click', '.artOF', function() {
 })
 //This gets playlist selection and adds song to playlist
 .on('click', '.songSelBtn', function() {
-	let selectedPlaylist2 = {'playlist': $(this).text(), 'playlistid': $(this).attr('data-playlistid')};
+	var selectedPlaylist2 = {'playlist': $(this).text(), 'playlistid': $(this).attr('data-playlistid')};
 	localStorage.setItem("currentSelected_PLAYLIST_PLAYLISTID", JSON.stringify(selectedPlaylist2));
 	var name2 = JSON.parse(localStorage.getItem('songPageSelected_SONG_SONGID'));
 	$.get('AddSongsToPlistDB', 
@@ -819,7 +914,7 @@ $(document).on('click', '.artOF', function() {
 	function(data) {
 		$('#songs_view, #songs_view2').empty();
 		$.each(data.xsearch, function( k, v) {
-			let s4 = oc_searchBut(v);
+			var s4 = oc_searchBut(v);
 			$("#songs_view2").append(s4);
 		});
 		$('#songs_view2').listview('refresh');
@@ -841,7 +936,7 @@ $(document).on('click', '.artOF', function() {
 
 .on('keypress', function(e) {
 	if (e.which == 13){
-		let alb = $("#albsearch-basic").val()
+		var alb = $("#albsearch-basic").val()
 		if (alb != '') {
 			albumSearchFunc();
 		}
@@ -858,7 +953,7 @@ $(document).on('click', '.artOF', function() {
 .on('click', '#albsearchBut', function() {
 	albumSearchFunc();
 })
-.on('click', '#albsearchClear',function() {
+.on('click', '#albsearchClear', function() {
 	$('#albsearch-basic').val('');
 	$('#albListViewDIV2').fadeToggle('fast').empty();
 })
@@ -873,21 +968,21 @@ $(document).on('click', '.artOF', function() {
 		"artsearchval" : artsearchval,
 	},
 	function(data) {
-		$.each(data, function( key, val ) {
+		$.each(data, function( key, val ) {		
 			$.each(val, function( ke, va ) {
 				alblength = va.albums.length;
 				if ( alblength === 1 ) {
-					let abc = "<div class='artistPageDivS' data-role='collapsible'><h4>" + va.artist + "</h4>";
-					let selected = va.albums[0][1]; //this is albumid
+					var abc = "<div class='artistPageDivS' data-role='collapsible'><h4>" + va.artist + "</h4>";
+					var selected = va.albums[0][1]; //this is albumid
 					$.get('ImageSongsForAlbum',
 						{
 							'selected' : selected	//this is albumid	
 						},
 						function(data) {
-							let a3 = oc_artsearchBut1(data.getimgsonalb.thumbnail);							
+							var a3 = oc_artsearchBut1(data.getimgsonalb.thumbnail);							
 							liString = '';
 							$.each(data.getimgsonalb.songs, function(kk, vv) {
-								let art34 = oc_artsearchBut2(vv);
+								var art34 = oc_artsearchBut2(vv);
 								liString = liString + art34;
 								return liString;
 							})
@@ -896,11 +991,11 @@ $(document).on('click', '.artOF', function() {
 							$('.artistPageDivS').collapsible().trigger('create');	
 					});
 				} else {
-					let artA4 = oc_artsearchBut3(va);
-					let a2 = ''
-					let aa1 = "<option class='artop0' value='Choose Album'>Choose Album</option>";
+					var artA4 = oc_artsearchBut3(va);
+					var a2 = ''
+					var aa1 = "<option class='artop0' value='Choose Album'>Choose Album</option>";
 					$.each(va.albums, function(k, v) {
-						let a1 = "<option class='artop1' value='" + v[1] + "'>" + v[0] + "</option>";
+						var a1 = "<option class='artop1' value='" + v[1] + "'>" + v[0] + "</option>";
 						a2 = a2 + a1;
 						a3 = aa1 + a2;
 						return a3
@@ -934,7 +1029,7 @@ $(document).on('click', '.artOF', function() {
 .on('click', '.homeBTN, .fraz', function() {
 	rpwStop();
 	$('#popup1, #popup2, #popup3, #popup4, #popup5, #intropicGrid1').empty();
-	let boohoo = JSON.parse(localStorage.getItem('nextimgset'));
+	var boohoo = JSON.parse(localStorage.getItem('nextimgset'));
 	var result = oc_homeBTN_fraz1(boohoo);
 	$('#intropicGrid1').append(result);
 	oc_homeBTN_fraz2(boohoo);
@@ -997,7 +1092,7 @@ $.mobile.loader.prototype.options.textVisible,
 		function(data) {
 			$('#playPlaylistUL, #artsplUL, #albsplUL, #splUL').empty();
 			$.each(data.pnames, function(k, v) {
-				let pln = {'playlist': v.playlistname, 'playlistid': v.playlistid};
+				var pln = {'playlist': v.playlistname, 'playlistid': v.playlistid};
 				localStorage.setItem("currentSelected_PLAYLIST_PLAYLISTID", JSON.stringify(pln));
 				$('#playPlaylistUL').append(oc_butsub1(v));
 				$('#splUL').append(oc_butsub2(v));
@@ -1023,7 +1118,7 @@ $.mobile.loader.prototype.options.textVisible,
 //delete a playlist
 .on('click', '#playlistDeleteBtn1', function() {
 	$('#playPlaylistUL').empty();
-	let selpl = JSON.parse(localStorage.getItem("currentSelected_PLAYLIST_PLAYLISTID"));
+	var selpl = JSON.parse(localStorage.getItem("currentSelected_PLAYLIST_PLAYLISTID"));
 	$.get('DeletePlaylistFromDB',
 	{
 		"playlistid" : selpl.playlistid
@@ -1031,9 +1126,9 @@ $.mobile.loader.prototype.options.textVisible,
 	function(data) {
 		localStorage.setItem('playlists', JSON.stringify(data));
 		$.each(data.npl, function(k, v) {
-			let pllone = "<li class='playlistLi' data-playlistid='" + v.playlistid + "'><a href='#' class='plplay ";
-			let plltwo = pllone + "ui-btn ui-mini ui-icon-bullets ui-btn-icon-right' ";
-			let pllthree = plltwo + "data-playlistid='" + v.playlistid + "'>" + v.playlistname + "</a></li>";
+			var pllone = "<li class='playlistLi' data-playlistid='" + v.playlistid + "'><a href='#' class='plplay ";
+			var plltwo = pllone + "ui-btn ui-mini ui-icon-bullets ui-btn-icon-right' ";
+			var pllthree = plltwo + "data-playlistid='" + v.playlistid + "'>" + v.playlistname + "</a></li>";
 			$('#playPlaylistUL').append(pllthree);
 		})
 		$('#playPlaylistUL').listview('refresh');
@@ -1042,16 +1137,16 @@ $.mobile.loader.prototype.options.textVisible,
 })
 .on('click', '#playlistEditBtn1', function() {
 	$("#pleditMain").empty();
-	let pln33 = JSON.parse(localStorage.getItem("currentSelected_PLAYLIST_PLAYLISTID"));
-	let blep = "<div id='pledith3'><h3>Edit: " + pln33.playlist + "</h3></div>";
+	var pln33 = JSON.parse(localStorage.getItem("currentSelected_PLAYLIST_PLAYLISTID"));
+	var blep = "<div id='pledith3'><h3>Edit: " + pln33.playlist + "</h3></div>";
 	$.get('AllPlaylistSongsFromDB',
 	{
 		'playlistid' : pln33.playlistid
 	},
 	function(data) {
-		let ple1 = "<div class='pleditLV'>";
-		let ple = ple1 + "<ul class='editplUL' data-role='listview' data-inset='true' data-split-icon='gear'>";
-		let s3 = "";
+		var ple1 = "<div class='pleditLV'>";
+		var ple = ple1 + "<ul class='editplUL' data-role='listview' data-inset='true' data-split-icon='gear'>";
+		var s3 = "";
 		$.each(data.taz, function(key, val) {
 			var lvLI1 = "<li><a href='#' class='lviewLi' data-sonID='" + val[1] + "'>" + val[0] + "</a>";
 			var lvLI2 = lvLI1 + "<a href='#editpopup' data-sonID='" + val[1] + "' data-rel='popup' class='plpsongsA2  ";
@@ -1076,22 +1171,22 @@ $.mobile.loader.prototype.options.textVisible,
 })
 //This sets the values in the delete popup
 .on('click', '.plpsongsA2', function() {
-	let plsnid = {'dsongid': $(this).attr("data-sonID")};
+	var plsnid = {'dsongid': $(this).attr("data-sonID")};
 	crock = localStorage.setItem("editPage_DELETE_SONGID", JSON.stringify(plsnid));
 })
 .on('click', '#editYesBtn' , function() {
 	$('#pleditMain').empty();
-	let snID = JSON.parse(localStorage.getItem("editPage_DELETE_SONGID"));
-	let pln = JSON.parse(localStorage.getItem("currentSelected_PLAYLIST_PLAYLISTID"));
-	let blep = "<div id='pledith3'><h3>Edit: " + pln.playlist + "</h3></div>";
-	let ple1 = "<div class='pleditLV'>";
-	let ple = ple1 + "<ul class='editplUL' data-role='listview' data-inset='true' data-split-icon='gear'>";
+	var snID = JSON.parse(localStorage.getItem("editPage_DELETE_SONGID"));
+	var pln = JSON.parse(localStorage.getItem("currentSelected_PLAYLIST_PLAYLISTID"));
+	var blep = "<div id='pledith3'><h3>Edit: " + pln.playlist + "</h3></div>";
+	var ple1 = "<div class='pleditLV'>";
+	var ple = ple1 + "<ul class='editplUL' data-role='listview' data-inset='true' data-split-icon='gear'>";
 	$.getJSON("DeleteSongFromPlaylist",
 	{
 		"playlistname" : pln.playlist, 'delsongid' : snID.dsongid
 	},
 	function(data) {
-		let s3 = "";
+		var s3 = "";
 		$.each(data, function(key, valu) {
 			$.each(valu, function(key, val) {
 				$.each(val, function(k, v) {
@@ -1099,7 +1194,8 @@ $.mobile.loader.prototype.options.textVisible,
 					var lvLI2 = lvLI1 + "<a href='#editpopup' data-sonID='" + v.sonID + "' data-rel='popup' ";
 					var lvLI3 = lvLI2 + "class='plpsongsA2  ui-btn' data-textonly='false' data-textvisible='false' ";
 					var lvLI4 = lvLI3 + "data-msgtext=''></a></li>";
-					return s3 + lvLI4
+					s3 = s3 + lvLI4;
+					return s3
 				});
 			});
 		});
@@ -1177,7 +1273,7 @@ $.mobile.loader.prototype.options.textVisible,
 })
 .on('click', '#playlistDownLoadBtn1', function(e) {
 	e.preventDefault();
-	let plid = JSON.parse(localStorage.getItem('currentSelected_PLAYLIST_PLAYLISTID'));
+	var plid = JSON.parse(localStorage.getItem('currentSelected_PLAYLIST_PLAYLISTID'));
 	$.get("Download",
 	{
 		"selectedplid": plid.playlistid
